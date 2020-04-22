@@ -23,15 +23,11 @@ However, if you are not using Homestead, you will need to make sure your server 
 <div class="content-list" markdown="1" style="display: flex;flex-direction: column">
 
 - PHP >= 7.4
-- BCMath PHP Extension
-- Ctype PHP Extension
-- Fileinfo PHP extension
 - JSON PHP Extension
-- Mbstring PHP Extension
+- ICONV PHP Extension
+- GD PHP extension
+- MySQLI PHP Extension
 - OpenSSL PHP Extension
-- PDO PHP Extension
-- Tokenizer PHP Extension
-- XML PHP Extension
 </div>
 
 <a name="installing-sura"></a>
