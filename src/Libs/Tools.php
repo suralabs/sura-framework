@@ -137,10 +137,10 @@ class Tools
         if ( $pages_count <= 1 )
             $pages = '';
 
-        $config = include __DIR__.'/../data/config.php';
+        $config = include __DIR__.'/../../../../../app/data/config.php';
 
         $tpl_2 = new Templates();
-        $tpl_2->dir = __DIR__.'/../../templates/'.$config['temp'];;
+        $tpl_2->dir = __DIR__.'/../../../../../templates/'.$config['temp'];;
         $tpl_2->load_template('nav.tpl');
         $tpl_2->set('{pages}', $pages);
         $tpl_2->compile('content');
@@ -200,10 +200,10 @@ class Tools
         if ( $pages_count <= 1 )
             $pages = '';
 
-        $config = include __DIR__.'/../data/config.php';
+        $config = include __DIR__.'/../../../../../app/data/config.php';
 
         $tpl_2 = new Templates();
-        $tpl_2->dir = __DIR__.'/../../templates/'.$config['temp'];;
+        $tpl_2->dir = __DIR__.'/../../../../../templates/'.$config['temp'];;
         $tpl_2->load_template('nav.tpl');
         $tpl_2->set('{pages}', $pages);
         $tpl_2->compile('content');

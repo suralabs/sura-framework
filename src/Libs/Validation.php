@@ -317,13 +317,13 @@ class Validation
      */
     public static function word_filter($source, $encode = true)  :string
     {
-		$config = include __DIR__.'/../data/config.php';
+		$config = include __DIR__.'/../../../../../app/data/config.php';
 			
 		$safe_mode = false;
 		
 		if($encode){
 				
-			$all_words = file(__DIR__.'/../data/wordfilter.db.php');
+			$all_words = file(__DIR__.'/../../../../../app/data/wordfilter.db.php');
 			$find = array();
 			$replace = array();
 				
