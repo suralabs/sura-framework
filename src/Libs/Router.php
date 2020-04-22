@@ -40,7 +40,7 @@ class Router
      */
     public static function fromGlobals()
     {
-        $config = include __DIR__.'/../data/config.php';
+        $config = include __DIR__.'/../../../../../app/data/config.php';
         if (isset($_SERVER['REQUEST_URI'])) {
             $uri = $_SERVER['REQUEST_URI'];
         }elseif(!empty($config['home_url'])){
@@ -218,18 +218,18 @@ class Router
             // self::$actionName = $ca[1];//delete
             $dir_name = ucfirst($ModName);
 
-                if (class_exists('\\System\\Modules\\'.$controllername)) {
-                    if (!method_exists('\\System\\Modules\\'.$controllername, $action)) {
+                if (class_exists('\\App\\Modules\\'.$controllername)) {
+                    if (!method_exists('\\App\\Modules\\'.$controllername, $action)) {
                         // throw new RuntimeException("Method '{$controllerName}::{$action}' not found");
-                        echo "Method \\System\\Modules\\{$controllername}::{$action} not found";
+                        echo "Method \\App\\Modules\\{$controllername}::{$action} not found";
                     }else{
-                        $class = 'System\Modules\\'.$controllername;
+                        $class = 'App\Modules\\'.$controllername;
                         $foo = new $class();
                         return call_user_func_array(array($foo, $action), $params);
                         //return call_user_func_array(array('\\System\\Modules\\'.$controllername, $action), $params);
                     }
                 }else  {
-                        echo 'Method \\System\\Modules\\'.$controllername.'::'.$action.' not found';
+                        echo 'Method \\App\\Modules\\'.$controllername.'::'.$action.' not found';
 
                 }
         }

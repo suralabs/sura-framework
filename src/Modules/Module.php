@@ -1,10 +1,10 @@
 <?php  
-namespace System\Modules;
+namespace Sura\Modules;
 
-use System\Classes\Db;
-use System\Contracts\ModuleInterface;
-use System\Libs\Langs;
-use System\Libs\Registry;
+use Sura\Classes\Db;
+use Sura\Contracts\ModuleInterface;
+use Sura\Libs\Langs;
+use Sura\Libs\Registry;
 
 /**
  *  Module

@@ -19,7 +19,7 @@ final class Db {
     private static $db = null; // Единственный экземпляр класса, чтобы не создавать множество подключений
 
     public function __construct(){
-        $this->db_config = include __DIR__.'/../data/db.php';
+        $this->db_config = include __DIR__.'/../../../../../app/data/db.php';
     }
 
     public function __destruct() {

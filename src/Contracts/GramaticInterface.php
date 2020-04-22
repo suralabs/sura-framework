@@ -1,7 +1,7 @@
 <?php
 
 
-namespace System\Contracts;
+namespace Sura\Contracts;
 
 
 interface GramaticInterface

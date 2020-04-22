@@ -23,6 +23,7 @@ use System\Libs\Request;
 use System\Libs\Tools;
 use System\Libs\Validation;
 use thiagoalessio\TesseractOCR\TesseractOCR;
+use Sura\Modules\Module;
 
 class HomeController extends Module{
 

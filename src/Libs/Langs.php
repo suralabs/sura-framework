@@ -28,7 +28,7 @@ class Langs {
      */
     public static function checkLang():string
     {
-        $config = include __DIR__.'/../data/config.php';
+        $config = $config = include __DIR__.'/../../../../../app/data/config.php';
 
         $config['lang_list'] = nl2br($config['lang_list']);
         $expLangList = explode('<br />', $config['lang_list']);
@@ -68,7 +68,7 @@ class Langs {
     public static function get_langs():array
     {
         $checkLang = self::checkLang() ? self::checkLang() :'Russian';
-        return include __DIR__.'/../../lang/'.$checkLang.'/langs.lng';
+        return include __DIR__.'/../../../../../lang/'.$checkLang.'/langs.lng';
     }
 
     /**
@@ -77,7 +77,7 @@ class Langs {
     public static function get_langdate():array
     {
         $checkLang = self::checkLang() ? self::checkLang() :'Russian';
-        return include __DIR__.'/../../lang/'.$checkLang.'/date.lng';
+        return include __DIR__.'/../../../../../lang/'.$checkLang.'/date.lng';
     }
 
     /**
@@ -85,7 +85,7 @@ class Langs {
      */
     public static function check_lang(){
         //lang
-        $config = include __DIR__.'/../data/config.php';
+        $config = $config = include __DIR__.'/../../../../../app/data/config.php';
         $config['lang_list'] = nl2br($config['lang_list']);
         $expLangList = explode('<br />', $config['lang_list']);
         $numLangs = count($expLangList);

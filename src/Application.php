@@ -4,10 +4,10 @@
 namespace Sura;
 
 
-use System\Classes\Db;
-use System\Classes\Templates;
-use System\Libs\Registry;
-use System\Libs\Router;
+use Sura\Classes\Db;
+use Sura\Classes\Templates;
+use Sura\Libs\Registry;
+use Sura\Libs\Router;
 
 class Application
 {
@@ -29,7 +29,7 @@ class Application
 
     function routing($params){
         $router = Router::fromGlobals();
-        require __DIR__ . '/../routes/web.php';
+        require __DIR__ . '/../../../../routes/web.php';
         if ($router->isFound()) {
             $router->executeHandler(
                 $router->getRequestHandler(),
@@ -85,9 +85,9 @@ class Application
     }
 
     function view(){
-        $config = include __DIR__.'/data/config.php';
+        $config = include __DIR__.'/../../../../app/data/config.php';
         $tpl = new Templates();
-        $tpl->dir = __DIR__.'/../templates/'.$config['temp'];
+        $tpl->dir = __DIR__.'/../../../../templates/'.$config['temp'];
         Registry::set('tpl', $tpl);
         return $tpl;
     }

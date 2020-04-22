@@ -3,9 +3,9 @@
 
 namespace Sura\Libs;
 
-use System\Classes\Db;
-use System\Libs\Cache;
-use System\Libs\Registry;
+use Sura\Classes\Db;
+use Sura\Libs\Cache;
+use Sura\Libs\Registry;
 
 class Page
 {
