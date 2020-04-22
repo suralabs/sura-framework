@@ -28,7 +28,7 @@
     },
     "autoload": {
       "files": [
-        "system/helpers.php"
+        "src/helpers.php"
       ],
       "psr-4": {
           "Sura\\": "src/"
