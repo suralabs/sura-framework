@@ -31,7 +31,7 @@
         "system/helpers.php"
       ],
       "psr-4": {
-          "System\\": "system/"
+          "Sura\\": "src/"
       }
     }
 }
