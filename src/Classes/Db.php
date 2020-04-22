@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Classes;
+namespace Sura\Classes;
 
-use System\Libs\Cache;
+use Sura\Libs\Cache;
 
 final class Db {
     public $db_id = false;

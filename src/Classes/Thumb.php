@@ -10,7 +10,7 @@
 	ICQ: 427-825-959
 	Данный код защищен авторскими правами
 */
-namespace System\Classes;
+namespace Sura\Classes;
 
 class Thumb {
 	var $img;

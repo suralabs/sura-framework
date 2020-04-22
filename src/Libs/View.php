@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Libs;
+namespace Sura\Libs;
 
 
 class View

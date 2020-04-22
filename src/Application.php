@@ -1,7 +1,7 @@
 <?php
 
 
-namespace System;
+namespace Sura;
 
 
 use System\Classes\Db;

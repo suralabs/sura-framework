@@ -1,7 +1,7 @@
 <?php
 
 
-namespace System\Libs;
+namespace Sura\Libs;
 
 use System\Classes\Db;
 use System\Libs\Cache;

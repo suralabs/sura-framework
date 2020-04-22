@@ -11,9 +11,9 @@
 	Данный код защищен авторскими правами
 */
 
-namespace System\Classes;
+namespace Sura\Classes;
 
-use System\Libs\Gramatic;
+use Sura\Libs\Gramatic;
 
 class Wall {
 

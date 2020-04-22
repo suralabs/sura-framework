@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Libs;
+namespace Sura\Libs;
 //System\Libs\Validation::
 use phpDocumentor\Reflection\Types\Integer;
-use System\Classes\Db;
+use Sura\Classes\Db;
 
 /**
  * Class Validation

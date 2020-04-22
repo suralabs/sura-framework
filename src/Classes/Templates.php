@@ -10,10 +10,10 @@
 	ICQ: 427-825-959
 	Данный код защищен авторскими правами
 */
-namespace System\Classes;
+namespace Sura\Classes;
     
-use System\Libs\Langs;
-use System\Libs\Validation;
+use Sura\Libs\Langs;
+use Sura\Libs\Validation;
 
 class Templates {
     public $dir = '.';

@@ -1,10 +1,10 @@
 <?php
 # language: ru
 
-namespace System\Libs;
+namespace Sura\Libs;
 
 use InvalidArgumentException;
-use System\Libs\Registry;
+use Sura\Libs\Registry;
 
 
 class Router

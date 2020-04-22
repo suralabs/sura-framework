@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Libs;
+namespace Sura\Libs;
 
-use System\Classes\Templates;
+use Sura\Classes\Templates;
 
 class Tools
 {

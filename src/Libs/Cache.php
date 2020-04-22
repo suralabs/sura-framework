@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Libs;
+namespace Sura\Libs;
 
-use System\Contracts\CacheInterface;
+use Sura\Contracts\CacheInterface;
 
 class Cache implements CacheInterface
 {

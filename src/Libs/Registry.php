@@ -2,8 +2,7 @@
 /**
  * Статический класс registry
  */
-namespace System\Libs;
-
+namespace Sura\Libs;
 
 class Registry 
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Libs;
+namespace Sura\Libs;
 
-use System\Contracts\GramaticInterface;
+use Sura\Contracts\GramaticInterface;
 
 /**
  * Class Gramatic

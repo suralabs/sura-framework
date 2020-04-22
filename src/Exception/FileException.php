@@ -1,7 +1,7 @@
 <?php
 
 
-namespace System\Exception;
+namespace Sura\Exception;
 
 
 use RuntimeException;

@@ -1,11 +1,11 @@
 <?php
 
 
-namespace System\Models;
+namespace Sura\Models;
 
 
-use System\Classes\Db;
-use System\Libs\Registry;
+use Sura\Classes\Db;
+use Sura\Libs\Registry;
 
 class Profile
 {
