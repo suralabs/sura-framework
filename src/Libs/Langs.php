@@ -28,7 +28,7 @@ class Langs {
      */
     public static function checkLang():string
     {
-        $config = $config = include __DIR__.'/../../../../../app/data/config.php';
+        $config = $config = include __DIR__.'/../../../../../config/config.php';
 
         $config['lang_list'] = nl2br($config['lang_list']);
         $expLangList = explode('<br />', $config['lang_list']);
@@ -85,7 +85,7 @@ class Langs {
      */
     public static function check_lang(){
         //lang
-        $config = $config = include __DIR__.'/../../../../../app/data/config.php';
+        $config = $config = include __DIR__.'/../../../../../config/config.php';
         $config['lang_list'] = nl2br($config['lang_list']);
         $expLangList = explode('<br />', $config['lang_list']);
         $numLangs = count($expLangList);

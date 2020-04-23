@@ -40,7 +40,7 @@ class Router
      */
     public static function fromGlobals()
     {
-        $config = include __DIR__.'/../../../../../app/data/config.php';
+        $config = include __DIR__.'/../../../../../config/config.php';
         if (isset($_SERVER['REQUEST_URI'])) {
             $uri = $_SERVER['REQUEST_URI'];
         }elseif(!empty($config['home_url'])){

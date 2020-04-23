@@ -85,7 +85,7 @@ class Application
     }
 
     function view(){
-        $config = include __DIR__.'/../../../../app/data/config.php';
+        $config = include __DIR__.'/../../../../config/config.php';
         $tpl = new Templates();
         $tpl->dir = __DIR__.'/../../../../templates/'.$config['temp'];
         Registry::set('tpl', $tpl);

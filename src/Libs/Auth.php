@@ -63,7 +63,7 @@ class Auth
 				$logged = false;
 			}
 
-            $config = include __DIR__.'/../../../../../app/data/config.php';
+            $config = include __DIR__.'/../../../../../config/config.php';
 
 			//Если юзер нажимает "Главная" и он зашел не с моб версии. то скидываем на его стр.
 			$host_site = $_SERVER['QUERY_STRING'];
@@ -119,7 +119,7 @@ class Auth
                     //Вставляем лог в бд
                     $db->query("UPDATE `".PREFIX."_log` SET browser = '".$_BROWSER."', ip = '".$_IP."' WHERE uid = '".$check_user['user_id']."'");
 
-                    $config = include __DIR__.'/../../../../../app/data/config.php';
+                    $config = include __DIR__.'/../../../../../config/config.php';
 
                     if($config['temp'] != 'mobile')
                         header('Location: /u'.$check_user['user_id']);
