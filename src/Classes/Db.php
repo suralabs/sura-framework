@@ -19,7 +19,7 @@ final class Db {
     private static $db = null; // Единственный экземпляр класса, чтобы не создавать множество подключений
 
     public function __construct(){
-        $this->db_config = include __DIR__.'/../../../../../config/db.php';
+        $this->db_config = include __DIR__.'/../../../../../config/config.php';
     }
 
     public function __destruct() {
@@ -135,7 +135,8 @@ final class Db {
         return $fields;
     }
     function safesql($source) {
-        if (!$this->db_id) $this->connect(DBUSER, DBPASS, DBNAME, DBHOST);
+        $config = $this->db_config;
+        if (!$this->db_id) $this->connect($config['dbuser'], $config['dbpass'], $config['dbname'], $config['dbhost']);
         return mysqli_real_escape_string($this->db_id, $source);
     }
     function free($query_id = '') {
@@ -150,17 +151,7 @@ final class Db {
         return ((float)$seconds + (float)$microSeconds);
     }
     function display_error($error, $error_num, $query = '') {
-        echo '<?xml version="1.0" encoding="iso-8859-1"?>
-		<!DOCTYPE html>
-		<html lang="ru">
-		<head>
-		<title>Ошибка</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		</head>
-		<body>
-			<span>Ошибка сервера, попробуйте обновить страницу позже. ' . $query . ' ' . $error_num . '</span> 
-		</body>
-		</html>';
+        echo 'Ошибка сервера: ' . $query . ' ' . $error_num;
         exit();
     }
 }
