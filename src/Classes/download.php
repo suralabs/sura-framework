@@ -1,16 +1,11 @@
 <?php
 /* 
 	Appointment: Скачивание файлов
-	File: download.php 
-	Author: f0rt1 
-	Engine: Vii Engine
-	Copyright: NiceWeb Group (с) 2011
-	e-mail: niceweb@i.ua
-	URL: http://www.niceweb.in.ua/
-	ICQ: 427-825-959
-	Данный код защищен авторскими правами
 */
-class download {
+
+namespace Sura\Classes;
+
+class Download {
 	
 	var $properties = array ('old_name' => "", 'new_name' => "", 'type' => "", 'size' => "", 'resume' => "", 'max_speed' => "" );
 	
