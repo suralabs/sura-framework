@@ -26,7 +26,7 @@ class Auth
 		if(isset($_SESSION['user_id']) > 0){
 			$logged = true;
 			$logged_user_id = intval($_SESSION['user_id']);
-			$user_info = $db->super_query("SELECT notifications_list, user_id, user_email, user_group, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$logged_user_id."'");
+			$user_info = $db->super_query("SELECT notifications_list, user_timezona, user_id, user_email, user_group, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$logged_user_id."'");
 			//Если есть данные о сесии, но нет инфы о юзере, то выкидываем его
 			if(!$user_info['user_id'])
 				header('Location: /logout/');
