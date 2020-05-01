@@ -45,7 +45,7 @@ class Auth
 		//Если есть данные о COOKIE то проверяем
 		} elseif(isset($_COOKIE['user_id']) > 0 AND $_COOKIE['password'] AND $_COOKIE['hid']){
 			$cookie_user_id = intval($_COOKIE['user_id']);
-			$user_info = $db->super_query("SELECT notifications_list, user_id, user_email, user_group, user_password, user_hid, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$cookie_user_id."'");
+			$user_info = $db->super_query("SELECT notifications_list, user_timezona, user_id, user_email, user_group, user_password, user_hid, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$cookie_user_id."'");
 
 			//Если пароль и HID совпадает то пропускаем
 			if($user_info['user_password'] == $_COOKIE['password'] AND $user_info['user_hid'] == $_COOKIE['password'].md5(md5($_IP))){
