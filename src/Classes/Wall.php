@@ -44,7 +44,7 @@ class Wall {
 		global $tpl, $db, $config, $user_id, $id, $for_user_id, $lang, $user_privacy, $check_friend, $user_info;
 
         $server_time = intval($_SERVER['REQUEST_TIME']);
-        $config = include __DIR__.'/data/config.php';
+        $config = include __DIR__.'/data/config.php';//bug
 
 		$this->template;
 		foreach($this->query as $row_wall){

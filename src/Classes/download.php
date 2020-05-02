@@ -1,8 +1,4 @@
 <?php
-/* 
-	Appointment: Скачивание файлов
-*/
-
 namespace Sura\Classes;
 
 class Download {

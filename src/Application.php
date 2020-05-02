@@ -62,6 +62,8 @@ class Application
 
             if(date('Y-m-d', $user_info['user_lastupdate']) < date('Y-m-d', $server_time))
                 $sql_balance = ", user_balance = user_balance+1, user_lastupdate = '{$server_time}'";
+            else
+                $sql_balance = "";
 
             //Определяем устройство
             if(check_smartphone()){
