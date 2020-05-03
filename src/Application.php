@@ -4,8 +4,8 @@
 namespace Sura;
 
 
-use Sura\Classes\Db;
-use Sura\Classes\Templates;
+use Sura\Libs\Db;
+use Sura\Libs\Templates;
 use Sura\Libs\Registry;
 use Sura\Libs\Router;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sura\Classes;
+namespace Sura\Libs;
 
 use Sura\Libs\Cache;
 

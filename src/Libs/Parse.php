@@ -11,7 +11,7 @@
 	Данный код защищен авторскими правами
 */
 
-class parse{
+class Parse{
 
 	function BBparse($source, $preview = false){
 		global $config;

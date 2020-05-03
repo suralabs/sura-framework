@@ -10,7 +10,7 @@
 	ICQ: 427-825-959
 	Данный код защищен авторскими правами
 */
-namespace Sura\Classes;
+namespace Sura\Libs;
     
 use Sura\Libs\Langs;
 use Sura\Libs\Validation;
