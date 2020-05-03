@@ -4,10 +4,15 @@
 namespace Sura\Cache\Adapter;
 
 
+
 use Sura\Cache\Traits\AbstractAdapterTrait;
 
 abstract class AbstractAdapter
 {
-    use AbstractAdapterTrait;
+    //use AbstractAdapterTrait;
+
+    function __construct()
+    {
+    }
 
 }
