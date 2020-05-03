@@ -317,7 +317,7 @@ class Validation
      */
     public static function word_filter($source, $encode = true)  :string
     {
-		$config = include __DIR__.'/../../../../../config/config.php';
+		//$config = include __DIR__.'/../../../../../config/config.php';
 			
 		$safe_mode = false;
 		
@@ -344,7 +344,8 @@ class Validation
 
 				} else $register ="i";
 
-				if($config['charset'] == "utf-8") $register .= "u";
+				//if($config['charset'] == "utf-8")
+				    $register .= "u";
 
 				$allow_find = true;
 
