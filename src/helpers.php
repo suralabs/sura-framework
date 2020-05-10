@@ -16,7 +16,12 @@ if (!function_exists('e')) {
 }
 
 if (!function_exists('clean_url')) {
-//FUNC. COOKIES
+    /**
+     * FUNC. COOKIES
+     *
+     * @param $url
+     * @return bool
+     */
     function clean_url($url)
     {
         if ($url == '') return false;
@@ -28,5 +33,19 @@ if (!function_exists('clean_url')) {
         $url = explode(':', $url);
         $url = reset($url);
         return $url;
+    }
+}
+
+if (!function_exists('GetVar')) {
+
+    /**
+     * @param string $v
+     * @return string
+     */
+    function GetVar(string $v): string
+    {
+        if (ini_get('magic_quotes_gpc'))
+            return stripslashes($v);
+        return $v;
     }
 }
