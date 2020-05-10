@@ -33,12 +33,12 @@ class Langs {
 
         $config['lang_list'] = nl2br($config['lang_list']);
         $expLangList = explode('<br />', $config['lang_list']);
-        $numLangs = count($expLangList);
+        //$numLangs = count($expLangList);
 
         //lang
         $config['lang_list'] = nl2br($config['lang_list']);
         $expLangList = explode('<br />', $config['lang_list']);
-        $numLangs = count($expLangList);
+        //$numLangs = count($expLangList);
         //$useLang = intval($_COOKIE['lang']);//bug
         if (!empty($_COOKIE['lang'])){
             $useLang = intval($_COOKIE['lang']);
