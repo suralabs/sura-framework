@@ -2,7 +2,7 @@
 
 namespace Sura\Libs;
 
-use Sura\Classes\Templates;
+use Sura\Libs\Templates;
 
 class Tools
 {
@@ -91,6 +91,16 @@ class Tools
             return false;
     }
 
+
+    /**
+     * !Дубликат
+     *
+     * @param $gc
+     * @param $num
+     * @param $type
+     * @param $tpl
+     * @return mixed
+     */
     public static function navigation($gc, $num, $type, $tpl){
         if($_GET['page'] > 0) $page = intval($_GET['page']); else $page = 1;
 //        $tpl = Registry::get('tpl');
@@ -137,7 +147,7 @@ class Tools
         if ( $pages_count <= 1 )
             $pages = '';
 
-        $config = include __DIR__.'/../../../../../config/config.php';
+        $config = Settings::loadsettings();
 
         $tpl_2 = new Templates();
         $tpl_2->dir = __DIR__.'/../../../../../templates/'.$config['temp'];;
@@ -149,6 +159,17 @@ class Tools
         return $tpl;
     }
 
+    /**
+     * !Дубликат
+     *
+     * @param $gc
+     * @param $num
+     * @param $id
+     * @param $function
+     * @param $act
+     * @param $tpl
+     * @return mixed
+     */
     public static function  box_navigation($gc, $num, $id, $function, $act, $tpl){
         global $page;
 
@@ -200,7 +221,7 @@ class Tools
         if ( $pages_count <= 1 )
             $pages = '';
 
-        $config = include __DIR__.'/../../../../../config/config.php';
+        $config = Settings::loadsettings();
 
         $tpl_2 = new Templates();
         $tpl_2->dir = __DIR__.'/../../../../../templates/'.$config['temp'];;

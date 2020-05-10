@@ -2,10 +2,11 @@
 
 namespace Sura\Libs;
 
-use Sura\Classes\Db;
+use Sura\Libs\Db;
 use Sura\Libs\Langs;
 use Sura\Libs\Registry;
 use Sura\Libs\Tools;
+use Sura\Libs\Settings;
 
 /**
  * Авторизация пользователей
@@ -63,7 +64,8 @@ class Auth
 				$logged = false;
 			}
 
-            $config = include __DIR__.'/../../../../../config/config.php';
+			$config = Settings::loadsettings();
+            //$config = include __DIR__.'/../../../../../config/config.php';
 
 			//Если юзер нажимает "Главная" и он зашел не с моб версии. то скидываем на его стр.
 			$host_site = $_SERVER['QUERY_STRING'];
@@ -119,7 +121,7 @@ class Auth
                     //Вставляем лог в бд
                     $db->query("UPDATE `log` SET browser = '".$_BROWSER."', ip = '".$_IP."' WHERE uid = '".$check_user['user_id']."'");
 
-                    $config = include __DIR__.'/../../../../../config/config.php';
+                    $config = Settings::loadsettings();
 
                     if($config['temp'] != 'mobile')
                         header('Location: /u'.$check_user['user_id']);

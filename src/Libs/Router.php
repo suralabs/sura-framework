@@ -5,7 +5,7 @@ namespace Sura\Libs;
 
 use InvalidArgumentException;
 use Sura\Libs\Registry;
-
+use Sura\Libs\Settings;
 
 class Router
 {
@@ -40,7 +40,7 @@ class Router
      */
     public static function fromGlobals()
     {
-        $config = include __DIR__.'/../../../../../config/config.php';
+        $config = Settings::loadsettings();
         if (isset($_SERVER['REQUEST_URI'])) {
             $uri = $_SERVER['REQUEST_URI'];
         }elseif(!empty($config['home_url'])){

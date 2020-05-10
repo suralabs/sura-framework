@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sura\Libs;
-
 
 class Profile_check
 {
@@ -38,8 +36,6 @@ class Profile_check
         );
 
         return date_default_timezone_set($timezona[$id]);
-
-
 
     }
 }

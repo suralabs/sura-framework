@@ -3,6 +3,7 @@
 namespace Sura\Libs;
 
 use Sura\Libs\Cache;
+use Sura\Libs\Settings;
 
 final class Db {
     public $db_id = false;
@@ -19,7 +20,7 @@ final class Db {
     private static $db = null; // Единственный экземпляр класса, чтобы не создавать множество подключений
 
     public function __construct(){
-        $this->db_config = include __DIR__.'/../../../../../config/config.php';
+        $this->db_config = Settings::loadsettings();
     }
 
     public function __destruct() {
