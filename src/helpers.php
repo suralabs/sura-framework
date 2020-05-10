@@ -49,3 +49,33 @@ if (!function_exists('GetVar')) {
         return $v;
     }
 }
+
+if (!function_exists('msgbox')) {
+    /**
+     * @param $title
+     * @param $text
+     * @param $tpl_name
+     * @return string|null
+     */
+    function msgbox($title, $text, $tpl_name)
+    {
+        global $tpl;
+        $result = null;
+        if ($tpl_name == 'info') {
+            $result = '<div class="err_yellow">' . $text . '</div>';
+        } elseif ($tpl_name == 'info_red') {
+            $result = '<div class="err_red">' . $text . '</div>';
+        } elseif ($tpl_name == 'info_2') {
+            $result = '<div class="info_center">' . $text . '</div>';
+        } elseif ($tpl_name == 'info_box') {
+            $result = '<div class="msg_none">' . $text . '</div>';
+        } elseif ($tpl_name == 'info_search') {
+            $result = '<div class="margin_top_10"></div><div class="search_result_title" style="border-bottom:1px solid #e4e7eb">Ничего не найдено</div>
+    <div class="info_center" style="width:630px;padding-top:140px;padding-bottom:154px">Ваш запрос не дал результатов</div>';
+        } elseif ($tpl_name == 'info_yellow') {
+            $result = '<div class="err_yellow"><ul class="listing">' . $text . '</ul></div>';
+        }
+        $tpl->result['info'] .= $result;
+        return $result;
+    }
+}
