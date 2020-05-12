@@ -39,6 +39,7 @@ if (!function_exists('clean_url')) {
 if (!function_exists('GetVar')) {
 
     /**
+     * Дубликат (в tools уже есть)
      * @param string $v
      * @return string
      */

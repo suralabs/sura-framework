@@ -38,6 +38,11 @@ class Templates {
             }
         } else $this->block_data[$name] = $var;
     }
+
+    /**
+     * @param $tpl_name
+     * @return bool
+     */
     function load_template($tpl_name) {
         $time_before = $this->get_real_time();
         if ($tpl_name == '' || !file_exists($this->dir . DIRECTORY_SEPARATOR . $tpl_name)) {
@@ -69,6 +74,13 @@ class Templates {
         $this->template_parse_time+= $this->get_real_time() - $time_before;
         return true;
     }
+
+    /**
+     * @param $aviable
+     * @param $block
+     * @param bool $action
+     * @return string|string[]
+     */
     function check_module($aviable, $block, $action = true) {
         global $mozg_module;
         $aviable = explode('|', $aviable);
@@ -81,6 +93,13 @@ class Templates {
             else return $block;
         }
     }
+
+    /**
+     * @param $groups
+     * @param $block
+     * @param bool $action
+     * @return string|string[]
+     */
     function check_group($groups, $block, $action = true) {
         global $user_info;
         $groups = explode(',', $groups);
@@ -92,17 +111,29 @@ class Templates {
         $block = str_replace('\"', '"', $block);
         return $block;
     }
+
+    /**
+     *
+     */
     function _clear() {
         $this->data = array();
         $this->block_data = array();
         $this->copy_template = $this->template;
     }
+
+    /**
+     *
+     */
     function clear() {
         $this->data = array();
         $this->block_data = array();
         $this->copy_template = null;
         $this->template = null;
     }
+
+    /**
+     *
+     */
     function global_clear() {
         $this->data = array();
         $this->block_data = array();
@@ -110,11 +141,20 @@ class Templates {
         $this->copy_template = null;
         $this->template = null;
     }
+
+    /**
+     * @param $var
+     * @return mixed
+     */
     function load_lang($var) {
         $lang = langs::get_langs();
 
         return $lang[$var];
     }
+
+    /**
+     * @param $tpl
+     */
     function compile($tpl) {
         $time_before = $this->get_real_time();
         if (count($this->block_data)) {
@@ -138,6 +178,10 @@ class Templates {
         $this->_clear();
         $this->template_parse_time+= $this->get_real_time() - $time_before;
     }
+
+    /**
+     * @return float
+     */
     function get_real_time() {
         list($seconds, $microSeconds) = explode(' ', microtime());
         return (( float )$seconds + ( float )$microSeconds);

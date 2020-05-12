@@ -12,6 +12,9 @@ use Sura\Classes\Db;
 class Validation
 {
 
+    /**
+     * @var string[]
+     */
     static $regx = array(
         //邮箱
         'email' => '/^[\w-\.]+@[\w-]+(\.(\w)+)*(\.(\w){2,4})$/',
@@ -96,6 +99,10 @@ class Validation
         return false;
     }
 
+    /**
+     * @param $user_name
+     * @return bool
+     */
     public static function check_name($user_name)
     {
         if (empty($user_name))
@@ -108,6 +115,11 @@ class Validation
     }
 
 
+    /**
+     * @param $password_first
+     * @param $password_second
+     * @return bool
+     */
     public static function check_password($password_first, $password_second)
     {
         if (empty($password_first) or empty($password_second))
@@ -118,6 +130,10 @@ class Validation
             return false;
     }
 
+    /**
+     * @param $email
+     * @return bool
+     */
     public static function check_email($email)
     {
         if (empty($email))
@@ -413,11 +429,19 @@ class Validation
 		return $source;
 	}
 
+    /**
+     * @param $str
+     * @return mixed
+     */
     static function string($str)
     {
         return filter_var($str, FILTER_DEFAULT);
     }
 
+    /**
+     * @param $binary_string
+     * @return false|int
+     */
     static function strlen_8bit($binary_string) {
         if (function_exists('mb_strlen')) {
             return mb_strlen($binary_string, '8bit');
@@ -425,6 +449,12 @@ class Validation
         return strlen($binary_string);
     }
 
+    /**
+     * @param $binary_string
+     * @param $start
+     * @param $length
+     * @return false|string
+     */
     static function substr_8bit($binary_string, $start, $length) {
         if (function_exists('mb_substr')) {
             return mb_substr($binary_string, $start, $length, '8bit');

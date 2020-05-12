@@ -9,12 +9,9 @@ use Sura\Libs\Registry;
 
 class Page
 {
-
-    function __construct()
-    {
-
-    }
-
+    /**
+     * @param array $params
+     */
     public static function generate(array $params = array()){
         $config = $params['config'];
 
@@ -117,6 +114,9 @@ class Page
         self::main($params);
     }
 
+    /**
+     * @param array $params
+     */
     public static function main_ajax(array $params){
         //Если есть POST Запрос и значение AJAX, а $ajax не равняется "yes" то не пропускаем
         $logged = $params['logged'];
@@ -169,6 +169,9 @@ class Page
         return die();
     }
 
+    /**
+     * @param array $params
+     */
     public static function main(array $params){
         //$tpl = Registry::get('tpl');
         $tpl = $params['tpl'];

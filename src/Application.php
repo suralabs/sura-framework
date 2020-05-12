@@ -1,10 +1,9 @@
 <?php
 
-
 namespace Sura;
 
-
 use Sura\Libs\Db;
+use Sura\Libs\Settings;
 use Sura\Libs\Templates;
 use Sura\Libs\Registry;
 use Sura\Libs\Router;
@@ -27,6 +26,9 @@ class Application
 
     }
 
+    /**
+     * @param $params
+     */
     function routing($params){
         $router = Router::fromGlobals();
         require __DIR__ . '/../../../../routes/web.php';
@@ -43,6 +45,10 @@ class Application
         }
     }
 
+    /**
+     * @param $params
+     * @return bool
+     */
     function user_online($params){
 
         //$logged = Registry::get('logged');
@@ -86,8 +92,11 @@ class Application
         return true;
     }
 
+    /**
+     * @return Templates
+     */
     function view(){
-        $config = include __DIR__.'/../../../../config/config.php';
+        $config = Settings::loadsettings();
         $tpl = new Templates();
         $tpl->dir = __DIR__.'/../../../../templates/'.$config['temp'];
         Registry::set('tpl', $tpl);

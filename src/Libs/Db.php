@@ -29,13 +29,24 @@ final class Db {
 
     }
 
-    /* Получение экземпляра класса. Если он уже существует, то возвращается, если его не было, то создаётся и возвращается (паттерн Singleton) */
+    /**
+     * Получение экземпляра класса. Если он уже существует, то возвращается, если его не было, то создаётся и возвращается (паттерн Singleton)
+     * @return Db|null
+     */
     public static function getDB()
     {
         if (self::$db == null) self::$db = new Db();
         return self::$db;
     }
 
+    /**
+     * @param $db_user
+     * @param $db_pass
+     * @param $db_name
+     * @param string $db_location
+     * @param int $show_error
+     * @return bool
+     */
     function connect($db_user, $db_pass, $db_name, $db_location = 'localhost', $show_error = 1) {
         $db_location = explode(":", $db_location);
         if (isset($db_location[1])) {
@@ -57,6 +68,12 @@ final class Db {
         mysqli_query($this->db_id, "SET NAMES '" . $this->db_config['collate'] . "'");
         return true;
     }
+
+    /**
+     * @param $query
+     * @param bool $show_error
+     * @return bool|\mysqli_result
+     */
     function query($query, $show_error = true) {
 
         $config = $this->db_config;
@@ -74,14 +91,32 @@ final class Db {
         $this->query_num++;
         return $this->query_id;
     }
+
+    /**
+     * @param string $query_id
+     * @return array|string[]|null
+     */
     function get_row($query_id = '') {
         if ($query_id == '') $query_id = $this->query_id;
         return is_object($query_id) ? mysqli_fetch_assoc($query_id) : [];
     }
+
+    /**
+     * @param string $query_id
+     * @return array|null
+     */
     function get_array($query_id = '') {
         if ($query_id == '') $query_id = $this->query_id;
         return mysqli_fetch_array($query_id);
     }
+
+    /**
+     * @param $query
+     * @param bool $multi
+     * @param bool $cache_prefix
+     * @param bool $system_cache
+     * @return array|mixed|string[]
+     */
     function super_query($query, $multi = false, $cache_prefix = false, $system_cache = false) {
         //Если включен кеш, то проверяем на его существование
         if ($cache_prefix) {
@@ -121,13 +156,27 @@ final class Db {
             }
         }
     }
+
+    /**
+     * @param string $query_id
+     * @return int
+     */
     function num_rows($query_id = '') {
         if ($query_id == '') $query_id = $this->query_id;
         return mysqli_num_rows($query_id);
     }
+
+    /**
+     * @return int|string
+     */
     function insert_id() {
         return mysqli_insert_id($this->db_id);
     }
+
+    /**
+     * @param string $query_id
+     * @return mixed
+     */
     function get_result_fields($query_id = '') {
         if ($query_id == '') $query_id = $this->query_id;
         while ($field = mysqli_fetch_field($query_id)) {
@@ -135,22 +184,45 @@ final class Db {
         }
         return $fields;
     }
+
+    /**
+     * @param $source
+     * @return string
+     */
     function safesql($source) {
         $config = $this->db_config;
         if (!$this->db_id) $this->connect($config['dbuser'], $config['dbpass'], $config['dbname'], $config['dbhost']);
         return mysqli_real_escape_string($this->db_id, $source);
     }
+
+    /**
+     * @param string $query_id
+     */
     function free($query_id = '') {
         if ($query_id == '') $query_id = $this->query_id;
         @mysqli_free_result($query_id);
     }
+
+    /**
+     * close bd
+     */
     function close() {
         @mysqli_close($this->db_id);
     }
+
+    /**
+     * @return float
+     */
     function get_real_time() {
         list($seconds, $microSeconds) = explode(' ', microtime());
         return ((float)$seconds + (float)$microSeconds);
     }
+
+    /**
+     * @param $error
+     * @param $error_num
+     * @param string $query
+     */
     function display_error($error, $error_num, $query = '') {
         echo 'Ошибка сервера: ' . $query . ' ' . $error_num;
         exit();

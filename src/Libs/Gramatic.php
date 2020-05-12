@@ -11,8 +11,8 @@ use Sura\Contracts\GramaticInterface;
 class Gramatic implements GramaticInterface
 {
 
-    //used to notify
     /**
+     * used to notify
      * @param string $date
      * @param bool $func
      * @param bool $full
@@ -30,10 +30,11 @@ class Gramatic implements GramaticInterface
     }
 
     /*
-    Использовать в любом файле php вот так
-    DeclName($row_users['user_name'], 'rod');
+
     */
     /**
+     *     Использовать в любом файле php вот так
+     * DeclName($row_users['user_name'], 'rod');
      * @param string $name
      * @param string $declination
      * @return string
@@ -217,7 +218,4 @@ class Gramatic implements GramaticInterface
         else
             return declOfNum($num, array(sprintf("%d {$a}",  $num), sprintf("%d {$b}",  $num), sprintf("%d {$c}", $num)));
     }
-
-
-
 }

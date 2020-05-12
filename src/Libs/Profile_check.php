@@ -4,6 +4,10 @@ namespace Sura\Libs;
 
 class Profile_check
 {
+    /**
+     * @param $id
+     * @return bool
+     */
     public static function timezona($id)
     {
         $timezona = array(

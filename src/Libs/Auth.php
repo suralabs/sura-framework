@@ -13,8 +13,11 @@ use Sura\Libs\Settings;
  */
 class Auth
 {
-	
-	public static function index()
+
+    /**
+     * @return array
+     */
+    public static function index()
 	{
 		$db = Db::getDB();
 		$_IP = $db->safesql($_SERVER['REMOTE_ADDR']);
@@ -135,6 +138,9 @@ class Auth
 		return array('user_info' => $user_info, 'logged' => $logged);
 	}
 
+    /**
+     * logout site
+     */
     public static function logout()
     {
         $redirect = false;

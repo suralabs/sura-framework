@@ -6,6 +6,9 @@ namespace Sura\Libs;
 
 class Main
 {
+    /**
+     * @return string
+     */
     public static function headers(){
         $metatags['title'] = (!$metatags['title']) ?  $config['home'] : $metatags['title'];
         $speedbar = ($user_speedbar) ? $user_speedbar : $lang['welcome'] ;
@@ -16,6 +19,9 @@ class Main
         return  $headers;
     }
 
+    /**
+     * @return string
+     */
     public static function js(){
         $checkLang = '';
         $logged = Registry::get('logged');
@@ -36,6 +42,9 @@ class Main
         return $js;
     }
 
+    /**
+     * @return bool|string
+     */
     public static function myid(){
         $logged = Registry::get('logged');
         if ($logged){
@@ -46,6 +55,9 @@ class Main
         }
     }
 
+    /**
+     * @return bool|string
+     */
     public static function home_link(){
         $logged = Registry::get('logged');
         if ($logged){

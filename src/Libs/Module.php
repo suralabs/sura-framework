@@ -12,18 +12,30 @@ use Sura\Libs\Registry;
  */
 class Module implements ModuleInterface
 {
-	public function user_info(){
+    /**
+     * @return unknown|null
+     */
+    public function user_info(){
 	    return Registry::get('user_info');
     }
 
+    /**
+     * @return unknown|null
+     */
     function logged(){
         return Registry::get('logged');
     }
 
+    /**
+     * @return mixed
+     */
     function db(){
         return Db::getDB();
     }
 
+    /**
+     * @return array
+     */
     function get_langs(){
         return langs::get_langs();
     }

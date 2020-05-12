@@ -6,7 +6,12 @@ use Sura\Libs\Templates;
 
 class Tools
 {
-	public static function set_cookie($name, $value, $expires) {
+    /**
+     * @param $name
+     * @param $value
+     * @param $expires
+     */
+    public static function set_cookie($name, $value, $expires) {
 		if( $expires ) {
 			$expires = time() + ($expires * 86400);
 		} else {
@@ -15,22 +20,38 @@ class Tools
 		setcookie($name, $value, $expires, "/", DOMAIN, NULL, TRUE);
     }
 
-	public static function NoAjaxQuery(){
+    /**
+     *
+     */
+    public static function NoAjaxQuery(){
 		if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST')
 			header('Location: /index.php?go=none');
 	}
 
+    /**
+     * @param $v
+     * @return string
+     */
     public static function GetVar($v){
         if(ini_get('magic_quotes_gpc'))
             return stripslashes($v) ;
         return $v;
     }
 
+    /**
+     * @param $id
+     * @param $options
+     * @return string|string[]
+     */
     public static function InstallationSelectedNew($id, $options){
         return str_replace('val="'.$id.'" class="', 'val="'.$id.'" class="active ', $options);
     }
 
     //deprecated
+
+    /**
+     *
+     */
     public static function check_xss(){
         $url = html_entity_decode(urldecode($_SERVER['QUERY_STRING']));
 
@@ -50,6 +71,9 @@ class Tools
         }
     }
 
+    /**
+     * @param $tpl
+     */
     public static function AjaxTpl($tpl){
 //        global $tpl, $config;
 
@@ -57,6 +81,10 @@ class Tools
         echo $tpl->result['info'].$tpl->result['content'];
     }
 
+    /**
+     * @param $userId
+     * @return bool
+     */
     public static function CheckBlackList($userId){
 //        global $user_info;
         $user_info = Registry::get('user_info');
@@ -69,6 +97,11 @@ class Tools
         else
             return false;
     }
+
+    /**
+     * @param $userId
+     * @return bool
+     */
     public static function MyCheckBlackList($userId){
         $user_info = Registry::get('user_info');
 
@@ -80,6 +113,10 @@ class Tools
             return false;
     }
 
+    /**
+     * @param $friendId
+     * @return bool
+     */
     public static function CheckFriends($friendId){
         $user_info = Registry::get('user_info');
 
