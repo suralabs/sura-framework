@@ -9,6 +9,20 @@ use Sura\Cache\Contracts\CacheItemPoolInterface;
 
 class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
 {
+    private string $dir = __DIR__.'/../../../../../app/cache/';
+
+    public function __construct()
+    {
+
+    }
+
+    /**
+     * @param $value
+     */
+    public function dir($value)
+    {
+        $this->dir = $value;
+    }
 
     /**
      * @param $key
@@ -16,7 +30,12 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function getItem($key)
     {
-        return true;
+        $filename = $this->dir.$key.'.tmp';
+        $value = file_get_contents($filename);
+
+        $result = [];
+        $result[$key] = $value;
+        return $result;
     }
 
     /**
@@ -34,7 +53,11 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function hasItem($key)
     {
-        return true;
+        $filename = $this->dir.$key.'.tmp';
+        if (file_exists($filename))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -51,7 +74,12 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function deleteItem($key)
     {
-        return true;
+        $filename = $this->dir.$key.'tmp';
+        if (file_exists($filename)){
+            unlink($filename);
+            return true;
+        }else
+            return true;
     }
 
     /**
@@ -69,6 +97,15 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function save(CacheItemInterface $item)
     {
+        $encodedValues = [];
+        foreach ($item as $key => $value) {
+            $encodedValues[$key] = $value;
+        }
+        $filename = $this->dir.$key.'.tmp';
+        $fp = fopen($filename, 'wb+');
+        fwrite($fp, $value);
+        fclose($fp);
+        //chmod($filename, 0666);
         return true;
     }
 

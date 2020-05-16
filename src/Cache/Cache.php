@@ -5,9 +5,27 @@ namespace Sura\Cache;
 
 
 use Sura\Cache\Contracts\CacheItemInterface;
+use Sura\Cache\Exeption\CacheExeption;
 
 class Cache implements CacheItemInterface
 {
+
+    /**
+     * Cache driver
+     *
+     * @var CacheItemPoolInterface
+     */
+    private $pool;
+
+    public function __construct(CacheItemPoolInterface $pool)
+    {
+        $this->pool = $pool;
+
+        if (!$pool instanceof AdapterInterface) {
+            return;
+        }
+
+    }
 
     /**
      * @return mixed
@@ -18,28 +36,49 @@ class Cache implements CacheItemInterface
     }
 
     /**
+     * @param $key
+     * @param null $default
      * @return mixed
      */
-    public function get()
+    public function get($key, $default = null)
     {
-        return true;
+        try {
+            $item = $this->pool->getItem($key);
+        } catch (CacheException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        return $item->isHit() ? $item->get() : $default;
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function isHit()
+    public function isHit($key)
     {
-        return true;
+        return $this->pool->hasItem($key);
     }
 
     /**
+     * @param $key
      * @param $value
      * @return mixed
      */
-    public function set($value)
+    public function set($key, $value, $ttl = null)
     {
-        return true;
+        try {
+            $f = [];
+            $item = $f($key, $value);
+
+            //$item = $this->pool->getItem($key)->set($value);
+        } catch (CacheException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+//        if (null !== $ttl) {
+//            $item->expiresAfter($ttl);
+//        }
+
+        return $this->pool->save($item);
     }
 
     /**
@@ -58,5 +97,29 @@ class Cache implements CacheItemInterface
     public function expiresAfter($time)
     {
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public function delete($key)
+    {
+        try {
+            return $this->pool->deleteItem($key);
+        } catch (CacheException $e) {
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public function clear()
+    {
+        return $this->pool->clear();
     }
 }
