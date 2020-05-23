@@ -174,4 +174,20 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
     {
         return true;
     }
+
+    /**
+     *
+     */
+    public function __destruct() {
+
+        if($this->connection < 1 ) return;
+
+        if( $this->server ) {
+            if( method_exists( $this->server, 'quit' ) ) {
+                $this->server->quit();
+            } elseif( method_exists( $this->server, 'close' ) ) {
+                $this->server->close();
+            }
+        }
+    }
 }

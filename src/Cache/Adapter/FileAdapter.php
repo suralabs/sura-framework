@@ -19,7 +19,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
     /**
      * @param $value
      */
-    public function dir($value)
+    protected function _dir($value)
     {
         $this->dir = $value;
     }
@@ -30,7 +30,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function getItem($key)
     {
-        $filename = $this->dir.$key.'.tmp';
+        $filename = $this->_dir.$key.'.tmp';
         $value = file_get_contents($filename);
 
         $result = [];
@@ -53,7 +53,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function hasItem($key)
     {
-        $filename = $this->dir.$key.'.tmp';
+        $filename = $this->_dir.$key.'.tmp';
         if (file_exists($filename))
             return true;
         else
@@ -74,7 +74,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function deleteItem($key)
     {
-        $filename = $this->dir.$key.'tmp';
+        $filename = $this->_dir.$key.'tmp';
         if (file_exists($filename)){
             unlink($filename);
             return true;
@@ -101,7 +101,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
         foreach ($item as $key => $value) {
             $encodedValues[$key] = $value;
         }
-        $filename = $this->dir.$key.'.tmp';
+        $filename = $this->_dir.$key.'.tmp';
         $fp = fopen($filename, 'wb+');
         fwrite($fp, $value);
         fclose($fp);
