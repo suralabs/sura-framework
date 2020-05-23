@@ -14,9 +14,14 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
     protected $max_age = null;
     public $connection = null;
 
+    /**
+     * load settings
+     *
+     * @param $config
+     */
     public function init($config)
     {
-        $this->suite_key = md5( DBNAME . PREFIX . SECURE_AUTH_KEY );
+        $this->suite_key = md5( $config['DBNAME'] . $config['PREFIX'] . $config['SECURE_AUTH_KEY'] );
         $this->cache_info_key = md5( $this->suite_key. '_all_info_tags_' );
         $this->server = $this->connect();
 
@@ -43,6 +48,11 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
         if ( $config['clear_cache'] ) $this->max_age = $config['clear_cache'] * 60; else $this->max_age = 86400;
     }
 
+    /**
+     * connect to memcache server
+     *
+     * @return Memcache|Memcached
+     */
     protected function connect() {
         if( class_exists( 'Memcached' ) ) {
             $this->server_type = "memcached";
@@ -135,6 +145,11 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
         return true;
     }
 
+    /**
+     * @param $key_name
+     * @param $key
+     * @return bool
+     */
     protected function _setstoredkeys($key_name, $key) {
 
         if($this->connection < 1 ) return false;
@@ -149,7 +164,12 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
 
     }
 
-    protected function _set( $key, $value) {
+    /**
+     * @param $key
+     * @param $value
+     * @return bool
+     */
+    protected function _set($key, $value) {
         if($this->connection < 1 ) return false;
         if ( $this->server_type == "memcache" ) {
             $this->server->set( $key, $value, null, $this->max_age );
@@ -177,7 +197,7 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
     }
 
     /**
-     *
+     * exit
      */
     public function __destruct() {
 
