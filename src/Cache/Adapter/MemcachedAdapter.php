@@ -124,7 +124,8 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
 
             if($this->connection < 1 ) return false;
 
-            $key_name = md5( $this->suite_key.$key );
+            //$key_name = md5( $this->suite_key.$key );
+            $key_name = $this->hasItem($key);
 
             $this->_set( $key_name, $value );
             $this->_setstoredkeys( $key_name, $key );
