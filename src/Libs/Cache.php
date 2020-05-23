@@ -60,6 +60,10 @@ class Cache implements CacheInterface
 	}
 	public static function mozg_cache($prefix) {
 		$filename = __DIR__.'/../../../../../app/cache/'.$prefix.'.tmp';
-		return file_get_contents($filename);
+		if (file_exists($filename)) {
+			return file_get_contents($filename);
+		}else{
+			return false;
+		}
 	}
 }

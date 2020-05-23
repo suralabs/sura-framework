@@ -9,9 +9,12 @@ use Sura\Libs\Registry;
 
 class Page
 {
-    /**
-     * @param array $params
-     */
+
+    function __construct()
+    {
+
+    }
+
     public static function generate(array $params = array()){
         $config = $params['config'];
 
@@ -114,9 +117,6 @@ class Page
         self::main($params);
     }
 
-    /**
-     * @param array $params
-     */
     public static function main_ajax(array $params){
         //Если есть POST Запрос и значение AJAX, а $ajax не равняется "yes" то не пропускаем
         $logged = $params['logged'];
@@ -164,14 +164,11 @@ class Page
         $tpl->global_clear();
         //$db = Db::getDB();
         //$db->close();
-        //	if($config['gzip'] == 'yes')
-        //		GzipOut();
+        //  if($config['gzip'] == 'yes')
+        //      GzipOut();
         return die();
     }
 
-    /**
-     * @param array $params
-     */
     public static function main(array $params){
         //$tpl = Registry::get('tpl');
         $tpl = $params['tpl'];
@@ -230,7 +227,7 @@ class Page
             $tpl->set_block("'\\[logged\\](.*?)\\[/logged\\]'si","");
             $tpl->set('[not-logged]','');
             $tpl->set('[/not-logged]','');
-            //	$tpl->set('{my-page-link}', '');
+            //  $tpl->set('{my-page-link}', '');
         }
 
         //$check_lang = Registry::get('check_lang');
@@ -255,7 +252,7 @@ class Page
             $tpl->set('{js}', '<script type="text/javascript" src="/js/jquery.lib.js"></script>
         <script type="text/javascript" src="/js/'.$check_lang.'/lang.js"></script>
         <script type="text/javascript" src="/js/main.js"></script>
-        <script type="text/javascript" src="/js/auth.js"></script>');
+        <script type="text/javascript" src="/js/auth.js?=1"></script>');
 
         $tpl->set('{header}', $headers);
         $tpl->set('{info}', $tpl->result['info']);
