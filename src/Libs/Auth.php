@@ -40,7 +40,7 @@ class Auth
 			
 			Registry::set('logged', $logged);
 
-            //$config = include __DIR__.'/../data/config.php';
+            //$config = Settings::loadsettings();
 
 //			if($logged AND !$host_site AND $config['temp'] != 'mobile' AND $_SERVER['REQUEST_URI'] !== '/news/')
 //				header('Location: /news/');
@@ -68,7 +68,6 @@ class Auth
 			}
 
 			$config = Settings::loadsettings();
-            //$config = include __DIR__.'/../../../../../config/config.php';
 
 			//Если юзер нажимает "Главная" и он зашел не с моб версии. то скидываем на его стр.
 			$host_site = $_SERVER['QUERY_STRING'];

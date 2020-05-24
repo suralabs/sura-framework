@@ -9,7 +9,13 @@ class Main
     /**
      * @return string
      */
-    public static function headers(){
+    public static function headers()
+    {
+        $metatags = '';
+        $config = '';
+        $user_speedbar = '';
+        $lang = '';
+
         $metatags['title'] = (!$metatags['title']) ?  $config['home'] : $metatags['title'];
         $speedbar = ($user_speedbar) ? $user_speedbar : $lang['welcome'] ;
 
@@ -22,7 +28,8 @@ class Main
     /**
      * @return string
      */
-    public static function js(){
+    public static function js()
+    {
         $checkLang = '';
         $logged = Registry::get('logged');
 
@@ -45,7 +52,8 @@ class Main
     /**
      * @return bool|string
      */
-    public static function myid(){
+    public static function myid()
+    {
         $logged = Registry::get('logged');
         if ($logged){
             $user_info = Registry::get('user_info');
@@ -58,7 +66,8 @@ class Main
     /**
      * @return bool|string
      */
-    public static function home_link(){
+    public static function home_link()
+    {
         $logged = Registry::get('logged');
         if ($logged){
             return 'news/';

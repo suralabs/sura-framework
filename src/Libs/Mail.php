@@ -1,5 +1,7 @@
 <?php
 
+namespace Sura\Libs;
+
 class Mail {
 	
 	var $site_name = "";

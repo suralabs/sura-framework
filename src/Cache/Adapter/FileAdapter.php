@@ -24,9 +24,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
     public function getItem($key)
     {
         $filename = $this->dir.$key.'.tmp';
-        $value = file_get_contents($filename);
-
-        return array($key => $value);
+        return file_get_contents($filename);
     }
 
     /**

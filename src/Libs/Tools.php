@@ -2,6 +2,8 @@
 
 namespace Sura\Libs;
 
+use Sura\Cache\Adapter\FileAdapter;
+use Sura\Cache\Cache;
 use Sura\Libs\Templates;
 
 class Tools
@@ -90,12 +92,19 @@ class Tools
         $user_info = Registry::get('user_info');
 
 
-        $openMyList = Cache::mozg_cache("user_{$userId}/blacklist");
+       // $openMyList = Cache::mozg_cache("user_{$userId}/blacklist");
 
-        if(stripos($openMyList, "|{$user_info['user_id']}|") !== false)
+        $key = "user_{$userId}/blacklist";
+
+        $Cache = new FileAdapter();
+        $Cache = new Cache($Cache);
+        $item = $Cache->get($key, $default = null);
+
+        if(stripos($item, "|{$user_info['user_id']}|") !== false)
             return true;
         else
             return false;
+
     }
 
     /**
@@ -105,9 +114,14 @@ class Tools
     public static function MyCheckBlackList($userId){
         $user_info = Registry::get('user_info');
 
-        $openMyList = Cache::mozg_cache("user_{$user_info['user_id']}/blacklist");
+        //$openMyList = Cache::mozg_cache("user_{$user_info['user_id']}/blacklist");
+        $key = "user_{$user_info['user_id']}/blacklist";
 
-        if(stripos($openMyList, "|{$userId}|") !== false)
+        $Cache = new FileAdapter();
+        $Cache = new Cache($Cache);
+        $item = $Cache->get($key, $default = null);
+
+        if(stripos($item, "|{$userId}|") !== false)
             return true;
         else
             return false;
@@ -120,9 +134,15 @@ class Tools
     public static function CheckFriends($friendId){
         $user_info = Registry::get('user_info');
 
-        $openMyList = Cache::mozg_cache("user_{$user_info['user_id']}/friends");
+        //$openMyList = Cache::mozg_cache("user_{$user_info['user_id']}/friends");
 
-        if(stripos($openMyList, "u{$friendId}|") !== false)
+        $key = "user_{$user_info['user_id']}/friends";
+
+        $Cache = new FileAdapter();
+        $Cache = new Cache($Cache);
+        $item = $Cache->get($key, $default = null);
+
+        if(stripos($item, "u{$friendId}|") !== false)
             return true;
         else
             return false;
