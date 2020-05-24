@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sura\Cache\Adapter;
-
 
 use Sura\Cache\Contracts\CacheItemInterface;
 use Sura\Cache\Contracts\CacheItemPoolInterface;
@@ -11,15 +9,10 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
 {
     private string $dir = __DIR__.'/../../../../../app/cache/';
 
-    public function __construct()
-    {
-
-    }
-
     /**
      * @param $value
      */
-    protected function _dir($value)
+    public function dir($value)
     {
         $this->dir = $value;
     }
@@ -30,12 +23,10 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function getItem($key)
     {
-        $filename = $this->_dir.$key.'.tmp';
+        $filename = $this->dir.$key.'.tmp';
         $value = file_get_contents($filename);
 
-        $result = [];
-        $result[$key] = $value;
-        return $result;
+        return array($key => $value);
     }
 
     /**
@@ -53,7 +44,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function hasItem($key)
     {
-        $filename = $this->_dir.$key.'.tmp';
+        $filename = $this->dir.$key.'.tmp';
         if (file_exists($filename))
             return true;
         else
@@ -74,7 +65,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function deleteItem($key)
     {
-        $filename = $this->_dir.$key.'tmp';
+        $filename = $this->dir.$key.'tmp';
         if (file_exists($filename)){
             unlink($filename);
             return true;
@@ -95,17 +86,18 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      * @param CacheItemInterface $item
      * @return mixed
      */
-    public function save(CacheItemInterface $item)
+    public function save( $item)
     {
-        $encodedValues = [];
+        //$encodedValues = [];
         foreach ($item as $key => $value) {
-            $encodedValues[$key] = $value;
+            //$encodedValues[$key] = $value;
+
+            $filename = $this->dir.$key.'.tmp';
+            $fp = fopen($filename, 'wb+');
+            fwrite($fp, $value);
+            fclose($fp);
+            //chmod($filename, 0666);
         }
-        $filename = $this->_dir.$key.'.tmp';
-        $fp = fopen($filename, 'wb+');
-        fwrite($fp, $value);
-        fclose($fp);
-        //chmod($filename, 0666);
         return true;
     }
 

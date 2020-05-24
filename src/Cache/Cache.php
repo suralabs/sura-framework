@@ -5,6 +5,7 @@ namespace Sura\Cache;
 
 
 use Sura\Cache\Contracts\CacheItemInterface;
+use Sura\Cache\Contracts\CacheItemPoolInterface;
 use Sura\Cache\Exeption\CacheExeption;
 
 class Cache implements CacheItemInterface
@@ -15,7 +16,7 @@ class Cache implements CacheItemInterface
      *
      * @var CacheItemPoolInterface
      */
-    private $pool;
+    private CacheItemPoolInterface $pool;
 
     public function __construct(CacheItemPoolInterface $pool)
     {
@@ -48,10 +49,11 @@ class Cache implements CacheItemInterface
             throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
 
-        return $item->isHit() ? $item->get() : $default;
+        return $this->isHit($key) ? $this->pool->getItem($key) : $default;
     }
 
     /**
+     * @param $key
      * @return bool
      */
     public function isHit($key)
@@ -62,13 +64,15 @@ class Cache implements CacheItemInterface
     /**
      * @param $key
      * @param $value
+     * @param null $ttl
      * @return mixed
      */
     public function set($key, $value, $ttl = null)
     {
         try {
-            $f = [];
-            $item = $f($key, $value);
+            //$f = [];
+            //$item = ($key, $value);
+            $item = array($key => $value);
 
             //$item = $this->pool->getItem($key)->set($value);
         } catch (CacheException $e) {
