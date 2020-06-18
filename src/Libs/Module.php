@@ -1,7 +1,7 @@
 <?php  
 namespace Sura\Libs;
 
-use Sura\Classes\Db;
+use Sura\Libs\Db;
 use Sura\Contracts\ModuleInterface;
 use Sura\Libs\Langs;
 use Sura\Libs\Registry;
