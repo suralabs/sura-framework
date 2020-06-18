@@ -3,7 +3,7 @@
 
 namespace Sura\Libs;
 
-use Sura\Classes\Db;
+use Sura\Libs\Db;
 use Sura\Libs\Cache;
 use Sura\Libs\Registry;
 
