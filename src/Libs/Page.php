@@ -129,9 +129,11 @@ class Page
         else
             $ajaxSpBar = "$('#speedbar').hide()";
 
-        if (!empty($metatags['title'])){
-            $metatags['title'] = 'title';
-        }
+        $metatags['title'] = $params['title'];
+
+        if (empty($metatags['title']))
+            $metatags['title'] = 'Sura';
+
 
         if($logged){
             $result_ajax = array(
@@ -171,6 +173,16 @@ class Page
 
     public static function main(array $params){
         //$tpl = Registry::get('tpl');
+
+        $metatags['title'] = $params['title'];
+
+        if (empty($metatags['title']))
+            $metatags['title'] = 'Sura';
+
+        $headers = '<title>'.$metatags['title'].'</title>
+<meta name="generator" content="CMS TOOLS" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
+
         $tpl = $params['tpl'];
         $tpl->load_template('main.tpl');
 
@@ -213,6 +225,9 @@ class Page
                 $tpl->set('{new_photos}', '');
 
             //UBM
+            if(empty($params['new_ubm']))
+                $params['new_ubm'] = '';
+
             $tpl->set('{new-ubm}', $params['new_ubm']);
             $tpl->set('{ubm-link}', $params['gifts_link']);
 

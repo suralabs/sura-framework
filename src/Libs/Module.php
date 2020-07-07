@@ -13,21 +13,21 @@ use Sura\Libs\Registry;
 class Module implements ModuleInterface
 {
     /**
-     * @return unknown|null
+     * @return array|null
      */
     public function user_info(){
 	    return Registry::get('user_info');
     }
 
     /**
-     * @return unknown|null
+     * @return array|null
      */
     function logged(){
         return Registry::get('logged');
     }
 
     /**
-     * @return mixed
+     * @return object
      */
     function db(){
         return Db::getDB();

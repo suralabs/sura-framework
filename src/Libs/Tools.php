@@ -25,9 +25,16 @@ class Tools
     /**
      *
      */
-    public static function NoAjaxQuery(){
-		if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST')
-			header('Location: /index.php?go=none');
+    public static function NoAjaxQuery($url = NULL){
+
+		if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
+            if($url !== NULL){
+                header('Location: '.$url);
+            }else{
+                header('Location: /index.php?go=none');
+            }
+        }
+
 	}
 
     /**

@@ -39,7 +39,7 @@ class Application
                 $params
             );
         }else {
-            echo 'error';
+            echo 'error: page not found';
             http_response_code(404);
             die();
         }
