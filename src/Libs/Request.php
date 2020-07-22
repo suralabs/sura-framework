@@ -85,6 +85,17 @@ class Request
         return "";
     }
 
+    /**
+     * 
+     *
+     * @return bool
+     */
+    public static function ajax(){
+        if (isset($_POST['ajax']) AND $_POST['ajax'] == 'yes')
+            return true;
+        else
+            return false;
+    }
 
 
 

@@ -108,7 +108,7 @@ class Page
             $params['notify_count'] = $notify_count;
 
         }
-        if ($_POST['ajax'] == 'yes'){
+        if (isset($_POST['ajax']) AND $_POST['ajax'] == 'yes'){
             if($_SERVER['REQUEST_METHOD'] == 'POST' AND $_POST['ajax'] != 'yes')
                 die('Неизвестная ошибка');
 
@@ -151,7 +151,7 @@ class Page
 //                'new_groups' => $params['new_groups'],
 //                'new_groups_lnk' => $params['new_groups_lnk'],
                 'new_notifications' => $params['notify_count'],
-                'sbar' => $spBar ? $speedbar : '',
+//                'sbar' => $spBar ? $speedbar : '',
                 'content' => $tpl->result['info'].$tpl->result['content']
             );
         }else{
@@ -161,7 +161,7 @@ class Page
                 'content' => $tpl->result['info'].$tpl->result['content']
             );
         }
-
+        header('Content-Type: application/json');
         echo json_encode($result_ajax);
         $tpl->global_clear();
         //$db = Db::getDB();
@@ -206,7 +206,10 @@ class Page
             $tpl->set('{requests-link}', $params['requests_link']);
 
             //Новости
-            $tpl->set('{new-news}', $params['new_news']);
+            if (isset($params['new_news']))
+                $tpl->set('{new-news}', $params['new_news']);
+            else
+                $tpl->set('{new-news}', '');//bug
             $tpl->set('{news-link}', $params['news_link']);
 
             $tpl->set('{notify}',  $params['notify_count']);

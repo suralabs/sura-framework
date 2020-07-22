@@ -2,9 +2,8 @@
 
 namespace Sura\Libs;
 
-use Sura\Contracts\CacheInterface;
 
-class Cache implements CacheInterface
+class Cache
 {
 	public static function creat_system_cache($prefix, $cache_text){
 		$libs_dir = dirname (__FILE__);

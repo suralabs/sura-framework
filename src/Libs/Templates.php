@@ -104,9 +104,9 @@ class Templates {
         global $user_info;
         $groups = explode(',', $groups);
         if ($action) {
-            if (!in_array($user_info['user_group'], $groups)) return "";
+            if (!array_key_exists($user_info['user_group'], $groups)) return "";
         } else {
-            if (in_array($user_info['user_group'], $groups)) return "";
+            if (array_key_exists($user_info['user_group'], $groups)) return "";
         }
         $block = str_replace('\"', '"', $block);
         return $block;
@@ -168,6 +168,7 @@ class Templates {
             $find[] = $key_find;
             $replace[] = $key_replace;
         }
+        if (isset($find))
         $this->copy_template = str_replace($find, $replace, $this->copy_template);
         $this->copy_template = Validation::word_filter($this->copy_template);
         $this->copy_template = preg_replace_callback("#\\{translate=(.+?)\\}#is", function ($matches) {

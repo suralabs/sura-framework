@@ -8,6 +8,40 @@ use Sura\Libs\Templates;
 
 class Tools
 {
+
+    public static function clean_url($url) {
+        if( $url == '' ) return;
+
+        $url = str_replace( "http://", "", strtolower( $url ) );
+        $url = str_replace( "https://", "", $url );
+        if( substr( $url, 0, 4 ) == 'www.' ) $url = substr( $url, 4 );
+        $url = explode( '/', $url );
+        $url = reset( $url );
+        $url = explode( ':', $url );
+        $url = reset( $url );
+
+        return $url;
+    }
+    public static function domain_cookie(){
+
+        $domain_cookie = explode (".", self::clean_url( $_SERVER['HTTP_HOST'] ));
+        $domain_cookie_count = count($domain_cookie);
+        $domain_allow_count = -2;
+
+        if($domain_cookie_count > 2){
+
+            if(in_array($domain_cookie[$domain_cookie_count-2], array('com', 'net', 'org') ))
+                $domain_allow_count = -3;
+
+            if($domain_cookie[$domain_cookie_count-1] == 'ua' )
+                $domain_allow_count = -3;
+
+            $domain_cookie = array_slice($domain_cookie, $domain_allow_count);
+        }
+
+        $domain_cookie = ".".implode(".", $domain_cookie);
+        return $domain_cookie;
+    }
     /**
      * @param $name
      * @param $value
@@ -19,7 +53,8 @@ class Tools
 		} else {
 			$expires = FALSE;
 		}
-		setcookie($name, $value, $expires, "/", DOMAIN, NULL, TRUE);
+        $domain = self::domain_cookie();
+		setcookie($name, $value, $expires, "/", $domain, NULL, TRUE);
     }
 
     /**
@@ -135,6 +170,10 @@ class Tools
     }
 
     /**
+     * check user to blacklist
+     *
+     * true - yes
+     *
      * @param $friendId
      * @return bool
      */

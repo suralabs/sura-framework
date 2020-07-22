@@ -30,10 +30,16 @@ class Auth
 		if(isset($_SESSION['user_id']) > 0){
 			$logged = true;
 			$logged_user_id = intval($_SESSION['user_id']);
-			$user_info = $db->super_query("SELECT notifications_list, user_timezona, user_id, user_email, user_group, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$logged_user_id."'");
+			$user_info = $db->super_query("SELECT user_name, user_lastname, notifications_list, user_timezona, user_id, user_email, user_group, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$logged_user_id."'");
 			//Если есть данные о сесии, но нет инфы о юзере, то выкидываем его
 			if(!$user_info['user_id'])
 				header('Location: /logout/');
+
+			//ava
+            if($user_info['user_photo'])
+                $user_info['ava'] = '/uploads/users/'.$user_info['user_id'].'/50_'.$user_info['user_photo'];
+            else
+                $user_info['ava'] = '/images/no_ava_50.png';
 
 			//Если юзер нажимает "Главная" и он зашел не с моб версии. то скидываем на его стр.
 			$host_site = $_SERVER['QUERY_STRING'];
@@ -50,6 +56,12 @@ class Auth
 		} elseif(isset($_COOKIE['user_id']) > 0 AND $_COOKIE['password'] AND $_COOKIE['hid']){
 			$cookie_user_id = intval($_COOKIE['user_id']);
 			$user_info = $db->super_query("SELECT notifications_list, user_timezona, user_id, user_email, user_group, user_password, user_hid, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$cookie_user_id."'");
+
+			//ava
+            if($user_info['user_photo'])
+                $user_info['ava'] = '/uploads/users/'.$user_info['user_id'].'/50_'.$user_info['user_photo'];
+            else
+                $user_info['ava'] = '/images/no_ava_50.png';
 
 			//Если пароль и HID совпадает то пропускаем
 			if($user_info['user_password'] == $_COOKIE['password'] AND $user_info['user_hid'] == $_COOKIE['password'].md5(md5($_IP))){
@@ -95,7 +107,7 @@ class Auth
             $lang = langs::get_langs();
 
 			//Проверяем правильность e-mail
-			if(Validation::check_email($email) == false) {
+			if(Validation::check_email($email) == false AND $_POST['token'] !== $_SESSION['_mytoken'] || empty($_POST['token'])) {
 				msgbox('', $lang['not_loggin'].'<br /><a href="/restore" onClick="Page.Go(this.href); return false">Забыли пароль?r</a>', 'info_red');
 			} else {
 
