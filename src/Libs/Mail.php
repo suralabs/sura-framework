@@ -31,7 +31,7 @@ class Mail {
 	
 	var $mail_method = 'php';
 	
-	function dle_mail($config, $is_html = false) {
+	function __construct($config, $is_html = false) {
 		$this->mail_method = $config['mail_metod'];
 		
 		$this->from = $config['admin_mail'];
@@ -111,34 +111,24 @@ class Mail {
 		
 		if( ($this->to) and ($this->from) and ($this->subject) ) {
 			if( $this->mail_method != 'smtp' ) {
-
-				if( !@mail( $this->to, $this->subject, $this->message, $this->mail_headers, $this->additional_parameters )  ) {
-
-					if( !@mail( $this->to, $this->subject, $this->message, $this->mail_headers)  ) {
-
+				if( !mail( $this->to, $this->subject, $this->message, $this->mail_headers, $this->additional_parameters )  ) {
+					if( !mail( $this->to, $this->subject, $this->message, $this->mail_headers)  ) {
 						$this->smtp_msg = "PHP Mail Error.";
 						$this->send_error = true;
-
 					}
-
 				}
 			
 			} else {
 				$this->smtp_send();
 			}
-		
 		}
-		
 		$this->mail_headers = "";
-	
 	}
 	
 	function smtp_get_line() {
 		$this->smtp_msg = "";
-		
 		while ( $line = fgets( $this->smtp_fp, 515 ) ) {
 			$this->smtp_msg .= $line;
-			
 			if( substr( $line, 3, 1 ) == " " ) {
 				break;
 			}
@@ -147,12 +137,10 @@ class Mail {
 	
 	function smtp_send() {
 		$this->smtp_fp = @fsockopen( $this->smtp_host, intval( $this->smtp_port ), $errno, $errstr, 30 );
-		
-		if( ! $this->smtp_fp ) {
+				if( ! $this->smtp_fp ) {
 			$this->smtp_error( "Could not open a socket to the SMTP server" );
 			return;
 		}
-		
 		$this->smtp_get_line();
 		
 		$this->smtp_code = substr( $this->smtp_msg, 0, 3 );
@@ -272,7 +260,6 @@ class Mail {
 		$data .= "\n";
 		$data = str_replace( "\n", "\r\n", str_replace( "\r", "", $data ) );
 		$data = str_replace( "\n.\r\n", "\n. \r\n", $data );
-		
 		return $data;
 	}
 }

@@ -6,9 +6,9 @@ class Profile_check
 {
     /**
      * @param $id
-     * @return bool
+     * @return string
      */
-    public static function timezona($id)
+    public static function timezona(int $id)
     {
         $timezona = array(
             0 => 'Europe/Moscow',
@@ -38,8 +38,7 @@ class Profile_check
             24 => 'Australia/Sydney',
             25 => 'Asia/Kamchatka',
         );
-
-        return date_default_timezone_set($timezona[$id]);
-
+        date_default_timezone_set($timezona[$id]);
+        return $timezona[$id];
     }
 }

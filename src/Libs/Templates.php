@@ -15,15 +15,48 @@ namespace Sura\Libs;
 use Sura\Libs\Langs;
 use Sura\Libs\Validation;
 
+/**
+ * Class Templates
+ * @package Sura\Libs
+ */
 class Templates {
+    /**
+     * @var string
+     */
     public $dir = '.';
+    /**
+     * @var null
+     */
     var $template = null;
+    /**
+     * @var null
+     */
     var $copy_template = null;
+    /**
+     * @var array
+     */
     public $data = array();
+    /**
+     * @var array
+     */
     public $block_data = array();
+    /**
+     * @var string[]
+     */
     public $result = array('info' => '', 'vote' => '', 'speedbar' => '', 'content' => '');
+    /**
+     * @var bool
+     */
     public $allow_php_include = true;
+    /**
+     * @var int
+     */
     public $template_parse_time = 0;
+
+    /**
+     * @param $name
+     * @param $var
+     */
     function set($name, $var) {
         if (is_array($var) && count($var)) {
             foreach ($var as $key => $key_var) {
@@ -31,6 +64,11 @@ class Templates {
             }
         } else $this->data[$name] = $var;
     }
+
+    /**
+     * @param $name
+     * @param $var
+     */
     function set_block($name, $var) {
         if (is_array($var) && count($var)) {
             foreach ($var as $key => $key_var) {

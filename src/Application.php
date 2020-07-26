@@ -41,7 +41,7 @@ class Application
         }else {
             echo 'error: page not found';
             http_response_code(404);
-            die();
+//            die();
         }
     }
 
@@ -85,14 +85,14 @@ class Application
             if(($user_info['user_last_visit'] + 60) <= $server_time){
                 $db->query("UPDATE LOW_PRIORITY `users` SET user_logged_mobile = '{$device_user}', user_last_visit = '{$server_time}' {$sql_balance} WHERE user_id = '{$user_info['user_id']}'");
             }
-
-
             return true;
         }
         return true;
     }
 
     /**
+     * old generate tpl
+     *
      * @return Templates
      */
     function view(){

@@ -108,12 +108,8 @@ class Langs {
                 $checkLang = $expLangName[1];
             }
         }
-
-
         Registry::set('myLang', $rMyLang);
         Registry::set('check_lang', $checkLang);
-
         return array('mylang' => $rMyLang, 'check_lang' => $checkLang);
-
     }
 }

@@ -7,14 +7,14 @@ use Sura\Libs\Db;
 use Sura\Libs\Cache;
 use Sura\Libs\Registry;
 
+/**
+ * Class Page
+ * TPL compile
+ *
+ * @package Sura\Libs
+ */
 class Page
 {
-
-    function __construct()
-    {
-
-    }
-
     public static function generate(array $params = array()){
         $config = $params['config'];
 

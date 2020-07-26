@@ -33,7 +33,7 @@ class Auth
 			$user_info = $db->super_query("SELECT user_name, user_lastname, notifications_list, user_timezona, user_id, user_email, user_group, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$logged_user_id."'");
 			//Если есть данные о сесии, но нет инфы о юзере, то выкидываем его
 			if(!$user_info['user_id'])
-				header('Location: /logout/');
+				header('Location: https://'.$_SERVER['HTTP_HOST'].'/logout/');
 
 			//ava
             if($user_info['user_photo'])
@@ -84,7 +84,7 @@ class Auth
 			//Если юзер нажимает "Главная" и он зашел не с моб версии. то скидываем на его стр.
 			$host_site = $_SERVER['QUERY_STRING'];
 			if($logged AND !$host_site AND $config['temp'] != 'mobile')
-				header('Location: /u'.$user_info['user_id']);
+				header('Location: https://'.$_SERVER['HTTP_HOST'].'/u'.$user_info['user_id']);
 				
 			Registry::set('logged', $logged);
 			Registry::set('user_info', $user_info);
@@ -138,14 +138,13 @@ class Auth
                     $config = Settings::loadsettings();
 
                     if($config['temp'] != 'mobile')
-                        header('Location: /u'.$check_user['user_id']);
+                        header('Location: https://'.$_SERVER['HTTP_HOST'].'/u'.$check_user['user_id']);
                     else
-                        header('Location: /');
+                        header('Location: https://'.$_SERVER['HTTP_HOST'].'/');
                 } else
                     msgbox('', $lang['not_loggin'].'<br /><br /><a href="/restore/" onClick="Page.Go(this.href); return false">Забыли пароль?</a>', 'info_red');
 			}
 		}
-
 		return array('user_info' => $user_info, 'logged' => $logged);
 	}
 
@@ -167,7 +166,6 @@ class Auth
         if ($redirect == true){
             header('Location: https://'.$_SERVER['HTTP_HOST'].'/');
         }
-        die();
     }
 }
 

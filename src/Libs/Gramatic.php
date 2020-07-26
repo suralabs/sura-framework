@@ -113,24 +113,20 @@ class Gramatic implements GramaticInterface
         $var = str_replace( ".php", "", $var );
         $var = trim( strip_tags( $var ) );
         $var = preg_replace( "/\s+/ms", "-", $var );
-
         $var = strtr($var, $langtranslit);
 
-        if ( $punkt ) $var = preg_replace( "/[^a-z0-9\_\-.]+/mi", "", $var );
-        else $var = preg_replace( "/[^a-z0-9\_\-]+/mi", "", $var );
-
+        if ( $punkt )
+            $var = preg_replace( "/[^a-z0-9\_\-.]+/mi", "", $var );
+        else
+            $var = preg_replace( "/[^a-z0-9\_\-]+/mi", "", $var );
         $var = preg_replace( '#[\-]+#i', '-', $var );
-
-        if ( $lower ) $var = strtolower( $var );
-
+        if ( $lower )
+            $var = strtolower( $var );
         if( strlen( $var ) > 200 ) {
-
             $var = substr( $var, 0, 200 );
-
-            if( ($temp_max = strrpos( $var, '-' )) ) $var = substr( $var, 0, $temp_max );
-
+            if( ($temp_max = strrpos( $var, '-' )) )
+                $var = substr( $var, 0, $temp_max );
         }
-
         return $var;
     }
 

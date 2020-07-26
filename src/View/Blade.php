@@ -23,7 +23,6 @@ use Sura\View\Compilers\Concerns\CompilesLayouts;
 class Blade
 {
     use CompilesLayouts;
-    //<editor-fold desc="fields">
 
     /** @var int Blade reads if the compiled file has changed. If has changed,then the file is replaced. */
     const MODE_AUTO = 0;
@@ -145,7 +144,7 @@ class Blade
      * Indicates the compile mode.
      * if the constant BLADE_MODE is defined, then it is used instead of this field.
      *
-     * @var int MODE_*
+     * @var int=[Blade::MODE_AUTO,Blade::MODE_DEBUG,Blade::MODE_SLOW,Blade::MODE_FAST][$i]
      */
     protected $mode;
     /** @var int Indicates the number of open switches */
@@ -161,11 +160,6 @@ class Blade
     public static $dictionary = [];
     /** @var array Alias (with or without namespace) of the classes) */
     public $aliasClasses = [];
-
-
-    //</editor-fold>
-
-    //<editor-fold desc="constructor">
 
     /**
      * Bob the constructor.
@@ -229,8 +223,6 @@ class Blade
             }
         }
     }
-    //</editor-fold>
-    //<editor-fold desc="common">
 
     /**
      * Show an error in the web.
@@ -486,8 +478,6 @@ class Blade
         $this->currentRole = $role;
         $this->currentPermission = $permission;
     }
-    //</editor-fold>
-    //<editor-fold desc="compile">
 
     /**
      * run the blade engine. It returns the result of the code.
@@ -889,7 +879,7 @@ class Blade
     public function __call($name, $args)
     {
         if ($name === 'if') {
-            return $this->registerIfStatement(@$args[0], @$args[1]);
+            return $this->registerIfStatement(isset($args[0]) ? $args[0] : null, isset($args[1]) ? $args[1] : null);
         }
         throw new BadMethodCallException("function $name is not defined<br>");
     }
@@ -1180,9 +1170,9 @@ class Blade
      */
     public function csrfIsValid($alwaysRegenerate = false, $tokenId = '_token')
     {
-        if (@$_SERVER['REQUEST_METHOD'] === 'POST' && $alwaysRegenerate === false) {
-            $this->csrf_token = @$_POST[$tokenId]; // ping pong the token.
-            return $this->csrf_token . '|' . $this->ipClient() === @$_SESSION[$tokenId];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $alwaysRegenerate === false) {
+            $this->csrf_token = isset($_POST[$tokenId]) ? $_POST[$tokenId] : null; // ping pong the token.
+            return $this->csrf_token . '|' . $this->ipClient() === (isset($_SESSION[$tokenId]) ? $_SESSION[$tokenId] : null);
         }
 
         if ($this->csrf_token == '' || $alwaysRegenerate) {
@@ -1199,7 +1189,7 @@ class Blade
      */
     public function yieldSection()
     {
-        return @$this->sections[$this->stopSection()];
+        return isset($this->sections[$this->stopSection()]) ? $this->sections[$this->stopSection()] : null;
     }
 
     /**
@@ -2047,9 +2037,6 @@ class Blade
         return $this->phpTag . "while{$expression}: ?>";
     }
 
-    //</editor-fold>
-    //<editor-fold desc="push">
-
     /**
      * default tag used for switch/case
      *
@@ -2252,8 +2239,6 @@ class Blade
         });
         return $methods;
     }
-    //</editor-fold>
-    //<editor-fold desc="compile extras">
 
     /**
      * Compile Blade statements that start with "@".
@@ -2634,14 +2619,6 @@ class Blade
         return $this->phpTag . \trim($segments[0]) . $value . '; ?>';
     }
 
-
-
-
-
-
-
-
-
     /**
      * Compile the auth statements into valid PHP.
      *
@@ -2829,8 +2806,6 @@ class Blade
     {
         return $this->phpTagEcho . "'" . $this->currentUser . "'; ?>";
     }
-    //</editor-fold>
-    //<editor-fold desc="file members">
 
     /**
      * Compile the endunless statements into valid PHP.
@@ -2983,8 +2958,6 @@ class Blade
         }
         return $this->phpTag . "if (empty{$expression}): ?>";
     }
-    //</editor-fold>
-    //<editor-fold desc="Array Functions">
 
     /**
      * Compile the has section statements into valid PHP.
@@ -3026,8 +2999,6 @@ class Blade
     {
         return $this->phpTag . 'endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>';
     }
-    //</editor-fold>
-    //<editor-fold desc="string functions">
 
     /**
      * Compile the end-can statements into valid PHP.
@@ -3089,8 +3060,6 @@ class Blade
     {
         return $expression ? $this->phpTag . "{$expression}; ?>" : $this->phpTag . '';
     }
-    //</editor-fold>
-    //<editor-fold desc="loop functions">
 
     /**
      * Compile end-php statement into valid PHP.
@@ -3141,7 +3110,7 @@ class Blade
         $expression = $this->stripParentheses($expression);
         $ex = $this->stripParentheses($expression);
         $exp = \explode(',', $ex);
-        $file = $this->stripQuotes(@$exp[0]);
+        $file = $this->stripQuotes(isset($exp[0])? $exp[0] : null);
         $fileC = $this->getCompiledFile($file);
         if (!@\file_exists($fileC)) {
             // if the file doesn't exist then it's created
@@ -3283,8 +3252,6 @@ class Blade
         }
         return '';
     }
-
-    //<editor-fold desc="setter and getters">
 
     /**
      * Get the contents of a file.
@@ -3586,8 +3553,6 @@ class Blade
 
         return ($num <= 1) ? $this->_e($phrase) : $this->_e($phrases);
     }
-
-    //<editor-fold desc="compile">
 
     /**
      * Used for @_e directive.

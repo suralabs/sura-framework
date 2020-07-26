@@ -6,9 +6,16 @@ use Sura\Cache\Adapter\FileAdapter;
 use Sura\Cache\Cache;
 use Sura\Libs\Templates;
 
+/**
+ * Class Tools
+ * @package Sura\Libs
+ */
 class Tools
 {
 
+    /**
+     * @param $url
+     */
     public static function clean_url($url) {
         if( $url == '' ) return;
 
@@ -22,6 +29,10 @@ class Tools
 
         return $url;
     }
+
+    /**
+     * @return string
+     */
     public static function domain_cookie(){
 
         $domain_cookie = explode (".", self::clean_url( $_SERVER['HTTP_HOST'] ));
@@ -61,16 +72,30 @@ class Tools
      *
      */
     public static function NoAjaxQuery($url = NULL){
-
 		if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
             if($url !== NULL){
                 header('Location: '.$url);
             }else{
-                header('Location: /index.php?go=none');
+                header('Location: https://'.$_SERVER['HTTP_HOST'].'/none/');
             }
         }
-
 	}
+
+    /**
+     * @param null $url
+     */
+    public static function NoAjaxRedirect($url = NULL){
+        $ajax = (isset($_POST['ajax'])) ? 'yes' : 'no';
+        if($ajax == 'yes')
+        if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
+            if($url !== NULL){
+                header('Location: '.$url);
+            }else{
+                header('Location: https://'.$_SERVER['HTTP_HOST'].'/none/');
+            }
+        }
+    }
+
 
     /**
      * @param $v
@@ -94,7 +119,7 @@ class Tools
     //deprecated
 
     /**
-     *
+     * check xss
      */
     public static function check_xss(){
         $url = html_entity_decode(urldecode($_SERVER['QUERY_STRING']));
@@ -116,6 +141,8 @@ class Tools
     }
 
     /**
+     * old
+     *
      * @param $tpl
      */
     public static function AjaxTpl($tpl){
@@ -131,6 +158,8 @@ class Tools
      */
     public static function CheckBlackList($userId){
 //        global $user_info;
+        return false;
+
         $user_info = Registry::get('user_info');
 
 
@@ -146,6 +175,7 @@ class Tools
             return true;
         else
             return false;
+
 
     }
 

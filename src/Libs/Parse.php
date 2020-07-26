@@ -11,6 +11,8 @@
 	Данный код защищен авторскими правами
 */
 
+use Sura\Libs\Settings;
+
 class Parse{
 
     /**
@@ -41,9 +43,7 @@ class Parse{
 			$source = preg_replace("#\\[photo\\](.*?)\\[/photo\\]#ies", "\$this->BBphoto('\\1', '{$preview}')", $source);
 			$source = preg_replace("#\\[link\\](.*?)\\[/link\\]#ies", "\$this->BBlink('\\1')", $source);
 		}
-		
 		return $source;
-		
 	}
 
     /**
@@ -57,41 +57,41 @@ class Parse{
 		$exp = explode('|', $source);
 		$home_url = $config['home_url'];
 
-		if(stripos($source, "{$exp[0]}|{$exp[1]}|{$home_url}") !== false){
+		if(stripos($source, "{$exp['0']}|{$exp['1']}|{$home_url}") !== false){
 			
-			if($exp[3])
-				if($exp[3] > 175)
+			if($exp['3'])
+				if($exp['3'] > 175)
 					$width = "width=\'175\'";
 				else
 					$width = "width=\'{$exp[3]}\'";
 					
-			if($exp[4])
-				if($exp[4] > 131)
+			if($exp['4'])
+				if($exp['4'] > 131)
 					$height = "height=\'131\'";
 				else
-					$height = "height=\'{$exp[4]}\'";
+					$height = "height=\'{$exp['4']}\'";
 			
-			if($exp[5])
+			if($exp['5'])
 				$border = 'notes_videoborder';
 				
-			if($exp[6])
+			if($exp['6'])
 				$blank = 'target="_blank"';
 			else
-				$blank = "onClick=\"videos.show({$exp[1]}, this.href, \'/notes/view/{note-id}\'); return false\"";
+				$blank = "onClick=\"videos.show({$exp['1']}, this.href, \'/notes/view/{note-id}\'); return false\"";
 			
-			if($exp[7] == 1)
+			if($exp['7'] == 1)
 				$pos = "align=\"left\"";
-			elseif($exp[7] == 2)
+			elseif($exp['7'] == 2)
 				$pos = "align=\"right\"";
 			else
 				$pos = "";
 			
 			if(!$preview){
-				$link = "<a href=\"/video{$exp[0]}_{$exp[1]}_sec=notes/id={note-id}\" {$blank}>";
+				$link = "<a href=\"/video{$exp['0']}_{$exp['1']}_sec=notes/id={note-id}\" {$blank}>";
 				$slink = "</a>";
 			}
 
-			$source = "<!--video:{$source}-->{$link}<img src=\"{$exp[2]}\" {$width} {$height} {$pos} class=\"notes_videopad {$border}\" />{$slink}<!--/video-->";
+			$source = "<!--video:{$source}-->{$link}<img src=\"{$exp['2']}\" {$width} {$height} {$pos} class=\"notes_videopad {$border}\" />{$slink}<!--/video-->";
 		}
 		
 		return $source;
@@ -103,61 +103,60 @@ class Parse{
      * @return string
      */
     function BBphoto($source, $preview = false){
-		global $config;
-		
+        $config = Settings::loadsettings();
 		$exp = explode('|', $source);
 		$home_url = $config['home_url'];
 
-		if(stripos($source, "{$exp[0]}|{$exp[1]}|{$home_url}") !== false){
+		if(stripos($source, "{$exp['0']}|{$exp['1']}|{$home_url}") !== false){
 			
-			if($exp[3] > 160)
-				$exp[2] = str_replace('/c_', '/', $exp[2]);
+			if($exp['3'] > 160)
+				$exp['2'] = str_replace('/c_', '/', $exp['2']);
 				
-			if($exp[4] > 120)
-				$exp[2] = str_replace('/c_', '/', $exp[2]);
+			if($exp['4'] > 120)
+				$exp['2'] = str_replace('/c_', '/', $exp['2']);
 				
-			if($exp[3])
-				if($exp[3] > 740)
+			if($exp['3'])
+				if($exp['3'] > 740)
 					$width = "width=\'740\'";
 				else
-					$width = "width=\'{$exp[3]}\'";
+					$width = "width=\'{$exp['3']}\'";
 					
-			if($exp[4])
-				if($exp[4] > 547)
+			if($exp['4'])
+				if($exp['4'] > 547)
 					$height = "height=\'547\'";
 				else
-					$height = "height=\'{$exp[4]}\'";
+					$height = "height=\'{$exp['4']}\'";
 			
-			if($exp[5])
+			if($exp['5'])
 				$border = 'notes_videoborder';
 				
-			if($exp[6])
+			if($exp['6'])
 				$blank = 'target="_blank"';
 			else
 				$blank = "onClick=\"Photo.Show(this.href); return false\"";
 			
-			if($exp[7] == 1)
+			if($exp['7'] == 1)
 				$pos = "align=\"left\"";
-			elseif($exp[7] == 2)
+			elseif($exp['7'] == 2)
 				$pos = "align=\"right\"";
 			else
 				$pos = "";
 				
-			if($exp[8] AND !$preview AND $exp[0] AND $exp[1]){
-				$link = "<a href=\"/photo{$exp[0]}_{$exp[1]}_sec=notes/id={note-id}\" {$blank}>";
+			if($exp['8'] AND !$preview AND $exp['0'] AND $exp['1']){
+				$link = "<a href=\"/photo{$exp['0']}_{$exp['1']}_sec=notes/id={note-id}\" {$blank}>";
 				$elink = "</a>";
-			} elseif($exp[8]) {
-				$link = "<a href=\"{$exp[2]}\" target=\"_blank\">";
+			} elseif($exp['8']) {
+				$link = "<a href=\"{$exp['2']}\" target=\"_blank\">";
 				$elink = "</a>";
 			} else {
 				$link = '';
 				$elink = '';
 			}
 			
-			if($exp[0] AND $exp[1])
-				$source = "<!--photo:{$source}-->{$link}<img class=\"notes_videopad {$border}\" src=\"{$exp[2]}\" {$width} {$height} {$pos} />{$elink}<!--/photo-->";
+			if($exp['0'] AND $exp['1'])
+				$source = "<!--photo:{$source}-->{$link}<img class=\"notes_videopad {$border}\" src=\"{$exp['2']}\" {$width} {$height} {$pos} />{$elink}<!--/photo-->";
 			else
-				$source = "<!--photo:{$source}-->{$link}<img class=\"notes_videopad {$border}\" src=\"{$exp[2]}\" {$width} {$height} {$pos} />{$elink}<!--/photo-->";
+				$source = "<!--photo:{$source}-->{$link}<img class=\"notes_videopad {$border}\" src=\"{$exp['2']}\" {$width} {$height} {$pos} />{$elink}<!--/photo-->";
 		}
 		
 		return $source;
@@ -170,15 +169,14 @@ class Parse{
     function BBlink($source){
 		$exp = explode('|', $source);
 		
-		if($exp[0]){
-			if(!$exp[1])
-				$exp[1] = $exp[0];
+		if($exp['0']){
+			if(!$exp['1'])
+				$exp['1'] = $exp['0'];
 			
-			$exp[0] = str_replace(':', '', $exp[0]);
+			$exp['0'] = str_replace(':', '', $exp[0]);
 			
-			$source = "<!--link:{$source}--><a href=\"{$exp[0]}\" target=\"_blank\">{$exp[1]}</a><!--/link-->";
+			$source = "<!--link:{$source}--><a href=\"{$exp['0']}\" target=\"_blank\">{$exp['1']}</a><!--/link-->";
 		}
-		
 		return $source;
 	}
 
@@ -207,9 +205,7 @@ class Parse{
 			$source = preg_replace("#\\<!--photo:(.*?)\\<!--/photo-->#ies", "\$this->BBdecodePhoto('\\1')", $source);
 			$source = preg_replace("#\\<!--link:(.*?)\\<!--/link-->#ies", "\$this->BBdecodeLink('\\1')", $source);
 		}
-		
 		return $source;
-	
 	}
 
     /**
@@ -218,7 +214,7 @@ class Parse{
      */
     function BBdecodePhoto($source){
 		$start = explode('-->', $source);
-		$source = "[photo]{$start[0]}[/photo]";
+		$source = "[photo]{$start['0']}[/photo]";
 		return $source;
 	}
 
@@ -228,7 +224,7 @@ class Parse{
      */
     function BBdecodeVideo($source){
 		$start = explode('-->', $source);
-		$source = "[video]{$start[0]}[/video]";
+		$source = "[video]{$start['0']}[/video]";
 		return $source;
 	}
 
@@ -238,9 +234,8 @@ class Parse{
      */
     function BBdecodeLink($source){
 		$start = explode('-->', $source);
-		$source = "[link]{$start[0]}[/link]";
+		$source = "[link]{$start['0']}[/link]";
 		return $source;
 	}
-
 }
 ?>
