@@ -15,28 +15,32 @@ class Module implements ModuleInterface
     /**
      * @return array|null
      */
-    public function user_info(){
+    public function user_info() : string|array|null
+    {
 	    return Registry::get('user_info');
     }
 
     /**
      * @return array|null
      */
-    function logged(){
+    function logged() : string|null
+    {
         return Registry::get('logged');
     }
 
     /**
      * @return object
      */
-    function db(){
+    function db() : null|Db
+    {
         return Db::getDB();
     }
 
     /**
      * @return array
      */
-    function get_langs(){
+    function get_langs() : array
+    {
         return langs::get_langs();
     }
 }

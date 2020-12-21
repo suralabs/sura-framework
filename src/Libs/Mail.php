@@ -30,7 +30,12 @@ class Mail {
 	var $eol = "\n";
 	
 	var $mail_method = 'php';
-	
+
+    /**
+     * Mail constructor.
+     * @param $config
+     * @param false $is_html
+     */
 	function __construct($config, $is_html = false) {
 		$this->mail_method = $config['mail_metod'];
 		
@@ -47,7 +52,10 @@ class Mail {
 		
 		$this->html_mail = $is_html;
 	}
-	
+
+    /**
+     *
+     */
 	function compile_headers() {
 		
 		$this->subject = "=?" . $this->charset . "?b?" . base64_encode( $this->subject ) . "?=";
@@ -86,7 +94,12 @@ class Mail {
 		$this->mail_headers .= "X-Mailer: DLE PHP" . $this->eol;
 	
 	}
-	
+
+    /**
+     * @param $to
+     * @param $subject
+     * @param $message
+     */
 	function send($to, $subject, $message) {
 		$this->to = preg_replace( "/[ \t]+/", "", $to );
 		$this->from = preg_replace( "/[ \t]+/", "", $this->from );
@@ -124,7 +137,10 @@ class Mail {
 		}
 		$this->mail_headers = "";
 	}
-	
+
+    /**
+     *
+     */
 	function smtp_get_line() {
 		$this->smtp_msg = "";
 		while ( $line = fgets( $this->smtp_fp, 515 ) ) {
@@ -134,7 +150,10 @@ class Mail {
 			}
 		}
 	}
-	
+
+    /**
+     *
+     */
 	function smtp_send() {
 		$this->smtp_fp = @fsockopen( $this->smtp_host, intval( $this->smtp_port ), $errno, $errstr, 30 );
 				if( ! $this->smtp_fp ) {
@@ -236,7 +255,11 @@ class Mail {
 			return;
 		}
 	}
-	
+
+    /**
+     * @param $cmd
+     * @return bool
+     */
 	function smtp_send_cmd($cmd) {
 		$this->smtp_msg = "";
 		$this->smtp_code = "";
@@ -249,13 +272,20 @@ class Mail {
 		
 		return $this->smtp_code == "" ? FALSE : TRUE;
 	}
-	
+
+    /**
+     * @param string $err
+     */
 	function smtp_error($err = "") {
 		$this->smtp_msg = $err;
 		$this->send_error = true;
 		return;
 	}
-	
+
+    /**
+     * @param $data
+     * @return string|string[]
+     */
 	function smtp_crlf_encode($data) {
 		$data .= "\n";
 		$data = str_replace( "\n", "\r\n", str_replace( "\r", "", $data ) );

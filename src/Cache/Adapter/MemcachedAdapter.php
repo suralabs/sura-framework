@@ -4,6 +4,7 @@ namespace Sura\Cache\Adapter;
 
 use Sura\Cache\Contracts\CacheItemInterface;
 use Sura\Cache\Contracts\CacheItemPoolInterface;
+use Sura\Cache\Exeption\InvalidArgumentException;
 
 class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
 {
@@ -21,18 +22,19 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function init($config)
     {
-        $this->suite_key = md5( $config['DBNAME'] . $config['PREFIX'] . $config['SECURE_AUTH_KEY'] );
+        $this->suite_key = md5( $config['dbname'] . $config['prefix'] . $config['secure_auth_key'] );
         $this->cache_info_key = md5( $this->suite_key. '_all_info_tags_' );
+
         $this->server = $this->connect();
 
         if($this->connection !== -1 ) {
             $memcache_server = explode(":", $config['memcache_server']);
             $this->connection = 1;
-            if ($memcache_server[0] == 'unix') {
+            if ($memcache_server['0'] == 'unix') {
                 $memcache_server = array($config['memcache_server'], 0);
             }
 
-            if ( !$this->server->addServer($memcache_server[0], $memcache_server[1]) ) {
+            if ( !$this->server->addServer($memcache_server['0'], $memcache_server['1']) ) {
                 $this->connection = 0;
             }
 
@@ -45,7 +47,10 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
             }
         }
 
-        if ( $config['clear_cache'] ) $this->max_age = $config['clear_cache'] * 60; else $this->max_age = 86400;
+        if ( $config['clear_cache'] )
+            $this->max_age = $config['clear_cache'] * 60;
+        else
+            $this->max_age = 86400;
     }
 
     /**
@@ -72,11 +77,15 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function getItem($key)
     {
-        if($this->connection < 1 ) return false;
+        if($this->connection < 1 )
+            return false;
 
         $key = $this->hasItem($key);
-
-        return $this->server->get($key);
+        try {
+            return $this->server->get($key);
+        }catch (CacheException $e){
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 
     /**
@@ -92,7 +101,7 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
      * @param $key
      * @return mixed
      */
-    public function hasItem($key)
+    public function hasItem($key) : bool
     {
         return $key = md5( $this->suite_key.$key );
     }
@@ -111,7 +120,7 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function deleteItem($key)
     {
-        return true;
+        return $this->server->delete($key);
     }
 
     /**
@@ -127,14 +136,14 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
      * @param CacheItemInterface $item
      * @return mixed
      */
-    public function save(CacheItemInterface $item)
+    public function save($item)
     {
-        $encodedValues = [];
+//        $encodedValues = [];
         foreach ($item as $key => $value) {
 
-            if($this->connection < 1 ) return false;
+            if($this->connection < 1 )
+                return false;
 
-            //$key_name = md5( $this->suite_key.$key );
             $key_name = $this->hasItem($key);
 
             $this->_set( $key_name, $value );
@@ -152,7 +161,8 @@ class MemcachedAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     protected function _setstoredkeys($key_name, $key) {
 
-        if($this->connection < 1 ) return false;
+        if($this->connection < 1 )
+            return false;
 
         $cache_keys = json_decode($this->server->get($this->cache_info_key), true);
 

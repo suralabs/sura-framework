@@ -6,17 +6,34 @@ namespace Sura\Libs;
 
 class Request
 {
+    /**
+     * Request constructor.
+     * @param array $get
+     * @param array $post
+     * @param array $files
+     * @param array $cookie
+     * @param array $session
+     * @param $request
+     * @param array $server
+     * @param array $header
+     */
+    public function __construct(
+        public array $get = array(),
+        public array $post = array(),
+        public array $files = array(),
+        public array $cookie = array(),
+        public array $session = array(),
+        public array $request = array(),
+        public array $server = array(),
+        public array $header = array()
+    )
+    {
 
-    public $get = array();
-    public $post = array();
-    public $files = array();
-    public $cookie = array();
-    public $session = array();
-    public $request;
-    public $server = array();
+    }
 
-    public $header = array();
-
+    /**
+     *
+     */
     function setGlobal()
     {
         /**
@@ -37,6 +54,9 @@ class Request
         $this->request = $_REQUEST = array_merge($this->get, $this->post, $this->cookie);
     }
 
+    /**
+     * @return mixed
+     */
     function getGlobal()
     {
         return $this->request;
@@ -54,16 +74,25 @@ class Request
         $this->request = $_REQUEST;
     }
 
+    /**
+     *
+     */
     function unsetGlobal()
     {
         $_REQUEST = $_SESSION = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
     }
 
+    /**
+     * @return bool
+     */
     function isWebSocket()
     {
         return isset($this->header['Upgrade']) && strtolower($this->header['Upgrade']) == 'websocket';
     }
 
+    /**
+     * @return mixed|string
+     */
     function getClientIP()
     {
         if (isset($this->server["HTTP_X_REAL_IP"]) and strcasecmp($this->server["HTTP_X_REAL_IP"], "unknown"))
@@ -97,6 +126,14 @@ class Request
             return false;
     }
 
+    public static function https()
+    {
+        if($_SERVER['SERVER_PORT'] != 443) {
+            return false;
+        }else{
+            return true;
+        }
+    }
 
 
 

@@ -9,15 +9,15 @@ use Sura\Libs\Settings;
 
 class Router
 {
-    private static $routes = [];
+    private static array $routes = [];
 
-    private static $requestUri;
+    private static string $requestUri;
 
-    private static $requestMethod;
+    private static string $requestMethod;
 
     private static $requestHandler;
 
-    private static $params = [];
+    private static array|null $params = [];
 
     private static $placeholders = [
         ':seg' => '([^\/]+)',
@@ -25,10 +25,15 @@ class Router
         ':any'  => '(.+)'
     ];
 
-    private static  $controllerName;
+    private static string $controllerName;
     private static  $actionName;
 
-    public function __construct($uri, $method = 'GET')
+    /**
+     * Router constructor.
+     * @param $uri
+     * @param string $method
+     */
+    public function __construct(string $uri, string $method = 'GET')
     {
         self::$requestUri = $uri;
         self::$requestMethod = $method;
@@ -118,9 +123,9 @@ class Router
 
     /**
      * Request params.
-     * @return array
+     * @return string
      */
-    public function getControllerName()
+    public function getControllerName() : string
     {
         return self::$controllerName;
     }
@@ -129,7 +134,7 @@ class Router
      * Request params.
      * @return array
      */
-    public  function getActionName()
+    public  function getActionName() : string
     {
         return self::$actionName;
     }
@@ -143,7 +148,7 @@ class Router
      * @param mixed $handler Any callable or string with controller classname and action method like "ControllerClass@actionMethod"
      * @return Router
      */
-    public function add($route, $handler = null)
+    public function add(array|string $route, $handler = null) : Router
     {
         if ($handler !== null && !is_array($route)) {
             $route = array($route => $handler);
@@ -156,7 +161,7 @@ class Router
      * Process requested URI.
      * @return bool
      */
-    public function isFound()
+    public function isFound() : bool
     {
         $uri = $this->getRequestUri();
 
@@ -194,7 +199,7 @@ class Router
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function executeHandler($handler = null, $params = null)
+    public function executeHandler($handler = null, $params = null) : callable|bool|null
     {
         if ($handler === null) {
              throw new InvalidArgumentException(
@@ -209,13 +214,13 @@ class Router
         // execute action in controllers
         if (strpos($handler, '@')) {
             $ca = explode('@', $handler);
-            self::$controllerName = $ca[0];
-            $ModName = strtolower( str_replace('Controller', '', $ca[0]) );
+            self::$controllerName = $ca['0'];
+            $ModName = strtolower( str_replace('Controller', '', $ca['0']) );
 
 //            Registry::set('ModName', $ModName); //main||manager||...
 
             $controllername = self::getController();
-            $action = $ca[1];
+            $action = $ca['1'];
             // self::$actionName = $ca[1];//delete
             $dir_name = ucfirst($ModName);
 
@@ -234,9 +239,13 @@ class Router
 
                 }
         }
+        return true;
     }
 
-    public function getController()
+    /**
+     * @return string
+     */
+    public function getController() : string
     {
         $ctrlName = self::$controllerName;
 

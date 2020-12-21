@@ -3,6 +3,13 @@
 namespace Sura\Libs;
 
 
+/**
+ * Class Cache
+ *
+ * DEPRECATED
+ *
+ * @package Sura\Libs
+ */
 class Cache
 {
 	public static function creat_system_cache($prefix, $cache_text){

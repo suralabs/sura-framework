@@ -8,6 +8,9 @@ namespace Sura\Libs;
 {
     private int $start_time;
 
+     /**
+      * @return int
+      */
 	public function start():int
     {
 		$mtime = microtime();
@@ -17,6 +20,9 @@ namespace Sura\Libs;
 		return true;
 	}
 
+     /**
+      * @return int
+      */
 	public function stop():int
     {
 		$mtime = microtime();

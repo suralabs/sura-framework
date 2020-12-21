@@ -4,10 +4,11 @@ namespace Sura\Cache\Adapter;
 
 use Sura\Cache\Contracts\CacheItemInterface;
 use Sura\Cache\Contracts\CacheItemPoolInterface;
+use Sura\Cache\Exeption\InvalidArgumentException;
 
 class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
 {
-    private string $dir = __DIR__.'/../../../../../app/cache/';
+    private string $dir = __DIR__.'/../../../../../../app/cache/';
 
     /**
      * @param $value
@@ -23,8 +24,18 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function getItem($key)
     {
-        $filename = $this->dir.$key.'.tmp';
-        return file_get_contents($filename);
+        try {
+            $filename = $this->dir.$key.'.tmp';
+            if (file_exists($filename))
+                return file_get_contents($filename);
+            else{
+                throw new InvalidArgumentException('item not found');
+                return false;
+            }
+        }catch (CacheException $e){
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
+        }
+
     }
 
     /**
@@ -46,6 +57,7 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
         if (file_exists($filename))
             return true;
         else
+            throw new Exception('item not found');
             return false;
     }
 
@@ -63,12 +75,15 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
      */
     public function deleteItem($key)
     {
-        $filename = $this->dir.$key.'tmp';
+        $filename = $this->dir.$key.'.tmp';
+        unlink($filename);
         if (file_exists($filename)){
-            unlink($filename);
-            return true;
+            throw new InvalidArgumentException('item found');
+            return false;
         }else
+        {
             return true;
+        }
     }
 
     /**
@@ -88,13 +103,12 @@ class FileAdapter extends AbstractAdapter implements CacheItemPoolInterface
     {
         //$encodedValues = [];
         foreach ($item as $key => $value) {
-            //$encodedValues[$key] = $value;
-
             $filename = $this->dir.$key.'.tmp';
-            $fp = fopen($filename, 'wb+');
-            fwrite($fp, $value);
-            fclose($fp);
+            file_put_contents($filename, $value);
             //chmod($filename, 0666);
+            if (!file_exists($filename)){
+                throw new InvalidArgumentException('item not found');
+            }
         }
         return true;
     }

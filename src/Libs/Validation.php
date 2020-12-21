@@ -1,7 +1,7 @@
 <?php
 
 namespace Sura\Libs;
-//System\Libs\Validation::
+
 use phpDocumentor\Reflection\Types\Integer;
 use Sura\Classes\Db;
 
@@ -103,7 +103,7 @@ class Validation
      * @param $user_name
      * @return bool
      */
-    public static function check_name($user_name)
+    public static function check_name(string $user_name)
     {
         if (empty($user_name))
             return false;
@@ -120,7 +120,7 @@ class Validation
      * @param $password_second
      * @return bool
      */
-    public static function check_password($password_first, $password_second)
+    public static function check_password(string $password_first, string $password_second) : string|bool
     {
         if (empty($password_first) or empty($password_second))
             return false;
@@ -134,7 +134,7 @@ class Validation
      * @param $email
      * @return bool
      */
-    public static function check_email($email)
+    public static function check_email(string $email) : string|bool
     {
         if (empty($email))
             return false;
@@ -304,6 +304,7 @@ class Validation
      * @param $ips
      * @return bool|mixed
      */
+    //#[Deprecated]
     public static function check_ip_old(array $ips) :string
     {
 		$_IP = $_SERVER['REMOTE_ADDR'];
@@ -433,7 +434,7 @@ class Validation
      * @param $str
      * @return mixed
      */
-    static function string($str)
+    static function string(string $str) : string
     {
         return filter_var($str, FILTER_DEFAULT);
     }
@@ -442,7 +443,8 @@ class Validation
      * @param $binary_string
      * @return false|int
      */
-    static function strlen_8bit($binary_string) {
+    static function strlen_8bit($binary_string) : false|int
+    {
         if (function_exists('mb_strlen')) {
             return mb_strlen($binary_string, '8bit');
         }
@@ -455,7 +457,8 @@ class Validation
      * @param $length
      * @return false|string
      */
-    static function substr_8bit($binary_string, $start, $length) {
+    static function substr_8bit($binary_string, $start, $length) : false|string
+    {
         if (function_exists('mb_substr')) {
             return mb_substr($binary_string, $start, $length, '8bit');
         }

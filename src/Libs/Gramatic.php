@@ -135,7 +135,7 @@ class Gramatic implements GramaticInterface
      * @param array $titles
      * @return mixed
      */
-    public static function declOfNum($number, $titles)
+    public static function declOfNum(int $number, array $titles) : string
     {
         $cases = array(2, 0, 1, 1, 1, 2);
         return $titles[ ($number % 100 > 4 AND $number % 100 < 20)? 2 : $cases[min($number % 10, 5)] ];

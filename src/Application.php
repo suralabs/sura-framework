@@ -17,7 +17,7 @@ class Application
      *
      * @return string
      */
-    public function version()
+    public function version() : string
     {
         return static::VERSION;
     }
@@ -31,17 +31,16 @@ class Application
      */
     function routing($params){
         $router = Router::fromGlobals();
-        require __DIR__ . '/../../../../routes/web.php';
+        $routers =  require __DIR__ . '/../../../../routes/web.php';
+        $router->add($routers);
         if ($router->isFound()) {
             $router->executeHandler(
                 $router->getRequestHandler(),
-//                $router->getParams()
                 $params
             );
         }else {
             echo 'error: page not found';
             http_response_code(404);
-//            die();
         }
     }
 
@@ -51,15 +50,12 @@ class Application
      */
     function user_online($params){
 
-        //$logged = Registry::get('logged');
         $logged = $params['user']['logged'];
 
         //Елси юзер залогинен то обновляем последнюю дату посещения на личной стр
         if($logged){
-            //$user_info = Registry::get('user_info');
             $user_info = $params['user']['user_info'];
             $db = Db::getDB();
-            //$db = $params['db'];
 
             //Начисления 1 убм.
             if(!$user_info['user_lastupdate']) $user_info['user_lastupdate'] = 1;
@@ -80,26 +76,17 @@ class Application
                 $check_smartphone = false;
             }
 
-            if($check_smartphone) $device_user = 1;
-            else $device_user = 0;
+            if($check_smartphone) {
+                $device_user = 1;
+            }
+            else {
+                $device_user = 0;
+            }
             if(($user_info['user_last_visit'] + 60) <= $server_time){
                 $db->query("UPDATE LOW_PRIORITY `users` SET user_logged_mobile = '{$device_user}', user_last_visit = '{$server_time}' {$sql_balance} WHERE user_id = '{$user_info['user_id']}'");
             }
             return true;
         }
         return true;
-    }
-
-    /**
-     * old generate tpl
-     *
-     * @return Templates
-     */
-    function view(){
-        $config = Settings::loadsettings();
-        $tpl = new Templates();
-        $tpl->dir = __DIR__.'/../../../../templates/'.$config['temp'];
-        Registry::set('tpl', $tpl);
-        return $tpl;
     }
 }

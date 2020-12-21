@@ -9,7 +9,7 @@ class Main
     /**
      * @return string
      */
-    public static function headers()
+    public static function headers() : string
     {
         $metatags = '';
         $config = '';
@@ -28,7 +28,7 @@ class Main
     /**
      * @return string
      */
-    public static function js()
+    public static function js() : string
     {
         $checkLang = '';
         $logged = Registry::get('logged');
@@ -52,7 +52,7 @@ class Main
     /**
      * @return bool|string
      */
-    public static function myid()
+    public static function myid() : bool|string
     {
         $logged = Registry::get('logged');
         if ($logged){
@@ -66,7 +66,7 @@ class Main
     /**
      * @return bool|string
      */
-    public static function home_link()
+    public static function home_link() : bool|string
     {
         $logged = Registry::get('logged');
         if ($logged){

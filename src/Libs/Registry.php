@@ -23,7 +23,7 @@ class Registry
      * @param string $name
      * @return bool
      */
-    public static function exists($name) 
+    public static function exists($name) : bool
     {
         return isset(self::$store[$name]);
     }
@@ -34,7 +34,7 @@ class Registry
      * @param string $name
      * @return unknown
      */
-    public static function get($name) 
+    public static function get($name) : string | array|null
     {
         return (isset(self::$store[$name])) ? self::$store[$name] : null;
     }

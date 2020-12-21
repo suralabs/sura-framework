@@ -33,7 +33,8 @@ class Tools
     /**
      * @return string
      */
-    public static function domain_cookie(){
+    public static function domain_cookie() : string
+    {
 
         $domain_cookie = explode (".", self::clean_url( $_SERVER['HTTP_HOST'] ));
         $domain_cookie_count = count($domain_cookie);
@@ -87,13 +88,13 @@ class Tools
     public static function NoAjaxRedirect($url = NULL){
         $ajax = (isset($_POST['ajax'])) ? 'yes' : 'no';
         if($ajax == 'yes')
-        if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
-            if($url !== NULL){
-                header('Location: '.$url);
-            }else{
-                header('Location: https://'.$_SERVER['HTTP_HOST'].'/none/');
+            if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
+                if($url !== NULL){
+                    header('Location: '.$url);
+                }else{
+                    header('Location: https://'.$_SERVER['HTTP_HOST'].'/none/');
+                }
             }
-        }
     }
 
 
@@ -145,11 +146,13 @@ class Tools
      *
      * @param $tpl
      */
+    //#[Deprecated]
     public static function AjaxTpl($tpl){
 //        global $tpl, $config;
 
 //        $config = include __DIR__.'/../data/config.php';
-        echo $tpl->result['info'].$tpl->result['content'];
+//        echo $tpl->result['info'].$tpl->result['content'];
+        echo 'error';
     }
 
     /**
@@ -157,25 +160,22 @@ class Tools
      * @return bool
      */
     public static function CheckBlackList($userId){
-//        global $user_info;
-        return false;
-
         $user_info = Registry::get('user_info');
 
-
-       // $openMyList = Cache::mozg_cache("user_{$userId}/blacklist");
-
+        $Cache = \App\Services\Cache::initialize();
         $key = "user_{$userId}/blacklist";
 
-        $Cache = new FileAdapter();
-        $Cache = new Cache($Cache);
-        $item = $Cache->get($key, $default = null);
+        try {
+            $item = $Cache->get($key, $default = null);
+            $item = unserialize($item);
 
-        if(stripos($item, "|{$user_info['user_id']}|") !== false)
-            return true;
-        else
+            if(stripos($item, "|{$user_info['user_id']}|") !== false)
+                return true;
+            else
+                return false;
+        }catch (\InvalidArgumentException $e){
             return false;
-
+        }
 
     }
 
@@ -185,18 +185,21 @@ class Tools
      */
     public static function MyCheckBlackList($userId){
         $user_info = Registry::get('user_info');
-
-        //$openMyList = Cache::mozg_cache("user_{$user_info['user_id']}/blacklist");
         $key = "user_{$user_info['user_id']}/blacklist";
 
-        $Cache = new FileAdapter();
-        $Cache = new Cache($Cache);
-        $item = $Cache->get($key, $default = null);
+        try {
+            $Cache = \App\Services\Cache::initialize();
+            $item = $Cache->get($key, $default = null);
+            $item = unserialize($item);
 
-        if(stripos($item, "|{$userId}|") !== false)
-            return true;
-        else
+            if(stripos($item, "|{$userId}|") !== false)
+                return true;
+            else
+                return false;
+        }catch (\InvalidArgumentException $e){
             return false;
+        }
+
     }
 
     /**
@@ -214,16 +217,31 @@ class Tools
 
         $key = "user_{$user_info['user_id']}/friends";
 
-        $Cache = new FileAdapter();
-        $Cache = new Cache($Cache);
-        $item = $Cache->get($key, $default = null);
+        try {
+            $Cache = \App\Services\Cache::initialize();
+            $item = $Cache->get($key, $default = null);
+            $item = unserialize($item);
 
-        if(stripos($item, "u{$friendId}|") !== false)
+            if(stripos($item, "u{$friendId}|") !== false)
+                return true;
+            else
+                return false;
+        }catch (\InvalidArgumentException $e){
+            return false;
+        }
+
+    }
+
+    public static function Online($time)
+    {
+        $config = Settings::loadsettings();
+        $server_time = intval($_SERVER['REQUEST_TIME']);
+        $online_time = $server_time - $config['online_time'];
+        if ($time >= $online_time)
             return true;
         else
             return false;
     }
-
 
     /**
      * !Дубликат
@@ -234,17 +252,18 @@ class Tools
      * @param $tpl
      * @return mixed
      */
-    public static function navigation($gc, $num, $type, $tpl){
-        if($_GET['page'] > 0) $page = intval($_GET['page']); else $page = 1;
-//        $tpl = Registry::get('tpl');
+    public static function navigation($gcount, $num, $type){
+        if(isset($_GET['page']) AND $_GET['page'] > 0)
+            $page = intval($_GET['page']);
+        else
+            $page = 1;
 
-        $gcount = $gc;
         $cnt = $num;
         $items_count = $cnt;
         $items_per_page = $gcount;
         $page_refers_per_page = 5;
         $pages = '';
-        $pages_count = ( ( $items_count % $items_per_page != 0 ) ) ? floor( $items_count / $items_per_page ) + 1 : floor( $items_count / $items_per_page );
+        $pages_count = ( ( $items_count % $gcount != 0 ) ) ? floor( $items_count / $gcount ) + 1 : floor( $items_count / $gcount );
         $start_page = ( $page - $page_refers_per_page <= 0  ) ? 1 : $page - $page_refers_per_page + 1;
         $page_refers_per_page_count = ( ( $page - $page_refers_per_page < 0 ) ? $page : $page_refers_per_page ) + ( ( $page + $page_refers_per_page > $pages_count ) ? ( $pages_count - $page )  :  $page_refers_per_page - 1 );
 
@@ -256,7 +275,6 @@ class Tools
         if ( $start_page > 1 ) {
             $pages .= '<a href="'.$type.'1" onClick="Page.Go(this.href); return false">1</a>';
             $pages .= '<a href="'.$type.( $start_page - 1 ).'" onClick="Page.Go(this.href); return false">...</a>';
-
         }
 
         for ( $index = -1; ++$index <= $page_refers_per_page_count-1; ) {
@@ -279,17 +297,8 @@ class Tools
 
         if ( $pages_count <= 1 )
             $pages = '';
-
-        $config = Settings::loadsettings();
-
-        $tpl_2 = new Templates();
-        $tpl_2->dir = __DIR__.'/../../../../../templates/'.$config['temp'];;
-        $tpl_2->load_template('nav.tpl');
-        $tpl_2->set('{pages}', $pages);
-        $tpl_2->compile('content');
-        $tpl_2->clear();
-        $tpl->result['content'] .= $tpl_2->result['content'];
-        return $tpl;
+        $nav = '<div class="nav" id="nav">'.$pages.'</div>';
+        return $nav;
     }
 
     /**
@@ -303,6 +312,7 @@ class Tools
      * @param $tpl
      * @return mixed
      */
+    //#[Deprecated]
     public static function  box_navigation($gc, $num, $id, $function, $act, $tpl){
         global $page;
 
