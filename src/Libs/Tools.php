@@ -142,20 +142,6 @@ class Tools
     }
 
     /**
-     * old
-     *
-     * @param $tpl
-     */
-    //#[Deprecated]
-    public static function AjaxTpl($tpl){
-//        global $tpl, $config;
-
-//        $config = include __DIR__.'/../data/config.php';
-//        echo $tpl->result['info'].$tpl->result['content'];
-        echo 'error';
-    }
-
-    /**
      * @param $userId
      * @return bool
      */
@@ -302,7 +288,6 @@ class Tools
     }
 
     /**
-     * !Дубликат
      *
      * @param $gc
      * @param $num
@@ -312,7 +297,7 @@ class Tools
      * @param $tpl
      * @return mixed
      */
-    //#[Deprecated]
+    //TODO update code
     public static function  box_navigation($gc, $num, $id, $function, $act, $tpl){
         global $page;
 

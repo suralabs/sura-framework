@@ -17,21 +17,12 @@ class Langs {
      */
     public static function setlocale()
     {
-        $checkLang = self::checkLang();
+        $checkLang = self::check_lang();
         if($checkLang == 'ru'){
             setlocale(LC_ALL, "ru");
         }else{
             setlocale(LC_ALL, "ru");
         }
-    }
-
-    /**
-     * @return string
-     */
-    //#[Deprecated]
-    public static function checkLang():string
-    {
-        return self::check_lang();
     }
 
     /**
@@ -49,7 +40,7 @@ class Langs {
      */
     public static function get_langdate():array
     {
-        $checkLang = self::checkLang() ? self::checkLang() :'ru';
+        $checkLang = self::check_lang() ? self::check_lang() :'ru';
         return include __DIR__.'/../../../../../lang/'.$checkLang.'/date.lng';
     }
 
