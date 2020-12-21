@@ -1,6 +1,5 @@
 {
     "name": "sura/framework",
-    "type": "project",
     "description": "The Sura framework.",
     "keywords": ["framework", "sura","router", "mvc"],
     "license": "MIT",
@@ -8,7 +7,7 @@
       {
           "name": "Semen Alekseev",
           "email": "semyon492@ya.ru",
-          "homepage": "https://alekseevs.ru/"
+          "homepage": "https://qd2.ru/"
       }
     ],
     "require": {
