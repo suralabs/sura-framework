@@ -3,6 +3,8 @@
     "description": "The Sura framework.",
     "keywords": ["framework", "sura","router", "mvc"],
     "license": "MIT",
+    "type": "library",
+    "version": "0.9",
     "authors": [
       {
           "name": "Semen Alekseev",
