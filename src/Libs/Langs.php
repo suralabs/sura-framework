@@ -51,13 +51,19 @@ class Langs {
      */
     public static function check_lang() : string
     {
+        $requests = Request::getRequest();
+        $request = ($requests->getGlobal());
+
         $expLangList = self::lang_list();
         $numLangs = count($expLangList);
-        if (isset($_COOKIE['lang']) AND $_COOKIE['lang'] > 0){
-            $useLang = intval($_COOKIE['lang']);
+        if ($request['lang'] > 0){
+            $useLang = (int) $request['lang'];
             return $expLangList[$useLang];
         }else{
-            Tools::set_cookie("lang", 0, 365);
+            if (!isset($request['lang']))
+            {
+                Tools::set_cookie("lang", 0, 365);
+            }
             $useLang = 0;
             return $expLangList[$useLang];
         }

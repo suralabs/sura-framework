@@ -5,6 +5,10 @@ namespace Sura\Url;
 use Sura\Macroable\Macroable;
 use Sura\Url\Exceptions\InvalidArgument;
 
+/**
+ * Class Url
+ * @package Sura\Url
+ */
 class Url
 {
     use Macroable;
@@ -33,18 +37,31 @@ class Url
     /** @var string */
     protected $fragment = '';
 
+    /**
+     *
+     */
     const VALID_SCHEMES = ['http', 'https', 'mailto'];
 
+    /**
+     * Url constructor.
+     */
     public function __construct()
     {
         $this->query = new QueryParameterBag();
     }
 
+    /**
+     * @return static
+     */
     public static function create()
     {
         return new static();
     }
 
+    /**
+     * @param string $url
+     * @return static
+     */
     public static function fromString(string $url)
     {
         $parts = array_merge(parse_url($url));
@@ -62,11 +79,17 @@ class Url
         return $url;
     }
 
+    /**
+     * @return string
+     */
     public function getScheme()
     {
         return $this->scheme;
     }
 
+    /**
+     * @return string
+     */
     public function getAuthority()
     {
         $authority = $this->host;
@@ -82,6 +105,9 @@ class Url
         return $authority;
     }
 
+    /**
+     * @return string
+     */
     public function getUserInfo()
     {
         $userInfo = $this->user;
@@ -93,26 +119,41 @@ class Url
         return $userInfo;
     }
 
+    /**
+     * @return string
+     */
     public function getHost()
     {
         return $this->host;
     }
 
+    /**
+     * @return int|null
+     */
     public function getPort()
     {
         return $this->port;
     }
 
+    /**
+     * @return string
+     */
     public function getPath()
     {
         return $this->path;
     }
 
+    /**
+     * @return string
+     */
     public function getBasename(): string
     {
         return $this->getSegment(-1);
     }
 
+    /**
+     * @return string
+     */
     public function getDirname(): string
     {
         $segments = $this->getSegments();
@@ -122,26 +163,46 @@ class Url
         return '/'.implode('/', $segments);
     }
 
+    /**
+     * @return string
+     */
     public function getQuery(): string
     {
         return (string) $this->query;
     }
 
+    /**
+     * @param string $key
+     * @param null $default
+     * @return mixed|null
+     */
     public function getQueryParameter(string $key, $default = null)
     {
         return $this->query->get($key, $default);
     }
 
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function hasQueryParameter(string $key): bool
     {
         return $this->query->has($key);
     }
 
+    /**
+     * @return array
+     */
     public function getAllQueryParameters(): array
     {
         return $this->query->all();
     }
 
+    /**
+     * @param string $key
+     * @param string $value
+     * @return Url
+     */
     public function withQueryParameter(string $key, string $value)
     {
         $url = clone $this;
@@ -152,6 +213,10 @@ class Url
         return $url;
     }
 
+    /**
+     * @param string $key
+     * @return Url
+     */
     public function withoutQueryParameter(string $key)
     {
         $url = clone $this;
@@ -160,16 +225,27 @@ class Url
         return $url;
     }
 
+    /**
+     * @return string
+     */
     public function getFragment()
     {
         return $this->fragment;
     }
 
+    /**
+     * @return array
+     */
     public function getSegments(): array
     {
         return explode('/', trim($this->path, '/'));
     }
 
+    /**
+     * @param int $index
+     * @param null $default
+     * @return mixed|null
+     */
     public function getSegment(int $index, $default = null)
     {
         $segments = $this->getSegments();
@@ -186,6 +262,9 @@ class Url
         return $segments[$index - 1] ?? $default;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getFirstSegment()
     {
         $segments = $this->getSegments();
@@ -193,6 +272,9 @@ class Url
         return $segments[0] ?? null;
     }
 
+    /**
+     * @return mixed|null
+     */
     public function getLastSegment()
     {
         $segments = $this->getSegments();
@@ -200,6 +282,10 @@ class Url
         return end($segments) ?? null;
     }
 
+    /**
+     * @param $scheme
+     * @return Url
+     */
     public function withScheme($scheme)
     {
         $url = clone $this;
@@ -209,6 +295,10 @@ class Url
         return $url;
     }
 
+    /**
+     * @param string $scheme
+     * @return string
+     */
     protected function sanitizeScheme(string $scheme): string
     {
         $scheme = strtolower($scheme);
@@ -220,6 +310,11 @@ class Url
         return $scheme;
     }
 
+    /**
+     * @param $user
+     * @param null $password
+     * @return Url
+     */
     public function withUserInfo($user, $password = null)
     {
         $url = clone $this;
@@ -230,6 +325,10 @@ class Url
         return $url;
     }
 
+    /**
+     * @param $host
+     * @return Url
+     */
     public function withHost($host)
     {
         $url = clone $this;
@@ -239,6 +338,10 @@ class Url
         return $url;
     }
 
+    /**
+     * @param $port
+     * @return Url
+     */
     public function withPort($port)
     {
         $url = clone $this;
@@ -248,6 +351,10 @@ class Url
         return $url;
     }
 
+    /**
+     * @param $path
+     * @return Url
+     */
     public function withPath($path)
     {
         $url = clone $this;
@@ -261,6 +368,10 @@ class Url
         return $url;
     }
 
+    /**
+     * @param string $dirname
+     * @return Url
+     */
     public function withDirname(string $dirname)
     {
         $dirname = trim($dirname, '/');
@@ -272,6 +383,10 @@ class Url
         return $this->withPath($dirname.'/'.$this->getBasename());
     }
 
+    /**
+     * @param string $basename
+     * @return Url
+     */
     public function withBasename(string $basename)
     {
         $basename = trim($basename, '/');
@@ -283,6 +398,10 @@ class Url
         return $this->withPath($this->getDirname().'/'.$basename);
     }
 
+    /**
+     * @param $query
+     * @return Url
+     */
     public function withQuery($query)
     {
         $url = clone $this;
@@ -292,6 +411,10 @@ class Url
         return $url;
     }
 
+    /**
+     * @param $fragment
+     * @return Url
+     */
     public function withFragment($fragment)
     {
         $url = clone $this;
@@ -301,11 +424,18 @@ class Url
         return $url;
     }
 
+    /**
+     * @param Url $url
+     * @return bool
+     */
     public function matches(self $url): bool
     {
         return (string) $this === (string) $url;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         $url = '';
@@ -341,6 +471,9 @@ class Url
         return $url;
     }
 
+    /**
+     *
+     */
     public function __clone()
     {
         $this->query = clone $this->query;

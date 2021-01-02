@@ -12,8 +12,22 @@ use \Sura\Log\Log;
  */
 final class Db {
 
+    /**
+     * @var null
+     */
     private static $db = null; // Единственный экземпляр класса, чтобы не создавать множество подключений
 
+    /**
+     * Db constructor.
+     * @param bool|object $db_id
+     * @param int $query_num
+     * @param string $mysql_error
+     * @param string $mysql_version
+     * @param int $mysql_error_num
+     * @param int $MySQL_time_taken
+     * @param bool|string|object $query_id
+     * @param array $db_config
+     */
     public function __construct(
         public bool|object $db_id = false,
         public int $query_num = 0,
@@ -84,7 +98,7 @@ final class Db {
     /**
      * @param $query
      * @param bool $show_error
-     * @return bool|\mysqli_result
+     * @return \mysqli_result
      */
     function query($query, $show_error = true)
     {

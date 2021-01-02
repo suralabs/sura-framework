@@ -4,16 +4,24 @@
 namespace Sura\Libs;
 
 
+/**
+ * Class Request
+ * @package Sura\Libs
+ */
 class Request
 {
+    /** @var null  */
+    private static $requests = null;
+
     /**
-     * Request constructor.
+     * хранит значение полученное методами
+     *
      * @param array $get
      * @param array $post
      * @param array $files
      * @param array $cookie
      * @param array $session
-     * @param $request
+     * @param array $request
      * @param array $server
      * @param array $header
      */
@@ -28,7 +36,16 @@ class Request
         public array $header = array()
     )
     {
+        $this->initWithFastCGI();
 
+    }
+
+    public static function getRequest() : Request
+    {
+        if (self::$requests == null) {
+            self::$requests = new Request();
+        }
+        return self::$requests;
     }
 
     /**
@@ -37,7 +54,7 @@ class Request
     function setGlobal()
     {
         /**
-         * 将HTTP头信息赋值给$_SERVER超全局变量
+         * Назначает информацию заголовка HTTP суперглобальной переменной $ _SERVER
          */
         foreach ($this->header as $key => $value)
         {
@@ -57,13 +74,13 @@ class Request
     /**
      * @return mixed
      */
-    function getGlobal()
+    function getGlobal(): array
     {
         return $this->request;
     }
 
     /**
-     * LAMP环境初始化
+     * Инициализация
      */
     function initWithFastCGI()
     {
@@ -79,21 +96,24 @@ class Request
      */
     function unsetGlobal()
     {
-        $_REQUEST = $_SESSION = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
+//        $_REQUEST = $_SESSION = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
+        $_REQUEST = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
     }
 
     /**
      * @return bool
      */
-    function isWebSocket()
+    function isWebSocket(): bool
     {
         return isset($this->header['Upgrade']) && strtolower($this->header['Upgrade']) == 'websocket';
     }
 
     /**
-     * @return mixed|string
+     * Получить IP клиента
+     *
+     * @return mixed|string - User IP
      */
-    function getClientIP()
+    function getClientIP() : string
     {
         if (isset($this->server["HTTP_X_REAL_IP"]) and strcasecmp($this->server["HTTP_X_REAL_IP"], "unknown"))
         {
@@ -115,18 +135,38 @@ class Request
     }
 
     /**
-     * 
+     * Получить USER_AGENT клиента
+     *
+     * @return string
+     */
+    public function getClientAGENT() : string
+    {
+        if (isset($this->server["HTTP_USER_AGENT"]))
+        {
+            return $this->server["HTTP_USER_AGENT"];
+        }
+        return "";
+    }
+
+    /**
+     * Проверяем ajax
      *
      * @return bool
      */
-    public static function ajax(){
+    public static function ajax() : bool
+    {
         if (isset($_POST['ajax']) AND $_POST['ajax'] == 'yes')
             return true;
         else
             return false;
     }
 
-    public static function https()
+    /**
+     * Проверяем https
+     *
+     * @return bool
+     */
+    public static function https() : bool
     {
         if($_SERVER['SERVER_PORT'] != 443) {
             return false;

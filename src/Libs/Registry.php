@@ -4,7 +4,11 @@
  */
 namespace Sura\Libs;
 
-class Registry 
+/**
+ * Class Registry
+ * @package Sura\Libs
+ */
+class Registry
 {
     /**
      * Статическое хранилище для данных
@@ -15,6 +19,10 @@ class Registry
      * Защита от создания экземпляров статического класса
      */
     protected function __construct() {}
+
+    /**
+     *
+     */
     protected function __clone() {}
  
     /**

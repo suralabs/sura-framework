@@ -16,7 +16,7 @@ class Tools
     /**
      * @param $url
      */
-    public static function clean_url($url) {
+    public static function clean_url(string $url) {
         if( $url == '' ) return;
 
         $url = str_replace( "http://", "", strtolower( $url ) );
@@ -26,7 +26,6 @@ class Tools
         $url = reset( $url );
         $url = explode( ':', $url );
         $url = reset( $url );
-
         return $url;
     }
 
@@ -73,6 +72,7 @@ class Tools
      *
      */
     public static function NoAjaxQuery($url = NULL){
+        return false;
 		if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
             if($url !== NULL){
                 header('Location: '.$url);
@@ -83,13 +83,13 @@ class Tools
 	}
 
     /**
-     * @param null $url
+     * @param string $url
      */
-    public static function NoAjaxRedirect($url = NULL){
+    public static function NoAjaxRedirect(string $url = ''){
         $ajax = (isset($_POST['ajax'])) ? 'yes' : 'no';
         if($ajax == 'yes')
             if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
-                if($url !== NULL){
+                if($url !== ''){
                     header('Location: '.$url);
                 }else{
                     header('Location: https://'.$_SERVER['HTTP_HOST'].'/none/');
@@ -102,7 +102,8 @@ class Tools
      * @param $v
      * @return string
      */
-    public static function GetVar($v){
+    public static function GetVar(string $v): string
+    {
         if(ini_get('magic_quotes_gpc'))
             return stripslashes($v) ;
         return $v;
@@ -113,7 +114,8 @@ class Tools
      * @param $options
      * @return string|string[]
      */
-    public static function InstallationSelectedNew($id, $options){
+    public static function InstallationSelectedNew($id, $options): string
+    {
         return str_replace('val="'.$id.'" class="', 'val="'.$id.'" class="active ', $options);
     }
 
@@ -142,80 +144,68 @@ class Tools
     }
 
     /**
-     * @param $userId
+     * @param $userId int not owner user
      * @return bool
      */
-    public static function CheckBlackList($userId){
+    public static function CheckBlackList(int $userId) : bool
+    {
         $user_info = Registry::get('user_info');
+        $user_id = $user_info['user_id'];
+        $bad_user_id = $userId;
+        $db = Db::getDB();
 
-        $Cache = \App\Services\Cache::initialize();
-        $key = "user_{$userId}/blacklist";
+        $row_blacklist = $db->super_query("SELECT id FROM `users_blacklist` WHERE users = '{$bad_user_id}|{$user_id}'");
 
-        try {
-            $item = $Cache->get($key, $default = null);
-            $item = unserialize($item);
-
-            if(stripos($item, "|{$user_info['user_id']}|") !== false)
-                return true;
-            else
-                return false;
-        }catch (\InvalidArgumentException $e){
-            return false;
+        if ($row_blacklist){
+            return true;
         }
-
+        return false;
     }
 
     /**
-     * @param $userId
-     * @return bool
-     */
-    public static function MyCheckBlackList($userId){
-        $user_info = Registry::get('user_info');
-        $key = "user_{$user_info['user_id']}/blacklist";
-
-        try {
-            $Cache = \App\Services\Cache::initialize();
-            $item = $Cache->get($key, $default = null);
-            $item = unserialize($item);
-
-            if(stripos($item, "|{$userId}|") !== false)
-                return true;
-            else
-                return false;
-        }catch (\InvalidArgumentException $e){
-            return false;
-        }
-
-    }
-
-    /**
-     * check user to blacklist
+     * check user to friends
      *
      * true - yes
      *
      * @param $friendId
      * @return bool
      */
-    public static function CheckFriends($friendId){
+    public static function CheckFriends(int $friendId) : bool
+    {
         $user_info = Registry::get('user_info');
+        $db = Db::getDB();
+        $for_user_id = $friendId; // not owner
 
-        //$openMyList = Cache::mozg_cache("user_{$user_info['user_id']}/friends");
-
-        $key = "user_{$user_info['user_id']}/friends";
-
-        try {
-            $Cache = \App\Services\Cache::initialize();
-            $item = $Cache->get($key, $default = null);
-            $item = unserialize($item);
-
-            if(stripos($item, "u{$friendId}|") !== false)
-                return true;
-            else
-                return false;
-        }catch (\InvalidArgumentException $e){
+        $from_user_id = $user_info['user_id'];
+        $check = $db->super_query("SELECT user_id FROM `friends` WHERE friend_id = '{$for_user_id}' AND user_id = '{$from_user_id}' AND subscriptions = 0");
+        if ($check)
+        {
+            return true;
+        }else{
             return false;
         }
 
+
+
+//        $Cache = cache_init(array('type' => 'file'));
+//        try {
+//            $openMyList = $Cache->get("users/{$user_info['user_id']}/friends");
+//            if(stripos($openMyList, "u{$friendId}|") !== false)
+//                return true;
+//            else
+//                return false;
+//        }catch (\Exception $e){
+//            try {
+//                $openMyList = $Cache->get("users/{$user_info['user_id']}/friends");
+//            }catch (\Exception $e){
+//                $Cache->set("users/{$user_info['user_id']}/friends", "");
+//            }
+//            $Cache->set("users/{$user_info['user_id']}/friends", $openMyList."u{$friendId}|");
+//            if(stripos($openMyList, "u{$friendId}|") !== false)
+//                return true;
+//            else
+//                return false;
+//        }
     }
 
     public static function Online($time)
@@ -232,24 +222,23 @@ class Tools
     /**
      * !Дубликат
      *
-     * @param $gc
+     * @param $limit колличество
      * @param $num
      * @param $type
      * @param $tpl
      * @return mixed
      */
-    public static function navigation($gcount, $num, $type){
+    public static function navigation(int $items_per_page, int $items_count, string $type): string
+    {
         if(isset($_GET['page']) AND $_GET['page'] > 0)
             $page = intval($_GET['page']);
         else
             $page = 1;
 
-        $cnt = $num;
-        $items_count = $cnt;
-        $items_per_page = $gcount;
+        $items_per_page = $items_per_page;
         $page_refers_per_page = 5;
         $pages = '';
-        $pages_count = ( ( $items_count % $gcount != 0 ) ) ? floor( $items_count / $gcount ) + 1 : floor( $items_count / $gcount );
+        $pages_count = ( ( $items_count % $items_per_page != 0 ) ) ? floor( $items_count / $items_per_page ) + 1 : floor( $items_count / $items_per_page );
         $start_page = ( $page - $page_refers_per_page <= 0  ) ? 1 : $page - $page_refers_per_page + 1;
         $page_refers_per_page_count = ( ( $page - $page_refers_per_page < 0 ) ? $page : $page_refers_per_page ) + ( ( $page + $page_refers_per_page > $pages_count ) ? ( $pages_count - $page )  :  $page_refers_per_page - 1 );
 
@@ -275,7 +264,7 @@ class Tools
             $pages .= '<a href="'.$type.$pages_count.'" onClick="Page.Go(this.href); return false">'.$pages_count.'</a>';
         }
 
-        $resif = $cnt/$gcount;
+        $resif = $items_count/$items_per_page;
         if(ceil($resif) == $page)
             $pages .= '';
         else
@@ -298,14 +287,17 @@ class Tools
      * @return mixed
      */
     //TODO update code
-    public static function  box_navigation($gc, $num, $id, $function, $act, $tpl){
-        global $page;
+    public static function  box_navigation($limit, $num, $id, $function, $act){
+        if(isset($_GET['page']) AND $_GET['page'] > 0)
+            $page = intval($_GET['page']);
+        else
+            $page = 1;
 
 
-        $gcount = $gc;
+//        $limit = $limit;
         $cnt = $num;
         $items_count = $cnt;
-        $items_per_page = $gcount;
+        $items_per_page = $limit;
         $page_refers_per_page = 5;
         $pages = '';
         $pages_count = ( ( $items_count % $items_per_page != 0 ) ) ? floor( $items_count / $items_per_page ) + 1 : floor( $items_count / $items_per_page );
@@ -340,7 +332,7 @@ class Tools
             $pages .= '<a href="" onClick="'.$function.'('.$id.', '.$pages_count.', '.$act.'); return false">'.$pages_count.'</a>';
         }
 
-        $resif = $cnt/$gcount;
+        $resif = $cnt/$limit;
         if(ceil($resif) == $page)
             $pages .= '';
         else
@@ -351,13 +343,17 @@ class Tools
 
         $config = Settings::loadsettings();
 
-        $tpl_2 = new Templates();
-        $tpl_2->dir = __DIR__.'/../../../../../templates/'.$config['temp'];;
-        $tpl_2->load_template('nav.tpl');
-        $tpl_2->set('{pages}', $pages);
-        $tpl_2->compile('content');
-        $tpl_2->clear();
-        $tpl->result['content'] .= $tpl_2->result['content'];
-        return $tpl;
+        return '<div class="nav" id="nav">'.$pages.'</div>';
+    }
+
+    /**
+     * Server time
+     */
+    public static function time(): int
+    {
+        $requests = Request::getRequest();
+        $server = $requests->server;
+
+        return (int)$server['REQUEST_TIME'];
     }
 }

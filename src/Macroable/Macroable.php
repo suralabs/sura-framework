@@ -9,6 +9,9 @@ use BadMethodCallException;
 
 trait Macroable
 {
+    /**
+     * @var array
+     */
     protected static $macros = [];
 
     /**
@@ -40,11 +43,20 @@ trait Macroable
         }
     }
 
+    /**
+     * @param string $name
+     * @return bool
+     */
     public static function hasMacro(string $name): bool
     {
         return isset(static::$macros[$name]);
     }
 
+    /**
+     * @param $method
+     * @param $parameters
+     * @return false|mixed
+     */
     public static function __callStatic($method, $parameters)
     {
         if (! static::hasMacro($method)) {
@@ -60,6 +72,11 @@ trait Macroable
         return call_user_func_array($macro, $parameters);
     }
 
+    /**
+     * @param $method
+     * @param $parameters
+     * @return false|mixed
+     */
     public function __call($method, $parameters)
     {
         if (! static::hasMacro($method)) {

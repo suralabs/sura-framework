@@ -8,9 +8,16 @@ use Sura\Libs\Templates;
 use Sura\Libs\Registry;
 use Sura\Libs\Router;
 
+/**
+ * Class Application
+ * @package Sura
+ */
 class Application
 {
-    const VERSION = '1.0';
+    /**
+     * VERSION
+     */
+    const VERSION = '1.0.0';
 
     /**
      * Get the version number of the application.
@@ -22,6 +29,9 @@ class Application
         return static::VERSION;
     }
 
+    /**
+     *
+     */
     function init(){
 
     }

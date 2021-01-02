@@ -2,9 +2,11 @@
 namespace Sura\Classes;
 
 class Download {
-	
+
+    /** @var string[]  */
 	var $properties = array ('old_name' => "", 'new_name' => "", 'type' => "", 'size' => "", 'resume' => "", 'max_speed' => "" );
-	
+
+	/** @var int  */
 	var $range = 0;
 
     /**
@@ -13,7 +15,7 @@ class Download {
      * @param int $resume
      * @param int $max_speed
      */
-	function download($path, $name = "", $resume = 0, $max_speed = 0) {
+	function download(string $path, $name = "", $resume = 0, $max_speed = 0) {
 		
 		$name = ($name == "") ? substr( strrchr( "/" . $path, "/" ), 1 ) : $name;
 		$name = explode( "/", $name );
@@ -90,7 +92,8 @@ class Download {
      * @param int $range
      * @return bool
      */
-	function _download($filename, $range = 0) {
+	function _download(string $filename, int $range = 0): bool
+    {
 		
 		@ob_end_clean();
 		

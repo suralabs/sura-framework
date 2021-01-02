@@ -39,7 +39,7 @@ class Gramatic implements GramaticInterface
      * @param string $declination
      * @return string
      */
-    public static function DeclName($name, $declination) :string
+    public static function DeclName(string $name, string $declination) :string
     {
         switch ($declination){
             case 'rod': // родительный - Кого? Чего?
@@ -72,11 +72,9 @@ class Gramatic implements GramaticInterface
      * @param bool $punkt
      * @return string
      */
-    public static function totranslit($var, $lower = true, $punkt = true):string
+    public static function totranslit(string $var, bool $lower = true, bool $punkt = true): string
     {
         // global $langtranslit;
-        if ( is_array($var) ) return "";
-
         $langtranslit = null;
         if (!is_array ( $langtranslit ) OR !count( $langtranslit ) ) {
 
@@ -145,7 +143,7 @@ class Gramatic implements GramaticInterface
      * @param string $name
      * @return string
      */
-    public static function gramatikName($name):string
+    public static function gramatikName(string $name):string
     {
         $name_u_gram = $name;
         $str_1_name = strlen($name_u_gram);
@@ -207,11 +205,11 @@ class Gramatic implements GramaticInterface
      * @param bool $t
      * @return string
      */
-    public static function newGram($num, $a, $b, $c, $t = false):string
+    public static function newGram(int $num, $a, $b, $c, $t = false): string
     {
         if($t)
-            return declOfNum($num, array(sprintf($a,  $num), sprintf($b,  $num), sprintf($c, $num)));
+            return self::declOfNum($num, array(sprintf($a,  $num), sprintf($b,  $num), sprintf($c, $num)));
         else
-            return declOfNum($num, array(sprintf("%d {$a}",  $num), sprintf("%d {$b}",  $num), sprintf("%d {$c}", $num)));
+            return self::declOfNum($num, array(sprintf("%d {$a}",  $num), sprintf("%d {$b}",  $num), sprintf("%d {$c}", $num)));
     }
 }

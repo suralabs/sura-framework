@@ -55,7 +55,7 @@ class Profile_check
         $row = '';
 
     /*
-        $Cache = Cache::initialize();
+        $Cache = cache_init(array('type' => 'file'));
         try {
             $row = $Cache->get("system/time_zone", $default = null);
             $value = unserialize($row);

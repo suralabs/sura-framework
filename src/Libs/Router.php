@@ -7,30 +7,59 @@ use InvalidArgumentException;
 use Sura\Libs\Registry;
 use Sura\Libs\Settings;
 
+/**
+ * Class Router
+ * @package Sura\Libs
+ */
 class Router
 {
+    /**
+     * @var array $routes
+     */
     private static array $routes = [];
 
+    /**
+     * @var string $requestUri
+     */
     private static string $requestUri;
 
+    /**
+     * @var string $requestMethod
+     */
     private static string $requestMethod;
 
+    /**
+     * @var $requestHandler
+     */
     private static $requestHandler;
 
+    /**
+     * @var array|null $params
+     */
     private static array|null $params = [];
 
+    /**
+     * @var string[] $placeholders
+     */
     private static $placeholders = [
         ':seg' => '([^\/]+)',
         ':num'  => '([0-9]+)',
         ':any'  => '(.+)'
     ];
 
+    /**
+     * @var string $controllerName
+     */
     private static string $controllerName;
+
+    /**
+     * @var $actionName
+     */
     private static  $actionName;
 
     /**
      * Router constructor.
-     * @param $uri
+     * @param string $uri
      * @param string $method
      */
     public function __construct(string $uri, string $method = 'GET')
@@ -46,8 +75,10 @@ class Router
     public static function fromGlobals()
     {
         $config = Settings::loadsettings();
-        if (isset($_SERVER['REQUEST_URI'])) {
-            $uri = $_SERVER['REQUEST_URI'];
+        $requests = Request::getRequest();
+        $server = $requests->server;
+        if (isset($server['REQUEST_URI'])) {
+            $uri = $server['REQUEST_URI'];
         }elseif(!empty($config['home_url'])){
             $uri = $config['home_url'];
         }else{
@@ -58,7 +89,7 @@ class Router
             $uri = substr($uri, 0, $pos);
         }
         $uri = rawurldecode($uri);
-        return new static($uri, $_SERVER['REQUEST_METHOD']);
+        return new static($uri, $server['REQUEST_METHOD']);
     }
     /**
      * Current .
@@ -107,7 +138,7 @@ class Router
      * Set Request handler.
      * @param $handler string|callable
      */
-    public function setRequestHandler($handler)
+    public function setRequestHandler(string|callable $handler)
     {
         self::$requestHandler = $handler;
     }
@@ -145,10 +176,10 @@ class Router
      * Добавить маршрут
      *
      * @param string|array $route A URI route string or array
-     * @param mixed $handler Any callable or string with controller classname and action method like "ControllerClass@actionMethod"
+     * @param string|callable $handler Any callable or string with controller classname and action method like "ControllerClass@actionMethod"
      * @return Router
      */
-    public function add(array|string $route, $handler = null) : Router
+    public function add(array|string $route, string|callable $handler = null) : Router
     {
         if ($handler !== null && !is_array($route)) {
             $route = array($route => $handler);
@@ -165,7 +196,9 @@ class Router
     {
         $uri = $this->getRequestUri();
 
-        // if URI equals to route
+        /**
+         *  if URI equals to route
+         */
         if (isset(self::$routes[$uri])) {
             self::$requestHandler = self::$routes[$uri];
             return true;
@@ -174,11 +207,15 @@ class Router
         $find    = array_keys(self::$placeholders);
         $replace = array_values(self::$placeholders);
         foreach (self::$routes as $route => $handler) {
-            // Replace wildcards by regex
+            /**
+             *  Replace wildcards by regex
+             */
             if (strpos($route, ':') !== false) {
                 $route = str_replace($find, $replace, $route);
             }
-            // Route rule matched
+            /**
+             *  Route rule matched
+             */
             if (preg_match('#^' . $route . '$#', $uri, $matches)) {
                 self::$requestHandler = $handler;
                 self::$params = array_slice($matches, 1);
@@ -228,6 +265,7 @@ class Router
                     if (!method_exists('\\App\\Modules\\'.$controllername, $action)) {
                         // throw new RuntimeException("Method '{$controllerName}::{$action}' not found");
                         echo "Method \\App\\Modules\\{$controllername}::{$action} not found";
+                        return false;
                     }else{
                         $class = 'App\Modules\\'.$controllername;
                         $foo = new $class();
@@ -255,9 +293,13 @@ class Router
         return $mod.'Controller';
     }
 
-     public function getAction($action)
+    /**
+     * @return string
+     */
+     public function getAction() : string
      {
-       # code...
+//         $actionName = self::$actionName;
+         return self::$actionName;
      }
 
 }

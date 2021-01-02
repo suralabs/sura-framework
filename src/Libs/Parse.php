@@ -20,9 +20,9 @@ class Parse{
      * @param bool $preview
      * @return string|string[]|null
      */
-    function BBparse($source, $preview = false) : string|null
+    function BBparse(string $source, $preview = false) : string
     {
-		global $config;
+//		global $config;
 
 		$source = preg_replace("#<iframe#i", "&lt;iframe", $source);
 		$source = preg_replace("#<script#i", "&lt;script", $source);
@@ -52,7 +52,7 @@ class Parse{
      * @param bool $preview
      * @return string
      */
-    function BBvideo($source, $preview = false) : string
+    function BBvideo(string $source, $preview = false) : string
     {
 		global $config;
 		
@@ -104,7 +104,7 @@ class Parse{
      * @param bool $preview
      * @return string
      */
-    function BBphoto($source, $preview = false) : string
+    function BBphoto(string $source, $preview = false) : string
     {
         $config = Settings::loadsettings();
 		$exp = explode('|', $source);
@@ -169,7 +169,7 @@ class Parse{
      * @param $source
      * @return string
      */
-    function BBlink($source) : string
+    function BBlink(string $source) : string
     {
 		$exp = explode('|', $source);
 		
@@ -188,7 +188,7 @@ class Parse{
      * @param $source
      * @return string|string[]|null
      */
-    function BBdecode($source) : string
+    function BBdecode(string $source) : string
     {
 	
 		$source = str_ireplace("&#123;", "{", $source);
@@ -217,7 +217,7 @@ class Parse{
      * @param $source
      * @return string
      */
-    function BBdecodePhoto($source) : string
+    function BBdecodePhoto(string $source) : string
     {
 		$start = explode('-->', $source);
 		$source = "[photo]{$start['0']}[/photo]";
@@ -228,7 +228,7 @@ class Parse{
      * @param $source
      * @return string
      */
-    function BBdecodeVideo($source) : string
+    function BBdecodeVideo(string $source) : string
     {
 		$start = explode('-->', $source);
 		$source = "[video]{$start['0']}[/video]";
@@ -239,7 +239,7 @@ class Parse{
      * @param $source
      * @return string
      */
-    function BBdecodeLink($source) : string{
+    function BBdecodeLink(string $source) : string{
 		$start = explode('-->', $source);
 		$source = "[link]{$start['0']}[/link]";
 		return $source;

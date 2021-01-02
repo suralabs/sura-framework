@@ -15,8 +15,14 @@ class File extends SplFileInfo
      */
     protected $hash = [];
 
+    /** @var $hashName */
     protected $hashName;
 
+    /**
+     * File constructor.
+     * @param string $path
+     * @param bool $checkPath
+     */
     public function __construct(string $path, bool $checkPath = true)
     {
         if ($checkPath && !is_file($path)) {
