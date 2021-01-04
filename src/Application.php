@@ -2,10 +2,9 @@
 
 namespace Sura;
 
+use InvalidArgumentException;
+use Sura\Exception\SuraException;
 use Sura\Libs\Db;
-use Sura\Libs\Settings;
-use Sura\Libs\Templates;
-use Sura\Libs\Registry;
 use Sura\Libs\Router;
 
 /**
@@ -19,56 +18,64 @@ class Application
      */
     const VERSION = '1.0.0';
 
+    public function __construct($params)
+    {
+        $this->user_online($params);
+        $params = array($params);
+        $this->routing($params);
+    }
+
     /**
      * Get the version number of the application.
      *
      * @return string
      */
-    public function version() : string
+    public function version(): string
     {
         return static::VERSION;
     }
 
     /**
-     *
-     */
-    function init(){
-
-    }
-
-    /**
      * @param $params
      */
-    function routing($params){
+    public function routing($params)
+    {
         $router = Router::fromGlobals();
-        $routers =  require __DIR__ . '/../../../../routes/web.php';
+        $dir = '/../../../../routes/web.php';
+        $routers = require __DIR__ . $dir;
         $router->add($routers);
-        if ($router->isFound()) {
-            $router->executeHandler(
-                $router->getRequestHandler(),
-                $params
-            );
-        }else {
-            echo 'error: page not found';
-            http_response_code(404);
+        try {
+            if ($router->isFound()) {
+                $router->executeHandler(
+                    $router->getRequestHandler(),
+                    $params
+                );
+            } else {
+                http_response_code(404);
+                throw SuraException::Error("Page not found");
+            }
+        } catch (InvalidArgumentException $e) {
+            echo $e->getMessage();
         }
+
     }
 
     /**
      * @param $params
      * @return bool
      */
-    function user_online($params){
+    public function user_online($params): bool
+    {
 
         $logged = $params['user']['logged'];
 
         //Елси юзер залогинен то обновляем последнюю дату посещения на личной стр
-        if($logged){
+        if ($logged) {
             $user_info = $params['user']['user_info'];
             $db = Db::getDB();
 
             //Начисления 1 убм.
-            if(!$user_info['user_lastupdate']) $user_info['user_lastupdate'] = 1;
+            if (!$user_info['user_lastupdate']) $user_info['user_lastupdate'] = 1;
 
             $server_time = intval($_SERVER['REQUEST_TIME']);
 
@@ -78,6 +85,7 @@ class Application
                 $sql_balance = "";
 
             //Определяем устройство
+            //TODO update
             if(check_smartphone()){
                 if($_SESSION['mobile'] != 2)
                     $config['temp'] = "mobile";
@@ -88,8 +96,7 @@ class Application
 
             if($check_smartphone) {
                 $device_user = 1;
-            }
-            else {
+            } else {
                 $device_user = 0;
             }
             if(($user_info['user_last_visit'] + 60) <= $server_time){

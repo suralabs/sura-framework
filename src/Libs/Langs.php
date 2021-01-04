@@ -2,10 +2,7 @@
 
 namespace Sura\Libs;
 
-use phpDocumentor\Reflection\Types\Integer;
-use Sura\Libs\Settings;
-
-/**
+ /**
  * Class Langs
  * @package System\Libs
  */
@@ -31,8 +28,7 @@ class Langs {
     public static function get_langs():array
     {
         $checkLang = self::check_lang() ? self::check_lang() :'ru';
-        return include __DIR__.'/../../../../../app/lang/'.$checkLang.'.php';
-//        return include __DIR__.'/../../../../../lang/'.$checkLang.'/langs.lng';
+        return include __DIR__."/../../../../../app/lang/{$checkLang}.php";
     }
 
     /**
@@ -51,11 +47,9 @@ class Langs {
      */
     public static function check_lang() : string
     {
-        $requests = Request::getRequest();
-        $request = ($requests->getGlobal());
+        $request = Request::getRequest()->getGlobal();
 
         $expLangList = self::lang_list();
-        $numLangs = count($expLangList);
         if ($request['lang'] > 0){
             $useLang = (int) $request['lang'];
             return $expLangList[$useLang];

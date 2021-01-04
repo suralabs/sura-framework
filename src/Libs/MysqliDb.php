@@ -2,6 +2,9 @@
 
 namespace Sura\Libs;
 
+use Exception;
+use ReflectionClass;
+
 /**
  * MysqliDb Class
  *
@@ -121,14 +124,14 @@ class MysqliDb
      *
      * @var string
      */
-    public string $count = 0;
+    public int $count = 0;
 
     /**
      * Variable which holds an amount of returned rows during get/getOne/select queries with withTotalCount()
      *
      * @var string
      */
-    public string $totalCount = 0;
+    public int $totalCount = 0;
 
     /**
      * Variable which holds last statement error
@@ -156,14 +159,14 @@ class MysqliDb
      *
      * @var int
      */
-    protected int $_lastInsertId = null;
+    protected ?int $_lastInsertId = null;
 
     /**
      * Column names for update when using onDuplicate method
      *
      * @var array
      */
-    protected array $_updateColumns = null;
+    protected ?array $_updateColumns = null;
 
     /**
      * Return type: 'array' to return results as array, 'object' as object
@@ -206,7 +209,7 @@ class MysqliDb
      *
      * @var string
      */
-    protected string $_mapKey = null;
+    protected ?string $_mapKey = null;
 
     /**
      * Variables for query execution tracing
@@ -214,7 +217,7 @@ class MysqliDb
     protected $traceStartQ;
     protected $traceEnabled;
     protected $traceStripPrefix;
-    public $trace = array();
+    public array $trace = array();
 
     /**
      * Per page limit for pagination
@@ -239,8 +242,8 @@ class MysqliDb
      */
     public string $defConnectionName = 'default';
 
-    public $autoReconnect = true;
-    protected $autoReconnectCount = 0;
+    public bool $autoReconnect = true;
+    protected int $autoReconnectCount = 0;
 
     /**
      * @var bool Operations in transaction indicator
@@ -248,13 +251,13 @@ class MysqliDb
     protected bool $_transaction_in_progress = false;
 
     /**
-     * @param string $host
-     * @param string $username
-     * @param string $password
-     * @param string $db
-     * @param int    $port
+     * @param string|null $host
+     * @param string|null $username
+     * @param string|null $password
+     * @param string|null $db
+     * @param int|null $port
      * @param string $charset
-     * @param string $socket
+     * @param string|null $socket
      */
     public function __construct(string|null $host = null, null|string $username = null, null|string $password = null, null|string $db = null, null|int $port = null, string $charset = 'utf8', null|string $socket = null)
     {
@@ -2083,9 +2086,9 @@ class MysqliDb
      * Mostly internal method to get query and its params out of subquery object
      * after get() and getAll()
      *
-     * @return array
+     * @return array|null
      */
-    public function getSubQuery() : array
+    public function getSubQuery() : ?array
     {
         if (!$this->isSubQuery) {
             return null;

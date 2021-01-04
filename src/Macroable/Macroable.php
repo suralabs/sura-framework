@@ -12,15 +12,15 @@ trait Macroable
     /**
      * @var array
      */
-    protected static $macros = [];
+    protected static array $macros = [];
 
     /**
      * Register a custom macro.
      *
-     * @param  string $name
-     * @param  object|callable  $macro
+     * @param string $name
+     * @param object|callable $macro
      */
-    public static function macro(string $name, $macro)
+    public static function macro(string $name, callable|object $macro)
     {
         static::$macros[$name] = $macro;
     }
@@ -28,9 +28,9 @@ trait Macroable
     /**
      * Mix another object into the class.
      *
-     * @param  object  $mixin
+     * @param object $mixin
      */
-    public static function mixin($mixin)
+    public static function mixin(object $mixin)
     {
         $methods = (new ReflectionClass($mixin))->getMethods(
             ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
@@ -55,9 +55,9 @@ trait Macroable
     /**
      * @param $method
      * @param $parameters
-     * @return false|mixed
+     * @return mixed
      */
-    public static function __callStatic($method, $parameters)
+    public static function __callStatic($method, $parameters): mixed
     {
         if (! static::hasMacro($method)) {
             throw new BadMethodCallException("Method {$method} does not exist.");
@@ -75,9 +75,9 @@ trait Macroable
     /**
      * @param $method
      * @param $parameters
-     * @return false|mixed
+     * @return mixed
      */
-    public function __call($method, $parameters)
+    public function __call($method, $parameters): mixed
     {
         if (! static::hasMacro($method)) {
             throw new BadMethodCallException("Method {$method} does not exist.");

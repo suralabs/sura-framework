@@ -2,17 +2,13 @@
 
 namespace Sura\Libs;
 
-use App\Services\Cache;
-use Sura\Libs\Db;
-use Sura\Libs\Langs;
-use Sura\Libs\Registry;
-use Sura\Libs\Tools;
-use Sura\Libs\Settings;
+
+use Sura\Contracts\AuthInterface;
 
 /**
  * Авторизация пользователей
  */
-class Auth
+class Auth implements AuthInterface
 {
 
     /**
@@ -36,7 +32,7 @@ class Auth
 
 		//Если есть данные сесии
 		if(isset($_SESSION['user_id']) > 0){
-			$logged = true;
+
 			$logged_user_id = $id = intval($_SESSION['user_id']);
 
             $user_info = $db->super_query("SELECT user_id,user_name, user_lastname, time_zone, notifications_list, user_email, user_group, user_friends_demands, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, user_pm_num, invties_pub_num, user_balance, balance_rub FROM `users` WHERE user_id = '".$logged_user_id."'");
@@ -47,19 +43,18 @@ class Auth
 
 			//ava
             if($user_info['user_photo'])
+            {
                 $user_info['ava'] = '/uploads/users/'.$user_info['user_id'].'/50_'.$user_info['user_photo'];
+            }
             else
+            {
                 $user_info['ava'] = '/images/no_ava_50.png';
+            }
 
 			//Если юзер нажимает "Главная" и он зашел не с моб версии. то скидываем на его стр.
-			$host_site = $server['QUERY_STRING'];
-			
-			Registry::set('logged', $logged);
-
-            //$config = Settings::loadsettings();
-
-//			if($logged AND !$host_site AND $config['temp'] != 'mobile' AND $_SERVER['REQUEST_URI'] !== '/news/')
-//				header('Location: /news/');
+//			$host_site = $server['QUERY_STRING'];
+            $logged = true;
+			Registry::set('logged', true);
 
 			Registry::set('user_info', $user_info);
         }
@@ -70,9 +65,13 @@ class Auth
 
 			//ava
             if($user_info['user_photo'])
+            {
                 $user_info['ava'] = '/uploads/users/'.$user_info['user_id'].'/50_'.$user_info['user_photo'];
+            }
             else
+            {
                 $user_info['ava'] = '/images/no_ava_50.png';
+            }
 
 			//Если HASH совпадает то пропускаем
 			if( $user_info['user_hash'] == $request['hash'] AND $request['user_id'] == $user_info['user_id']){
@@ -95,11 +94,10 @@ class Auth
 
             }
 
-			$config = Settings::loadsettings();
-
 			//Если юзер нажимает "Главная" и он зашел не с моб версии. то скидываем на его стр.
 			$host_site = $server['QUERY_STRING'];
-			if($logged AND !$host_site AND $config['temp'] != 'mobile')
+//            if($logged AND !$host_site AND $config['temp'] != 'mobile')
+            if($logged AND !$host_site)
 				header('Location: https://'.$server['HTTP_HOST'].'/u'.$user_info['user_id']);
 				
 			Registry::set('logged', $logged);
@@ -120,15 +118,18 @@ class Auth
 			//Приготавливаем данные
 			$email = strip_tags($_POST['email']);
 
-			$password = password_hash(GetVar($_POST['password']), PASSWORD_DEFAULT);
+			$password = password_hash(Tools::GetVar($_POST['password']), PASSWORD_DEFAULT);
 
 			// if( _strlen( $name, $config['charset'] ) > 40 OR _strlen(trim($name), $config['charset']) < 3) $stop = 'error';
 
-            $lang = langs::get_langs();
+            //$lang = langs::get_langs();
 
 			//Проверяем правильность e-mail
 			if(Validation::check_email($email) == false AND $_POST['token'] !== $_SESSION['_mytoken'] || empty($_POST['token'])) {
-				msgbox('', $lang['not_loggin'].'<br /><a href="/restore" onClick="Page.Go(this.href); return false">Забыли пароль?r</a>', 'info_red');
+                //TODO update
+			    $logged = false;
+                return array('user_info' => $user_info, 'logged' => $logged);
+				//msgbox('', $lang['not_loggin'].'<br /><a href="/restore" onClick="Page.Go(this.href); return false">Забыли пароль?r</a>', 'info_red');
 			} else {
 
                 $check_user = $db->super_query("SELECT user_id FROM `users` WHERE user_email = '".$email."' AND user_password = '".$password."'");
@@ -139,7 +140,7 @@ class Auth
                     $hid = $password.md5(md5($_IP));
 
                     //Обновляем хэш входа
-                    $db->query("UPDATE `users` SET user_hid = '".$hid."' WHERE user_id = '".$check_user['user_id']."'");
+                    $db->query("UPDATE `users` SET user_hash = '".$hid."' WHERE user_id = '".$check_user['user_id']."'");
 
                     //Удаляем все рание события
                     $db->query("DELETE FROM `updates` WHERE for_user_id = '{$check_user['user_id']}'");
@@ -155,14 +156,17 @@ class Auth
                     //Вставляем лог в бд
                     $db->query("UPDATE `log` SET browser = '".$_BROWSER."', ip = '".$_IP."' WHERE uid = '".$check_user['user_id']."'");
 
-                    $config = Settings::loadsettings();
-
-                    if($config['temp'] != 'mobile')
+//                    if($config['temp'] != 'mobile')
                         header('Location: https://'.$server['HTTP_HOST'].'/u'.$check_user['user_id']);
-                    else
-                        header('Location: https://'.$server['HTTP_HOST'].'/');
+//                    else
+//                        header('Location: https://'.$server['HTTP_HOST'].'/');
                 } else
-                    msgbox('', $lang['not_loggin'].'<br /><br /><a href="/restore/" onClick="Page.Go(this.href); return false">Забыли пароль?</a>', 'info_red');
+                {
+                    //TODO update
+                    $logged = false;
+                    return array('user_info' => $user_info, 'logged' => $logged);
+                    //msgbox('', $lang['not_loggin'].'<br /><br /><a href="/restore/" onClick="Page.Go(this.href); return false">Забыли пароль?</a>', 'info_red');
+                }
 			}
 		}
 		return array('user_info' => $user_info, 'logged' => $logged);
@@ -170,6 +174,7 @@ class Auth
 
     /**
      * logout site
+     * @param bool $redirect
      */
     public static function logout($redirect = false)
     {

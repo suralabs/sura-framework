@@ -2,6 +2,7 @@
 
 namespace Sura\Libs;
 
+use JetBrains\PhpStorm\Pure;
 use Sura\Contracts\GramaticInterface;
 
 /**
@@ -11,27 +12,30 @@ use Sura\Contracts\GramaticInterface;
 class Gramatic implements GramaticInterface
 {
 
-    /**
+    public static function langdate($format, $stamp): string
+    {
+        $lang_date = Langs::get_langdate();
+        return strtr(@date($format, $stamp), $lang_date);
+    }
+
+/**
      * used to notify
      * @param string $date
      * @param bool $func
      * @param bool $full
      * @return string
      */
-    public static function megaDateNoTpl2($date, $func = false, $full = false):string
+    public static function megaDateNoTpl2(string $date, $func = false, $full = false):string
     {
         $server_time = intval($_SERVER['REQUEST_TIME']);
-        if(date('Y-m-d', $date) == date('Y-m-d', $server_time)) return $date = langdate('сегодня', $date);
-        elseif(date('Y-m-d', $date) == date('Y-m-d', ($server_time-84600))) return $date = langdate('вчера', $date);
-        else if($func == 'no_year') return $date = langdate('j M', $date);
-        else if($full) return $date = langdate('j F Y', $date);
+        if(date('Y-m-d', $date) == date('Y-m-d', $server_time)) return $date = self::langdate('сегодня', $date);
+        elseif(date('Y-m-d', $date) == date('Y-m-d', ($server_time-84600))) return $date = self::langdate('вчера', $date);
+        else if($func == 'no_year') return $date = self::langdate('j M', $date);
+        else if($full) return $date = self::langdate('j F Y', $date);
         else
-        return langdate('j M Y', $date);
+        return self::langdate('j M Y', $date);
     }
 
-    /*
-
-    */
     /**
      *     Использовать в любом файле php вот так
      * DeclName($row_users['user_name'], 'rod');
@@ -133,7 +137,7 @@ class Gramatic implements GramaticInterface
      * @param array $titles
      * @return mixed
      */
-    public static function declOfNum(int $number, array $titles) : string
+    #[Pure] public static function declOfNum(int $number, array $titles) : string
     {
         $cases = array(2, 0, 1, 1, 1, 2);
         return $titles[ ($number % 100 > 4 AND $number % 100 < 20)? 2 : $cases[min($number % 10, 5)] ];

@@ -1,11 +1,8 @@
 <?php
-# language: ru
 
 namespace Sura\Libs;
 
-use InvalidArgumentException;
-use Sura\Libs\Registry;
-use Sura\Libs\Settings;
+use Sura\Exception\SuraException;
 
 /**
  * Class Router
@@ -29,19 +26,20 @@ class Router
     private static string $requestMethod;
 
     /**
-     * @var $requestHandler
+     * @var string $requestHandler
      */
-    private static $requestHandler;
+    private static string $requestHandler;
 
     /**
      * @var array|null $params
+     * @deprecated
      */
-    private static array|null $params = [];
+    private ?array $params = [];
 
     /**
      * @var string[] $placeholders
      */
-    private static $placeholders = [
+    private static array $placeholders = [
         ':seg' => '([^\/]+)',
         ':num'  => '([0-9]+)',
         ':any'  => '(.+)'
@@ -72,11 +70,12 @@ class Router
      * Factory method construct Router from global vars.
      * @return Router
      */
-    public static function fromGlobals()
+    public static function fromGlobals(): Router
     {
         $config = Settings::loadsettings();
         $requests = Request::getRequest();
         $server = $requests->server;
+        $method = $requests->getMethod();
         if (isset($server['REQUEST_URI'])) {
             $uri = $server['REQUEST_URI'];
         }elseif(!empty($config['home_url'])){
@@ -89,13 +88,13 @@ class Router
             $uri = substr($uri, 0, $pos);
         }
         $uri = rawurldecode($uri);
-        return new static($uri, $server['REQUEST_METHOD']);
+        return new static($uri, $method);
     }
     /**
      * Current .
      * @return array
      */
-    public function getRoutes()
+    public static function getRoutes(): array
     {
         return self::$routes;
     }
@@ -104,32 +103,25 @@ class Router
      * Current processed URI.
      * @return string
      */
-    public function getRequestUri()
+    public static function getRequestUri(): string
     {
         return self::$requestUri; // ?: '/';
     }
-
-  /**
-   * Текущий обработанный URL
-   */
-//   public static function getCurrentUrl2() {
-//     return (self::$requestedUrl?:'/');
-//   }
 
     /**
      * Request method.
      * @return string
      */
-    public function getRequestMethod()
+    public static function getRequestMethod(): string
     {
         return self::$requestMethod;
     }
-    
+
     /**
      * Get Request handler.
-     * @return string|callable
+     * @return string
      */
-    public function getRequestHandler()
+    public static function getRequestHandler(): string
     {
         return self::$requestHandler;
     }
@@ -146,9 +138,11 @@ class Router
     /**
      * Request wildcard params.
      * @return array
+     * @deprecated
      */
-    public function getParams()
+    public static function getParams(): array
     {
+        //TODO
         return self::$params; //old
     }
 
@@ -156,16 +150,16 @@ class Router
      * Request params.
      * @return string
      */
-    public function getControllerName() : string
+    public static function getControllerName() : string
     {
         return self::$controllerName;
     }
 
     /**
      * Request params.
-     * @return array
+     * @return string
      */
-    public  function getActionName() : string
+    public static function getActionName() : string
     {
         return self::$actionName;
     }
@@ -173,13 +167,11 @@ class Router
     /**
      * Add route rule.
      *
-     * Добавить маршрут
-     *
      * @param string|array $route A URI route string or array
-     * @param string|callable $handler Any callable or string with controller classname and action method like "ControllerClass@actionMethod"
+     * @param callable|string|null $handler Any callable or string with controller classname and action method like "ControllerClass@actionMethod"
      * @return Router
      */
-    public function add(array|string $route, string|callable $handler = null) : Router
+    public function add(array|string $route, callable|null|string $handler = null) : Router
     {
         if ($handler !== null && !is_array($route)) {
             $route = array($route => $handler);
@@ -194,7 +186,7 @@ class Router
      */
     public function isFound() : bool
     {
-        $uri = $this->getRequestUri();
+        $uri = self::getRequestUri();
 
         /**
          *  if URI equals to route
@@ -210,7 +202,7 @@ class Router
             /**
              *  Replace wildcards by regex
              */
-            if (strpos($route, ':') !== false) {
+            if (str_contains($route, ':')) {
                 $route = str_replace($find, $replace, $route);
             }
             /**
@@ -222,7 +214,6 @@ class Router
                 return true;
             }
         }
-
         return false;
     }
     
@@ -230,18 +221,15 @@ class Router
      * Execute Request Handler.
      * Запуск соответствующего действия/экшена/метода контроллера
      *
-     * @param string|callable $handler
+     * @param callable|null|string $handler
      * @param array $params
      * @return mixed
-     * @throws \InvalidArgumentException
      * @throws \RuntimeException
      */
-    public function executeHandler($handler = null, $params = null) : callable|bool|null
+    public function executeHandler(callable|null|string $handler = null, array|null $params = null): mixed
     {
         if ($handler === null) {
-             throw new InvalidArgumentException(
-                 'Request handler not setted out. Please check '.__CLASS__.'::isFound() first'
-             );
+            throw SuraException::Error('Request handler not setted out. Please check '.__CLASS__.'::isFound() first');
         }
 
         // execute action in callable
@@ -251,55 +239,22 @@ class Router
         // execute action in controllers
         if (strpos($handler, '@')) {
             $ca = explode('@', $handler);
-            self::$controllerName = $ca['0'];
-            $ModName = strtolower( str_replace('Controller', '', $ca['0']) );
 
-//            Registry::set('ModName', $ModName); //main||manager||...
+            $controllername = self::$controllerName = $ca['0'];
+            $action = self::$actionName = $ca['1'];
 
-            $controllername = self::getController();
-            $action = $ca['1'];
-            // self::$actionName = $ca[1];//delete
-            $dir_name = ucfirst($ModName);
-
-                if (class_exists('\\App\\Modules\\'.$controllername)) {
-                    if (!method_exists('\\App\\Modules\\'.$controllername, $action)) {
-                        // throw new RuntimeException("Method '{$controllerName}::{$action}' not found");
-                        echo "Method \\App\\Modules\\{$controllername}::{$action} not found";
-                        return false;
-                    }else{
-                        $class = 'App\Modules\\'.$controllername;
-                        $foo = new $class();
-                        return call_user_func_array(array($foo, $action), $params);
-                        //return call_user_func_array(array('\\System\\Modules\\'.$controllername, $action), $params);
-                    }
-                }else  {
-                        echo 'Method \\App\\Modules\\'.$controllername.'::'.$action.' not found';
-
+            if (class_exists('\\App\\Modules\\'.$controllername)) {
+                if (!method_exists('\\App\\Modules\\'.$controllername, $action)) {
+                    throw SuraException::Error("Method '\\App\\Modules\\{$controllername}::{$action}()' not found");
+                }else{
+                    $class = 'App\Modules\\'.$controllername;
+                    $foo = new $class();
+                    return call_user_func_array(array($foo, $action), $params);
                 }
+            }else{
+                throw SuraException::Error("Class '{$controllername}' not found");
+            }
         }
-        return true;
+        throw SuraException::Error("Execute handler error");
     }
-
-    /**
-     * @return string
-     */
-    public function getController() : string
-    {
-        $ctrlName = self::$controllerName;
-
-        $mod = ucfirst(strtolower(str_replace('Controller', '', $ctrlName)));
-        $mod=ucfirst($mod);
-
-        return $mod.'Controller';
-    }
-
-    /**
-     * @return string
-     */
-     public function getAction() : string
-     {
-//         $actionName = self::$actionName;
-         return self::$actionName;
-     }
-
 }

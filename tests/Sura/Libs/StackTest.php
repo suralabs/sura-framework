@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class StackTest extends TestCase
 {
-    public function testEmpty()
+    public function testEmpty(): array
     {
         $stack = [];
         $this->assertEmpty($stack);
@@ -17,7 +17,7 @@ class StackTest extends TestCase
     /**
      * @depends testEmpty
      */
-    public function testPush(array $stack)
+    public function testPush(array $stack): array
     {
         array_push($stack, 'foo');
         $this->assertSame('foo', $stack[count($stack)-1]);

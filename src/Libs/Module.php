@@ -1,10 +1,7 @@
 <?php  
 namespace Sura\Libs;
 
-use Sura\Libs\Db;
 use Sura\Contracts\ModuleInterface;
-use Sura\Libs\Langs;
-use Sura\Libs\Registry;
 
 /**
  *  Module
@@ -13,7 +10,7 @@ use Sura\Libs\Registry;
 class Module implements ModuleInterface
 {
     /**
-     * @return array|null
+     * @return string|array|null
      */
     public function user_info() : string|array|null
     {
@@ -29,7 +26,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return object
+     * @return \Sura\Libs\Db|null
      */
     function db() : null|Db
     {

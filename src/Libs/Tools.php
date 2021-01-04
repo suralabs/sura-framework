@@ -2,9 +2,7 @@
 
 namespace Sura\Libs;
 
-use Sura\Cache\Adapter\FileAdapter;
-use Sura\Cache\Cache;
-use Sura\Libs\Templates;
+use Sura\Exception\SuraException;
 
 /**
  * Class Tools
@@ -15,9 +13,12 @@ class Tools
 
     /**
      * @param $url
+     * @return string
      */
-    public static function clean_url(string $url) {
-        if( $url == '' ) return;
+    public static function clean_url(string $url): string
+    {
+        if( empty($url) )
+            return $url;
 
         $url = str_replace( "http://", "", strtolower( $url ) );
         $url = str_replace( "https://", "", $url );
@@ -72,8 +73,7 @@ class Tools
      *
      */
     public static function NoAjaxQuery($url = NULL){
-        return false;
-		if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
+		if(self::clean_url($_SERVER['HTTP_REFERER']) != self::clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
             if($url !== NULL){
                 header('Location: '.$url);
             }else{
@@ -88,7 +88,7 @@ class Tools
     public static function NoAjaxRedirect(string $url = ''){
         $ajax = (isset($_POST['ajax'])) ? 'yes' : 'no';
         if($ajax == 'yes')
-            if(clean_url($_SERVER['HTTP_REFERER']) != clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
+            if(self::clean_url($_SERVER['HTTP_REFERER']) != self::clean_url($_SERVER['HTTP_HOST']) AND $_SERVER['REQUEST_METHOD'] != 'POST'){
                 if($url !== ''){
                     header('Location: '.$url);
                 }else{
@@ -99,20 +99,20 @@ class Tools
 
 
     /**
-     * @param $v
+     * @param string $string
      * @return string
      */
-    public static function GetVar(string $v): string
+    public static function GetVar(string $string): string
     {
         if(ini_get('magic_quotes_gpc'))
-            return stripslashes($v) ;
-        return $v;
+            return stripslashes($string);
+        return $string;
     }
 
     /**
      * @param $id
      * @param $options
-     * @return string|string[]
+     * @return string
      */
     public static function InstallationSelectedNew($id, $options): string
     {
@@ -128,15 +128,16 @@ class Tools
         $url = html_entity_decode(urldecode($_SERVER['QUERY_STRING']));
 
         if($url){
-            if((strpos( $url, '<' ) !== false) || (strpos( $url, '>' ) !== false) || (strpos( $url, '"' ) !== false) || (strpos( $url, './' ) !== false) || (strpos( $url, '../' ) !== false) || (strpos( $url, '\'' ) !== false) || (strpos( $url, '.php' ) !== false)){
-                if($_GET['go'] != "search" AND $_GET['go'] != "messages")
-                    die('Hacking attempt!');
+            if((str_contains($url, '<')) || (str_contains($url, '>')) || (str_contains($url, '"')) || (str_contains($url, './')) || (str_contains($url, '../')) || (str_contains($url, '\'')) || (str_contains($url, '.php'))){
+                if($_GET['go'] != "search" AND $_GET['go'] != "messages"){
+                    throw \Sura\Exception\SuraException::Error('Hacking attempt!');
+                }
             }
         }
 
         $url = html_entity_decode( urldecode( $_SERVER['REQUEST_URI'] ) );
         if($url){
-            if((strpos($url, '<') !== false) || (strpos($url, '>') !== false) || (strpos($url, '"') !== false) || (strpos($url, '\'') !== false)){
+            if((str_contains($url, '<')) || (str_contains($url, '>')) || (str_contains($url, '"')) || (str_contains($url, '\''))){
                 if($_GET['go'] != "search" AND $_GET['go'] != "messages")
                     die('Hacking attempt!');
             }
@@ -164,19 +165,14 @@ class Tools
 
     /**
      * check user to friends
-     *
-     * true - yes
-     *
-     * @param $friendId
+     * @param int $for_user_id
      * @return bool
      */
-    public static function CheckFriends(int $friendId) : bool
+    public static function CheckFriends(int $for_user_id) : bool
     {
         $user_info = Registry::get('user_info');
-        $db = Db::getDB();
-        $for_user_id = $friendId; // not owner
-
         $from_user_id = $user_info['user_id'];
+        $db = Db::getDB();
         $check = $db->super_query("SELECT user_id FROM `friends` WHERE friend_id = '{$for_user_id}' AND user_id = '{$from_user_id}' AND subscriptions = 0");
         if ($check)
         {
@@ -184,31 +180,9 @@ class Tools
         }else{
             return false;
         }
-
-
-
-//        $Cache = cache_init(array('type' => 'file'));
-//        try {
-//            $openMyList = $Cache->get("users/{$user_info['user_id']}/friends");
-//            if(stripos($openMyList, "u{$friendId}|") !== false)
-//                return true;
-//            else
-//                return false;
-//        }catch (\Exception $e){
-//            try {
-//                $openMyList = $Cache->get("users/{$user_info['user_id']}/friends");
-//            }catch (\Exception $e){
-//                $Cache->set("users/{$user_info['user_id']}/friends", "");
-//            }
-//            $Cache->set("users/{$user_info['user_id']}/friends", $openMyList."u{$friendId}|");
-//            if(stripos($openMyList, "u{$friendId}|") !== false)
-//                return true;
-//            else
-//                return false;
-//        }
     }
 
-    public static function Online($time)
+    public static function Online($time): bool
     {
         $config = Settings::loadsettings();
         $server_time = intval($_SERVER['REQUEST_TIME']);
@@ -222,10 +196,9 @@ class Tools
     /**
      * !Дубликат
      *
-     * @param $limit колличество
-     * @param $num
-     * @param $type
-     * @param $tpl
+     * @param int $items_per_page
+     * @param int $items_count
+     * @param string $type
      * @return mixed
      */
     public static function navigation(int $items_per_page, int $items_count, string $type): string
@@ -278,12 +251,11 @@ class Tools
 
     /**
      *
-     * @param $gc
+     * @param $limit
      * @param $num
      * @param $id
      * @param $function
      * @param $act
-     * @param $tpl
      * @return mixed
      */
     //TODO update code
@@ -351,9 +323,7 @@ class Tools
      */
     public static function time(): int
     {
-        $requests = Request::getRequest();
-        $server = $requests->server;
-
+        $server = Request::getRequest()->server;
         return (int)$server['REQUEST_TIME'];
     }
 }

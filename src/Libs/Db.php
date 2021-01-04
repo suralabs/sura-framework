@@ -2,15 +2,15 @@
 
 namespace Sura\Libs;
 
-use Sura\Libs\Cache;
-use Sura\Libs\Settings;
+use Sura\Contracts\DbInterface;
 use \Sura\Log\Log;
 
 /**
  * Class Db
  * @package Sura\Libs
  */
-final class Db {
+final class Db implements DbInterface
+{
 
     /**
      * @var null

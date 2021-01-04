@@ -2,32 +2,34 @@
 
 namespace Sura\Libs;
 
+use JetBrains\PhpStorm\Pure;
+
 class Mail {
 	
 	var $site_name = "";
 	var $from = "";
 	var $to = "";
-	var $subject = "";
-	var $message = "";
-	var $header = "";
-	var $additional_parameters = null;
-	var $error = "";
-	var $bcc = array ();
-	var $mail_headers = "";
-	var $html_mail = 0;
+	var string $subject = "";
+	var string $message = "";
+	var string $header = "";
+	var ?string $additional_parameters = null;
+	var string $error = "";
+	var array $bcc = array ();
+	var string $mail_headers = "";
+	var false|int $html_mail = 0;
 	var $charset = 'windows-1251';
 	
 	var $smtp_fp = FALSE;
-	var $smtp_msg = "";
-	var $smtp_port = "";
+	var string $smtp_msg = "";
+	var int|string $smtp_port = "";
 	var $smtp_host = "localhost";
 	var $smtp_user = "";
 	var $smtp_pass = "";
-	var $smtp_code = "";
-	var $smtp_mail = "";
-	var $send_error = FALSE;
+	var string $smtp_code = "";
+	var string $smtp_mail = "";
+	var bool $send_error = FALSE;
 	
-	var $eol = "\n";
+	var string $eol = "\n";
 	
 	var $mail_method = 'php';
 
@@ -36,7 +38,7 @@ class Mail {
      * @param $config
      * @param false $is_html
      */
-	function __construct($config, $is_html = false) {
+	#[Pure] function __construct($config, $is_html = false) {
 		$this->mail_method = $config['mail_metod'];
 		
 		$this->from = $config['admin_mail'];
@@ -252,15 +254,15 @@ class Mail {
 			@fclose( $this->smtp_fp );
 		} else {
 			$this->smtp_error( "SMTP service unaviable" );
-			return;
-		}
+        }
 	}
 
     /**
      * @param $cmd
      * @return bool
      */
-	function smtp_send_cmd($cmd) {
+	function smtp_send_cmd($cmd): bool
+    {
 		$this->smtp_msg = "";
 		$this->smtp_code = "";
 		
@@ -279,18 +281,17 @@ class Mail {
 	function smtp_error($err = "") {
 		$this->smtp_msg = $err;
 		$this->send_error = true;
-		return;
-	}
+    }
 
     /**
      * @param $data
      * @return string|string[]
      */
-	function smtp_crlf_encode($data) {
+	function smtp_crlf_encode($data): array|string
+    {
 		$data .= "\n";
 		$data = str_replace( "\n", "\r\n", str_replace( "\r", "", $data ) );
 		$data = str_replace( "\n.\r\n", "\n. \r\n", $data );
 		return $data;
 	}
 }
-?>

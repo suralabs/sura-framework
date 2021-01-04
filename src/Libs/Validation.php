@@ -2,8 +2,7 @@
 
 namespace Sura\Libs;
 
-use phpDocumentor\Reflection\Types\Integer;
-use Sura\Classes\Db;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class Validation
@@ -15,7 +14,7 @@ class Validation
     /**
      * @var string[]
      */
-    static $regx = array(
+    static array $regx = array(
         //邮箱
         'email' => '/^[\w-\.]+@[\w-]+(\.(\w)+)*(\.(\w){2,4})$/',
         //手机号码
@@ -56,7 +55,7 @@ class Validation
      * @param $input
      * @return bool|string
      */
-    static function regx(string $regx, string $input)
+    static function regx(string $regx, string $input): bool|string
     {
         $n = preg_match($regx, $input, $match);
         if ($n === 0)
@@ -74,7 +73,7 @@ class Validation
      * @param $input
      * @return mixed
      */
-    static function check($input, $ctype)
+    static function check($input, $ctype): mixed
     {
         if (isset(self::$regx[$ctype]))
         {
@@ -91,7 +90,7 @@ class Validation
      * @param string $ip
      * @return bool|string
      */
-    static function check_ip(string $ip)
+    #[Pure] static function check_ip(string $ip): bool|string
     {
         if (count ( explode ( ".", $ip ) ) == 4 OR filter_var( $ip , FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) OR strpos($ip, ":") !== false ){
             return $ip;
@@ -103,7 +102,7 @@ class Validation
      * @param $user_name
      * @return bool
      */
-    public static function check_name(string $user_name)
+    public static function check_name(string $user_name): bool|string
     {
         if (empty($user_name))
             return false;
@@ -120,7 +119,7 @@ class Validation
      * @param $password_second
      * @return bool
      */
-    public static function check_password(string $password_first, string $password_second) : string|bool
+    #[Pure] public static function check_password(string $password_first, string $password_second) : string|bool
     {
         if (empty($password_first) or empty($password_second))
             return false;
@@ -131,10 +130,10 @@ class Validation
     }
 
     /**
-     * @param $email
-     * @return bool
+     * @param string $email
+     * @return string|bool
      */
-    public static function check_email(string $email) : string|bool
+    #[Pure] public static function check_email(string $email) : string|bool
     {
         if (empty($email))
             return false;
@@ -150,8 +149,8 @@ class Validation
     }
 
     /**
-     * @param $text
-     * @return string|string[]
+     * @param string $text
+     * @return string
      */
     public static function strip_data(string $text) :string
     {
@@ -177,8 +176,8 @@ class Validation
 
 
     /**
-     * @param $source
-     * @return string|string[]|null
+     * @param string $source
+     * @return string
      */
     public static function replace_rn(string $source) :string
     {
@@ -195,8 +194,8 @@ class Validation
 	}
 
     /**
-     * @param $source
-     * @return string|string[]|null
+     * @param string $source
+     * @return string
      */
     public static function myBr(string $source) :string
     {
@@ -214,8 +213,8 @@ class Validation
 	}
 
     /**
-     * @param $source
-     * @return string|string[]
+     * @param string $source
+     * @return string
      */
     public static function myBrRn(string $source) :string
     {
@@ -231,8 +230,8 @@ class Validation
 	}
 
     /**
-     * @param $source
-     * @return string|string[]|null
+     * @param string $source
+     * @return string
      */
     public static function rn_replace(string $source) :string
     {
@@ -252,7 +251,7 @@ class Validation
      * @param string $source
      * @param int $substr_num
      * @param bool $strip_tags
-     * @return string|string[]|null
+     * @return string
      */
     public static function textFilter(string $source, int $substr_num = 25000, bool $strip_tags = false) :string
     {
@@ -283,11 +282,11 @@ class Validation
 	}
 
     /**
-     * @param $value
+     * @param string $value
      * @param string $charset
-     * @return false|int
+     * @return int
      */
-    public static function _strlen(string $value, string $charset = "utf-8" ) :int
+    #[Pure] public static function _strlen(string $value, string $charset = "utf-8" ) :int
     {
 
 		if( function_exists( 'mb_strlen' ) ) {
@@ -300,9 +299,9 @@ class Validation
 	}
 
     /**
+     * @param array $ips
+     * @return string
      * @deprecated
-     * @param $ips
-     * @return bool|mixed
      */
     //#[Deprecated]
     public static function check_ip_old(array $ips) :string
@@ -330,7 +329,7 @@ class Validation
     /**
      * @param $source
      * @param bool $encode
-     * @return string|string[]|null
+     * @return string
      */
     public static function word_filter($source, $encode = true)  :string
     {
@@ -434,7 +433,7 @@ class Validation
      * @param $str
      * @return mixed
      */
-    static function string(string $str) : string
+    #[Pure] static function string(string $str) : string
     {
         return filter_var($str, FILTER_DEFAULT);
     }
@@ -457,7 +456,7 @@ class Validation
      * @param $length
      * @return false|string
      */
-    static function substr_8bit($binary_string, $start, $length) : false|string
+    #[Pure] static function substr_8bit($binary_string, $start, $length) : false|string
     {
         if (function_exists('mb_substr')) {
             return mb_substr($binary_string, $start, $length, '8bit');

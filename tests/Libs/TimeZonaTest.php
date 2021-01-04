@@ -2,19 +2,18 @@
 
 namespace Libs;
 
-use Sura\Libs\Auth;
+use Sura\Libs\TimeZona;
 use PHPUnit\Framework\TestCase;
 
-class AuthTest extends TestCase
+class TimeZonaTest extends TestCase
 {
 
-    public function testIndex()
+    public function testList()
     {
         $this->assertNotFalse(true);
-
     }
 
-    public function testLogout()
+    public function testTime_zone()
     {
         $this->assertNotFalse(true);
     }

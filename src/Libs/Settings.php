@@ -12,6 +12,16 @@ class Settings
      */
     public static function loadsettings() : array
  {
-     return include __DIR__.'/../../../../../config/config.php';
+     //TODO update
+     return self::load();
  }
+
+    /**
+     * load settings
+     * @return array
+     */
+    public static function load() : array
+    {
+        return include __DIR__.'/../../../../../config/config.php';
+    }
 }

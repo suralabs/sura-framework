@@ -24,37 +24,37 @@ class Registry
      *
      */
     protected function __clone() {}
- 
+
     /**
      * Проверяет существуют ли данные по ключу
      *
      * @param string $name
      * @return bool
      */
-    public static function exists($name) : bool
+    public static function exists(string $name) : bool
     {
         return isset(self::$store[$name]);
     }
- 
+
     /**
      * Возвращает данные по ключу или null, если не данных нет
      *
      * @param string $name
-     * @return unknown
+     * @return array|string|null
      */
-    public static function get($name) : string | array|null
+    public static function get(mixed $name) : string | array|null
     {
         return (isset(self::$store[$name])) ? self::$store[$name] : null;
     }
- 
+
     /**
      * Сохраняет данные по ключу в статическом хранилище
      *
      * @param string $name
-     * @param unknown $obj
-     * @return unknown
+     * @param mixed $obj
+     * @return string
      */
-    public static function set($name, $obj) 
+    public static function set(mixed $name, mixed $obj): string
     {
         return self::$store[$name] = $obj;
     }

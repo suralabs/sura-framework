@@ -2,19 +2,18 @@
 
 namespace Libs;
 
-use Sura\Libs\Auth;
+use Sura\Libs\Settings;
 use PHPUnit\Framework\TestCase;
 
-class AuthTest extends TestCase
+class SettingsTest extends TestCase
 {
 
-    public function testIndex()
+    public function testLoadsettings()
     {
         $this->assertNotFalse(true);
-
     }
 
-    public function testLogout()
+    public function testLoad()
     {
         $this->assertNotFalse(true);
     }

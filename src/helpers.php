@@ -1,37 +1,35 @@
 <?php
 
-use Sura\Libs\Str;
+use JetBrains\PhpStorm\Pure;
 
 if (!function_exists('e')) {
     /**
      * Escape HTML entities in a string.
      *
-     * @param  string  $value
+     * @param string $value
      * @return string
      */
-    function e($value)
+    #[Pure] function e(string $value): string
     {
         return html_entity_decode($value);
     }
 }
 
-if (!function_exists('clean_url')) {
-    /**
-     * FUNC. COOKIES
-     *
-     * @param $url
-     * @return bool
-     */
-    function clean_url(string $url) : string
+if (!function_exists('check_smartphone')) {
+    #[Pure] function check_smartphone(): bool
     {
-        if ($url == '') return false;
-        $url = str_replace( "http://", "", strtolower( $url ) );
-        $url = str_replace("https://", "", $url);
-        if( substr( $url, 0, 4 ) == 'www.' ) $url = substr( $url, 4 );
-        $url = explode('/', $url);
-        $url = reset($url);
-        $url = explode(':', $url);
-        $url = reset($url);
-        return $url;
+
+        if (isset($_SESSION['mobile_enable'])) {
+            return true;
+        }
+        $phone_array = array('iphone', 'android', 'pocket', 'palm', 'windows ce', 'windowsce', 'mobile windows', 'cellphone', 'opera mobi', 'operamobi', 'ipod', 'small', 'sharp', 'sonyericsson', 'symbian', 'symbos', 'opera mini', 'nokia', 'htc_', 'samsung', 'motorola', 'smartphone', 'blackberry', 'playstation portable', 'tablet browser', 'android');
+        $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        foreach ($phone_array as $value) {
+            if (str_contains($agent, $value)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
+

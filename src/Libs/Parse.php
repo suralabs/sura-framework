@@ -1,24 +1,13 @@
 <?php
-/* 
-	Appointment: Парсинг данных
-	File: parse.php 
-	Author: f0rt1 
-	Engine: Vii Engine
-	Copyright: NiceWeb Group (с) 2011
-	e-mail: niceweb@i.ua
-	URL: http://www.niceweb.in.ua/
-	ICQ: 427-825-959
-	Данный код защищен авторскими правами
-*/
 
-use Sura\Libs\Settings;
+namespace Sura\Libs;
 
 class Parse{
 
     /**
-     * @param $source
+     * @param string $source
      * @param bool $preview
-     * @return string|string[]|null
+     * @return string
      */
     function BBparse(string $source, $preview = false) : string
     {
@@ -35,7 +24,7 @@ class Parse{
 		$source = str_ireplace("[i]", "<i>", str_ireplace("[/i]", "</i>", $source));
 		$source = str_ireplace("[u]", "<u>", str_ireplace("[/u]", "</u>", $source));
 		
-		$source = preg_replace("#\[(left|right|center)\](.+?)\[/\\1\]#is", "<div align=\"\\1\">\\2</div>", $source);
+		$source = preg_replace("#\[(left|right|center)\](.+?)\[/\\1\]#is", "<div >\\2</div>", $source);
 		
 		$source = preg_replace( "#\[quote\](.+?)\[/quote\]#is", "<blockquote>\\1</blockquote>", $source );
 		
@@ -52,30 +41,36 @@ class Parse{
      * @param bool $preview
      * @return string
      */
-    function BBvideo(string $source, $preview = false) : string
+    function BBvideo(string $source, bool $preview = false) : string
     {
-		global $config;
-		
+//		global $config;
+        $config = Settings::loadsettings();
+
 		$exp = explode('|', $source);
 		$home_url = $config['home_url'];
 
+        $border = $width = $height = '';
+
 		if(stripos($source, "{$exp['0']}|{$exp['1']}|{$home_url}") !== false){
 			
-			if($exp['3'])
-				if($exp['3'] > 175)
-					$width = "width=\'175\'";
-				else
-					$width = "width=\'{$exp[3]}\'";
+			if($exp['3']){
+                if($exp['3'] > 175)
+                    $width = "width=\'175\'";
+                else
+                    $width = "width=\'{$exp[3]}\'";
+            }
+
 					
-			if($exp['4'])
-				if($exp['4'] > 131)
-					$height = "height=\'131\'";
-				else
-					$height = "height=\'{$exp['4']}\'";
+			if($exp['4']){
+                if($exp['4'] > 131)
+                    $height = "height=\'131\'";
+                else
+                    $height = "height=\'{$exp['4']}\'";
+            }
 			
 			if($exp['5'])
 				$border = 'notes_videoborder';
-				
+
 			if($exp['6'])
 				$blank = 'target="_blank"';
 			else
@@ -91,9 +86,12 @@ class Parse{
 			if(!$preview){
 				$link = "<a href=\"/video{$exp['0']}_{$exp['1']}_sec=notes/id={note-id}\" {$blank}>";
 				$slink = "</a>";
-			}
+			}else{
+                $link = '';
+                $slink = '';
+            }
 
-			$source = "<!--video:{$source}-->{$link}<img src=\"{$exp['2']}\" {$width} {$height} {$pos} class=\"notes_videopad {$border}\" />{$slink}<!--/video-->";
+			$source = "<!--video:{$source}-->{$link}<img src=\"{$exp['2']}\" {$width} {$height} {$pos} class=\"notes_videopad {$border}\"  alt=\"img\"/>{$slink}<!--/video-->";
 		}
 		
 		return $source;
@@ -109,6 +107,8 @@ class Parse{
         $config = Settings::loadsettings();
 		$exp = explode('|', $source);
 		$home_url = $config['home_url'];
+
+        $border = $width = $height = '';
 
 		if(stripos($source, "{$exp['0']}|{$exp['1']}|{$home_url}") !== false){
 			
@@ -172,39 +172,30 @@ class Parse{
     function BBlink(string $source) : string
     {
 		$exp = explode('|', $source);
-		
 		if($exp['0']){
 			if(!$exp['1'])
 				$exp['1'] = $exp['0'];
-			
 			$exp['0'] = str_replace(':', '', $exp[0]);
-			
 			$source = "<!--link:{$source}--><a href=\"{$exp['0']}\" target=\"_blank\">{$exp['1']}</a><!--/link-->";
 		}
 		return $source;
 	}
 
     /**
-     * @param $source
-     * @return string|string[]|null
+     * @param string $source
+     * @return string
      */
     function BBdecode(string $source) : string
     {
-	
 		$source = str_ireplace("&#123;", "{", $source);
 		$source = str_ireplace("&#96;", "`", $source);
 		$source = str_ireplace("&#123;theme}", "{theme}", $source);
-		
 		$source = str_ireplace("<b>", "[b]", str_ireplace("</b>", "[/b]", $source));
 		$source = str_ireplace("<i>", "[i]", str_ireplace("</i>", "[/i]", $source));
 		$source = str_ireplace("<u>", "[u]", str_ireplace("</u>", "[/u]", $source));
-		
 		$source = preg_replace("#<div align=\"(left|right|center)\">(.+?)</div>#is", "[\\1]\\2[/\\1]", $source);
-		
 		$source = preg_replace( "#\[quote\](.+?)\[/quote\]#is", "<blockquote>\\1</blockquote>", $source );
-		
 		$source = preg_replace( "#<blockquote>(.+?)</blockquote>#is", "[quote]\\1[/quote]", $source );
-		
 		if(stripos($source, "<!--photo:") !== false || stripos($source, "<!--video:") !== false || stripos($source, "<!--link:") !== false){
 			$source = preg_replace("#\\<!--video:(.*?)\\<!--/video-->#ies", "\$this->BBdecodeVideo('\\1')", $source);
 			$source = preg_replace("#\\<!--photo:(.*?)\\<!--/photo-->#ies", "\$this->BBdecodePhoto('\\1')", $source);
@@ -220,8 +211,7 @@ class Parse{
     function BBdecodePhoto(string $source) : string
     {
 		$start = explode('-->', $source);
-		$source = "[photo]{$start['0']}[/photo]";
-		return $source;
+		return "[photo]{$start['0']}[/photo]";
 	}
 
     /**
@@ -231,8 +221,7 @@ class Parse{
     function BBdecodeVideo(string $source) : string
     {
 		$start = explode('-->', $source);
-		$source = "[video]{$start['0']}[/video]";
-		return $source;
+		return "[video]{$start['0']}[/video]";
 	}
 
     /**
@@ -241,7 +230,6 @@ class Parse{
      */
     function BBdecodeLink(string $source) : string{
 		$start = explode('-->', $source);
-		$source = "[link]{$start['0']}[/link]";
-		return $source;
+		return "[link]{$start['0']}[/link]";
 	}
 }

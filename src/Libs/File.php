@@ -4,7 +4,9 @@
 namespace Sura\Libs;
 
 
+use Closure;
 use SplFileInfo;
+use Sura\Exception\FileException;
 
 class File extends SplFileInfo
 {
@@ -13,10 +15,10 @@ class File extends SplFileInfo
      * 文件hash规则
      * @var array
      */
-    protected $hash = [];
+    protected array $hash = [];
 
     /** @var $hashName */
-    protected $hashName;
+    protected mixed $hashName;
 
     /**
      * File constructor.
@@ -64,7 +66,8 @@ class File extends SplFileInfo
      */
     public function sha1(): string
     {
-        return $this->hash('sha1');
+        //'sha1'
+        return $this->hash();
     }
 
     /**
@@ -74,9 +77,9 @@ class File extends SplFileInfo
      */
     public function getMime(): string
     {
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $f_info = finfo_open(FILEINFO_MIME_TYPE);
 
-        return finfo_file($finfo, $this->getPathname());
+        return finfo_file($f_info, $this->getPathname());
     }
 
     /**
@@ -90,7 +93,7 @@ class File extends SplFileInfo
     {
         $target = $this->getTargetFile($directory, $name);
 
-        set_error_handler(function ($type, $msg) use (&$error) {
+        set_error_handler(function ($msg) use (&$error) {
             $error = $msg;
         });
         $renamed = rename($this->getPathname(), (string) $target);
@@ -120,7 +123,7 @@ class File extends SplFileInfo
             throw new FileException(sprintf('Unable to write in the "%s" directory', $directory));
         }
 
-        $target = rtrim($directory, '/\\') . \DIRECTORY_SEPARATOR . (null === $name ? $this->getBasename() : $this->getName($name));
+        $target = rtrim($directory, '/\\') . '/' . (null === $name ? $this->getBasename() : $this->getName($name));
 
         return new self($target, false);
     }
@@ -151,13 +154,13 @@ class File extends SplFileInfo
     /**
      * 自动生成文件名
      * @access public
-     * @param string|\Closure $rule
+     * @param string|Closure $rule
      * @return string
      */
     public function hashName($rule = 'date'): string
     {
         if (!$this->hashName) {
-            if ($rule instanceof \Closure) {
+            if ($rule instanceof Closure) {
                 $this->hashName = call_user_func_array($rule, [$this]);
             } else {
                 switch (true) {

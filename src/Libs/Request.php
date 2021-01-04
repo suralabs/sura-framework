@@ -51,7 +51,7 @@ class Request
     /**
      *
      */
-    function setGlobal()
+    public function setGlobal()
     {
         /**
          * Назначает информацию заголовка HTTP суперглобальной переменной $ _SERVER
@@ -74,7 +74,7 @@ class Request
     /**
      * @return mixed
      */
-    function getGlobal(): array
+    public function getGlobal(): array
     {
         return $this->request;
     }
@@ -82,7 +82,7 @@ class Request
     /**
      * Инициализация
      */
-    function initWithFastCGI()
+    public function initWithFastCGI()
     {
         $this->get = $_GET;
         $this->post = $_POST;
@@ -94,7 +94,7 @@ class Request
     /**
      *
      */
-    function unsetGlobal()
+    public function unsetGlobal()
     {
 //        $_REQUEST = $_SESSION = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
         $_REQUEST = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
@@ -103,7 +103,7 @@ class Request
     /**
      * @return bool
      */
-    function isWebSocket(): bool
+    public function isWebSocket(): bool
     {
         return isset($this->header['Upgrade']) && strtolower($this->header['Upgrade']) == 'websocket';
     }
@@ -111,9 +111,9 @@ class Request
     /**
      * Получить IP клиента
      *
-     * @return mixed|string - User IP
+     * @return string - User IP
      */
-    function getClientIP() : string
+    public function getClientIP() : string
     {
         if (isset($this->server["HTTP_X_REAL_IP"]) and strcasecmp($this->server["HTTP_X_REAL_IP"], "unknown"))
         {
@@ -148,6 +148,24 @@ class Request
         return "";
     }
 
+    public function getMethod(): string
+    {
+        return getenv('REQUEST_METHOD');
+    }
+
+    /**
+     * Проверяем ajax
+     *
+     * @return bool
+     */
+    public function checkAjax() : bool
+    {
+        if (isset($this->post['ajax']) AND $this->post['ajax'] == 'yes')
+            return true;
+        else
+            return false;
+    }
+
     /**
      * Проверяем ajax
      *
@@ -168,7 +186,7 @@ class Request
      */
     public static function https() : bool
     {
-        if($_SERVER['SERVER_PORT'] != 443) {
+        if(getenv['SERVER_PORT'] != 443) {
             return false;
         }else{
             return true;

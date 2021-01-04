@@ -14,28 +14,28 @@ class Url
     use Macroable;
 
     /** @var string */
-    protected $scheme = '';
+    protected string $scheme = '';
 
     /** @var string */
-    protected $host = '';
+    protected string $host = '';
 
     /** @var int|null */
-    protected $port = null;
+    protected ?int $port = null;
 
     /** @var string */
-    protected $user = '';
+    protected string $user = '';
 
     /** @var string|null */
-    protected $password = null;
+    protected ?string $password = null;
 
     /** @var string */
-    protected $path = '';
+    protected string $path = '';
 
-    /** @var \Sura\Url\QueryParameterBag */
-    protected $query;
+    /** @var QueryParameterBag */
+    protected QueryParameterBag $query;
 
     /** @var string */
-    protected $fragment = '';
+    protected string $fragment = '';
 
     /**
      *
@@ -82,7 +82,7 @@ class Url
     /**
      * @return string
      */
-    public function getScheme()
+    public function getScheme(): string
     {
         return $this->scheme;
     }
@@ -108,7 +108,7 @@ class Url
     /**
      * @return string
      */
-    public function getUserInfo()
+    public function getUserInfo(): string
     {
         $userInfo = $this->user;
 
@@ -122,7 +122,7 @@ class Url
     /**
      * @return string
      */
-    public function getHost()
+    public function getHost(): string
     {
         return $this->host;
     }
@@ -130,7 +130,7 @@ class Url
     /**
      * @return int|null
      */
-    public function getPort()
+    public function getPort(): ?int
     {
         return $this->port;
     }
@@ -138,7 +138,7 @@ class Url
     /**
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -174,9 +174,9 @@ class Url
     /**
      * @param string $key
      * @param null $default
-     * @return mixed|null
+     * @return mixed
      */
-    public function getQueryParameter(string $key, $default = null)
+    public function getQueryParameter(string $key, $default = null): mixed
     {
         return $this->query->get($key, $default);
     }
@@ -203,7 +203,7 @@ class Url
      * @param string $value
      * @return Url
      */
-    public function withQueryParameter(string $key, string $value)
+    public function withQueryParameter(string $key, string $value): Url
     {
         $url = clone $this;
         $url->query->unset($key);
@@ -217,7 +217,7 @@ class Url
      * @param string $key
      * @return Url
      */
-    public function withoutQueryParameter(string $key)
+    public function withoutQueryParameter(string $key): Url
     {
         $url = clone $this;
         $url->query->unset($key);

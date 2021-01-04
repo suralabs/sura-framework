@@ -1,13 +1,13 @@
 <?php
-namespace Sura\Classes;
+namespace Sura\Libs;
 
 class Download {
 
     /** @var string[]  */
-	var $properties = array ('old_name' => "", 'new_name' => "", 'type' => "", 'size' => "", 'resume' => "", 'max_speed' => "" );
+	var array $properties = array ('old_name' => "", 'new_name' => "", 'type' => "", 'size' => "", 'resume' => "", 'max_speed' => "" );
 
 	/** @var int  */
-	var $range = 0;
+	var int $range = 0;
 
     /**
      * @param $path
@@ -82,7 +82,7 @@ class Download {
 		}
 		
 		@ini_set( 'max_execution_time', 0 );
-		@set_time_limit();
+//		@set_time_limit();
 		
 		$this->_download( $this->properties['old_name'], $this->range );
 	}
@@ -121,4 +121,3 @@ class Download {
 
 }
 
-?>
