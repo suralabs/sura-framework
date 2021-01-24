@@ -4,7 +4,6 @@
     "keywords": ["framework", "sura","router", "mvc"],
     "license": "MIT",
     "type": "library",
-    "version": "0.9.1",
     "authors": [
       {
           "name": "Semen Alekseev",
