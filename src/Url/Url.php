@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Sura\Url;
 
 use Sura\Macroable\Macroable;

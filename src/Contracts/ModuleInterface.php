@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Sura\Contracts;
 
@@ -10,7 +10,7 @@ interface ModuleInterface
 {
     public function user_info() : string|array|null;
 
-    public function logged() : string|null;
+    public function logged() : bool;
 
     public function db() : null|Db;
 

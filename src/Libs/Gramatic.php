@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Sura\Libs;
 
 use JetBrains\PhpStorm\Pure;
@@ -18,22 +18,28 @@ class Gramatic implements GramaticInterface
         return strtr(@date($format, $stamp), $lang_date);
     }
 
-/**
-     * used to notify
-     * @param string $date
-     * @param bool $func
+    /**
+     * @param int $timestamp
+     * @param false|string $func
      * @param bool $full
      * @return string
      */
-    public static function megaDateNoTpl2(string $date, $func = false, $full = false):string
+    public static function megaDate(int $timestamp, false|string $func = false, bool $full = false): string
     {
-        $server_time = intval($_SERVER['REQUEST_TIME']);
-        if(date('Y-m-d', $date) == date('Y-m-d', $server_time)) return $date = self::langdate('сегодня', $date);
-        elseif(date('Y-m-d', $date) == date('Y-m-d', ($server_time-84600))) return $date = self::langdate('вчера', $date);
-        else if($func == 'no_year') return $date = self::langdate('j M', $date);
-        else if($full) return $date = self::langdate('j F Y', $date);
-        else
-        return self::langdate('j M Y', $date);
+        $server_time = Tools::time();
+        if (date('Y-m-d', $timestamp) == date('Y-m-d', $server_time)) {
+            return langdate('сегодня в H:i', $timestamp);
+        }
+        if (date('Y-m-d', $timestamp) == date('Y-m-d', ($server_time - 84600))) {
+            return langdate('вчера в H:i', $timestamp);
+        }
+        if ($func == 'no_year') {
+            return langdate('j M в H:i', $timestamp);
+        }
+        if ($full) {
+            return langdate('j F Y в H:i', $timestamp);
+        }
+        return langdate('j M Y в H:i', $timestamp);
     }
 
     /**
@@ -76,41 +82,35 @@ class Gramatic implements GramaticInterface
      * @param bool $punkt
      * @return string
      */
-    public static function totranslit(string $var, bool $lower = true, bool $punkt = true): string
+    public static function totranslit(mixed $var, bool $lower = true, bool $punkt = true): string
     {
-        // global $langtranslit;
-        $langtranslit = null;
-        if (!is_array ( $langtranslit ) OR !count( $langtranslit ) ) {
+        $langtranslit = array(
+        'а' => 'a', 'б' => 'b', 'в' => 'v',
+        'г' => 'g', 'д' => 'd', 'е' => 'e',
+        'ё' => 'e', 'ж' => 'zh', 'з' => 'z',
+        'и' => 'i', 'й' => 'y', 'к' => 'k',
+        'л' => 'l', 'м' => 'm', 'н' => 'n',
+        'о' => 'o', 'п' => 'p', 'р' => 'r',
+        'с' => 's', 'т' => 't', 'у' => 'u',
+        'ф' => 'f', 'х' => 'h', 'ц' => 'c',
+        'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch',
+        'ь' => '', 'ы' => 'y', 'ъ' => '',
+        'э' => 'e', 'ю' => 'yu', 'я' => 'ya',
+        "ї" => "yi", "є" => "ye",
 
-            $langtranslit = array(
-            'а' => 'a', 'б' => 'b', 'в' => 'v',
-            'г' => 'g', 'д' => 'd', 'е' => 'e',
-            'ё' => 'e', 'ж' => 'zh', 'з' => 'z',
-            'и' => 'i', 'й' => 'y', 'к' => 'k',
-            'л' => 'l', 'м' => 'm', 'н' => 'n',
-            'о' => 'o', 'п' => 'p', 'р' => 'r',
-            'с' => 's', 'т' => 't', 'у' => 'u',
-            'ф' => 'f', 'х' => 'h', 'ц' => 'c',
-            'ч' => 'ch', 'ш' => 'sh', 'щ' => 'sch',
-            'ь' => '', 'ы' => 'y', 'ъ' => '',
-            'э' => 'e', 'ю' => 'yu', 'я' => 'ya',
-            "ї" => "yi", "є" => "ye",
-
-            'А' => 'A', 'Б' => 'B', 'В' => 'V',
-            'Г' => 'G', 'Д' => 'D', 'Е' => 'E',
-            'Ё' => 'E', 'Ж' => 'Zh', 'З' => 'Z',
-            'И' => 'I', 'Й' => 'Y', 'К' => 'K',
-            'Л' => 'L', 'М' => 'M', 'Н' => 'N',
-            'О' => 'O', 'П' => 'P', 'Р' => 'R',
-            'С' => 'S', 'Т' => 'T', 'У' => 'U',
-            'Ф' => 'F', 'Х' => 'H', 'Ц' => 'C',
-            'Ч' => 'Ch', 'Ш' => 'Sh', 'Щ' => 'Sch',
-            'Ь' => '', 'Ы' => 'Y', 'Ъ' => '',
-            'Э' => 'E', 'Ю' => 'Yu', 'Я' => 'Ya',
-            "Ї" => "yi", "Є" => "ye",
-            );
-
-        }
+        'А' => 'A', 'Б' => 'B', 'В' => 'V',
+        'Г' => 'G', 'Д' => 'D', 'Е' => 'E',
+        'Ё' => 'E', 'Ж' => 'Zh', 'З' => 'Z',
+        'И' => 'I', 'Й' => 'Y', 'К' => 'K',
+        'Л' => 'L', 'М' => 'M', 'Н' => 'N',
+        'О' => 'O', 'П' => 'P', 'Р' => 'R',
+        'С' => 'S', 'Т' => 'T', 'У' => 'U',
+        'Ф' => 'F', 'Х' => 'H', 'Ц' => 'C',
+        'Ч' => 'Ch', 'Ш' => 'Sh', 'Щ' => 'Sch',
+        'Ь' => '', 'Ы' => 'Y', 'Ъ' => '',
+        'Э' => 'E', 'Ю' => 'Yu', 'Я' => 'Ya',
+        "Ї" => "yi", "Є" => "ye",
+        );
 
         $var = str_replace( ".php", "", $var );
         $var = trim( strip_tags( $var ) );
@@ -211,9 +211,9 @@ class Gramatic implements GramaticInterface
      */
     public static function newGram(int $num, $a, $b, $c, $t = false): string
     {
-        if($t)
-            return self::declOfNum($num, array(sprintf($a,  $num), sprintf($b,  $num), sprintf($c, $num)));
-        else
-            return self::declOfNum($num, array(sprintf("%d {$a}",  $num), sprintf("%d {$b}",  $num), sprintf("%d {$c}", $num)));
+        if($t) {
+            return self::declOfNum($num, array(sprintf($a, $num), sprintf($b, $num), sprintf($c, $num)));
+        }
+        return self::declOfNum($num, array(sprintf("%d {$a}", $num), sprintf("%d {$b}", $num), sprintf("%d {$c}", $num)));
     }
 }

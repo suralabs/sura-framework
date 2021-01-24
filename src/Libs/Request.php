@@ -1,8 +1,11 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Sura\Libs;
 
+
+use JetBrains\PhpStorm\NoReturn;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Class Request
@@ -10,8 +13,8 @@ namespace Sura\Libs;
  */
 class Request
 {
-    /** @var null  */
-    private static $requests = null;
+    /** @var \Sura\Libs\Request|null */
+    private static Request|null $requests = null;
 
     /**
      * хранит значение полученное методами
@@ -25,7 +28,7 @@ class Request
      * @param array $server
      * @param array $header
      */
-    public function __construct(
+    #[NoReturn] public function __construct(
         public array $get = array(),
         public array $post = array(),
         public array $files = array(),
@@ -82,7 +85,7 @@ class Request
     /**
      * Инициализация
      */
-    public function initWithFastCGI()
+    #[NoReturn] public function initWithFastCGI(): void
     {
         $this->get = $_GET;
         $this->post = $_POST;
@@ -94,7 +97,7 @@ class Request
     /**
      *
      */
-    public function unsetGlobal()
+    #[NoReturn] public function unsetGlobal(): void
     {
 //        $_REQUEST = $_SESSION = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
         $_REQUEST = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
@@ -103,7 +106,7 @@ class Request
     /**
      * @return bool
      */
-    public function isWebSocket(): bool
+    #[Pure] public function isWebSocket(): bool
     {
         return isset($this->header['Upgrade']) && strtolower($this->header['Upgrade']) == 'websocket';
     }
@@ -113,7 +116,7 @@ class Request
      *
      * @return string - User IP
      */
-    public function getClientIP() : string
+    #[Pure] public function getClientIP() : string
     {
         if (isset($this->server["HTTP_X_REAL_IP"]) and strcasecmp($this->server["HTTP_X_REAL_IP"], "unknown"))
         {
@@ -148,7 +151,7 @@ class Request
         return "";
     }
 
-    public function getMethod(): string
+    #[Pure] public function getMethod(): string
     {
         return getenv('REQUEST_METHOD');
     }
@@ -160,10 +163,7 @@ class Request
      */
     public function checkAjax() : bool
     {
-        if (isset($this->post['ajax']) AND $this->post['ajax'] == 'yes')
-            return true;
-        else
-            return false;
+        return isset($this->post['ajax']) and $this->post['ajax'] == 'yes';
     }
 
     /**
@@ -173,10 +173,7 @@ class Request
      */
     public static function ajax() : bool
     {
-        if (isset($_POST['ajax']) AND $_POST['ajax'] == 'yes')
-            return true;
-        else
-            return false;
+        return isset($_POST['ajax']) and $_POST['ajax'] == 'yes';
     }
 
     /**
@@ -186,11 +183,7 @@ class Request
      */
     public static function https() : bool
     {
-        if(getenv['SERVER_PORT'] != 443) {
-            return false;
-        }else{
-            return true;
-        }
+        return !(getenv['SERVER_PORT'] !== 443);
     }
 
 

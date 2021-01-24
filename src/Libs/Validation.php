@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Sura\Libs;
 
 use JetBrains\PhpStorm\Pure;
@@ -14,7 +14,7 @@ class Validation
     /**
      * @var string[]
      */
-    static array $regx = array(
+    private static array $regx = array(
         //邮箱
         'email' => '/^[\w-\.]+@[\w-]+(\.(\w)+)*(\.(\w){2,4})$/',
         //手机号码
@@ -55,7 +55,7 @@ class Validation
      * @param $input
      * @return bool|string
      */
-    static function regx(string $regx, string $input): bool|string
+    public static function regx(string $regx, string $input): bool|string
     {
         $n = preg_match($regx, $input, $match);
         if ($n === 0)
@@ -73,16 +73,14 @@ class Validation
      * @param $input
      * @return mixed
      */
-    static function check($input, $ctype): mixed
+    public static function check($input, $ctype): mixed
     {
         if (isset(self::$regx[$ctype]))
         {
             return self::regx(self::$regx[$ctype], $input);
         }
-        else
-        {
-            return self::$ctype($input);
-        }
+
+        return self::$ctype($input);
     }
 
     /**
@@ -90,9 +88,9 @@ class Validation
      * @param string $ip
      * @return bool|string
      */
-    #[Pure] static function check_ip(string $ip): bool|string
+    #[Pure] public static function check_ip(string $ip): bool|string
     {
-        if (count ( explode ( ".", $ip ) ) == 4 OR filter_var( $ip , FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) OR strpos($ip, ":") !== false ){
+        if (count ( explode ( ".", $ip ) ) == 4 OR filter_var( $ip , FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) OR str_contains($ip, ":")){
             return $ip;
         }
         return false;
@@ -104,12 +102,14 @@ class Validation
      */
     public static function check_name(string $user_name): bool|string
     {
-        if (empty($user_name))
+        if (empty($user_name)) {
             return false;
-        if (preg_match("/^[a-zA-Zа-яА-Я]+$/iu", $user_name) AND strlen($user_name) >= 2)
+        }
+        if (preg_match("/^[a-zA-Zа-яА-Я]+$/iu", $user_name) AND strlen($user_name) >= 2) {
             return $user_name;
-        else
-            return false;
+        }
+
+        return false;
 
     }
 
@@ -121,12 +121,14 @@ class Validation
      */
     #[Pure] public static function check_password(string $password_first, string $password_second) : string|bool
     {
-        if (empty($password_first) or empty($password_second))
+        if (empty($password_first) or empty($password_second)) {
             return false;
+        }
         if (strlen($password_first) >= 6 AND strlen($password_first) <= 72 AND $password_first == $password_second) {
             return $password_first;
-        }else
-            return false;
+        }
+
+        return false;
     }
 
     /**
@@ -141,10 +143,12 @@ class Validation
         {
             if (empty( $email ) OR strlen( $email ) > 40 OR count(explode("@", $email)) !== 2){
                 return false;
-            }else
-                return $email;
-        }else
-            return false;
+            }
+
+            return $email;
+        }
+
+        return false;
 
     }
 
@@ -160,8 +164,7 @@ class Validation
 		$repquotes = array ("\-", "\+", "\#" );
 		$text = stripslashes( $text );
 		$text = trim( strip_tags( $text ) );
-		$text = str_replace( $quotes, '', $text );
-		$text = str_replace( $goodquotes, $repquotes, $text );
+        $text = str_replace(array($quotes, $goodquotes), array('', $repquotes), $text);
 		return $text;
 	}
 
@@ -289,41 +292,15 @@ class Validation
     #[Pure] public static function _strlen(string $value, string $charset = "utf-8" ) :int
     {
 
-		if( function_exists( 'mb_strlen' ) ) {
-			return mb_strlen( $value, $charset );
-		} elseif( function_exists( 'iconv_strlen' ) ) {
-			return iconv_strlen($value, $charset);
-		}
-
-		return strlen($value);
-	}
-
-    /**
-     * @param array $ips
-     * @return string
-     * @deprecated
-     */
-    //#[Deprecated]
-    public static function check_ip_old(array $ips) :string
-    {
-		$_IP = $_SERVER['REMOTE_ADDR'];
-		$blockip = '0.0.0.0';
-        foreach($ips as $ip_line){
-            $ip_arr = rtrim($ip_line['ip']);
-            $ip_check_matches = 0;
-            $db_ip_split = explode(".", $ip_arr);
-            $this_ip_split = explode(".", $_IP);
-            for($i_i = 0; $i_i < 4; $i_i ++){
-                if($this_ip_split[$i_i] == $db_ip_split[$i_i] or $db_ip_split[$i_i] == '*'){
-                    $ip_check_matches += 1;
-                }
-            }
-            if($ip_check_matches == 4){
-                $blockip = $ip_line['ip'];
-                return $blockip;
-            }
+        if (function_exists( 'mb_strlen' )) {
+            return mb_strlen( $value, $charset );
         }
-		return $blockip;
+
+        if(function_exists( 'iconv_strlen' )) {
+            return iconv_strlen($value, $charset);
+        }
+
+        return strlen($value);
 	}
 
     /**
@@ -333,8 +310,6 @@ class Validation
      */
     public static function word_filter($source, $encode = true)  :string
     {
-		//$config = include __DIR__.'/../../../../../config/config.php';
-			
 		$safe_mode = false;
 		
 		if($encode){
@@ -407,18 +382,17 @@ class Validation
 			if(!count($find)) return $source;
 				
 			$source = preg_split('((>)|(<))', $source, - 1, PREG_SPLIT_DELIM_CAPTURE);
-			$count = count($source);
-				
-			for($i = 0; $i < $count; $i ++){
-				if($source[$i] == "<" or $source[$i] == "["){
-					$i ++;
-					continue;
-				}
-					
-				if($source[$i] != "") $source[$i] = preg_replace($find, $replace, $source[$i]);
-			}
-				
-			$source = join("", $source);
+
+            foreach ($source as $i => $iValue) {
+                if($iValue == "<" or $iValue == "["){
+                    $i ++;
+                    continue;
+                }
+
+                if($iValue != "") $source[$i] = preg_replace($find, $replace, $source[$i]);
+            }
+
+            $source = join("", $source);
 			
 		} else {
 				
@@ -433,7 +407,7 @@ class Validation
      * @param $str
      * @return mixed
      */
-    #[Pure] static function string(string $str) : string
+    #[Pure] public static function string(string $str) : string
     {
         return filter_var($str, FILTER_DEFAULT);
     }
@@ -442,7 +416,7 @@ class Validation
      * @param $binary_string
      * @return false|int
      */
-    static function strlen_8bit($binary_string) : false|int
+    public static function strlen_8bit($binary_string) : false|int
     {
         if (function_exists('mb_strlen')) {
             return mb_strlen($binary_string, '8bit');
@@ -456,7 +430,7 @@ class Validation
      * @param $length
      * @return false|string
      */
-    #[Pure] static function substr_8bit($binary_string, $start, $length) : false|string
+    public static function substr_8bit($binary_string, $start, $length) : false|string
     {
         if (function_exists('mb_substr')) {
             return mb_substr($binary_string, $start, $length, '8bit');

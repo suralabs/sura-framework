@@ -1,4 +1,6 @@
-<?php  
+<?php
+declare(strict_types=1);
+
 namespace Sura\Libs;
 
 use Sura\Contracts\ModuleInterface;
@@ -12,15 +14,15 @@ class Module implements ModuleInterface
     /**
      * @return string|array|null
      */
-    public function user_info() : string|array|null
+    public function user_info(): string|array|null
     {
-	    return Registry::get('user_info');
+        return Registry::get('user_info');
     }
 
     /**
-     * @return array|null
+     * @return bool
      */
-    function logged() : string|null
+    public function logged(): bool
     {
         return Registry::get('logged');
     }
@@ -28,7 +30,7 @@ class Module implements ModuleInterface
     /**
      * @return \Sura\Libs\Db|null
      */
-    function db() : null|Db
+    public function db(): null|Db
     {
         return Db::getDB();
     }
@@ -36,8 +38,8 @@ class Module implements ModuleInterface
     /**
      * @return array
      */
-    function get_langs() : array
+    public function get_langs(): array
     {
-        return langs::get_langs();
+        return Langs::get_langs();
     }
 }

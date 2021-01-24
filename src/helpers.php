@@ -1,5 +1,7 @@
 <?php
 
+namespace Sura;
+
 use JetBrains\PhpStorm\Pure;
 
 if (!function_exists('e')) {
@@ -33,3 +35,29 @@ if (!function_exists('check_smartphone')) {
     }
 }
 
+/**
+ * Get the available container instance.
+ *
+ * @param  string|null  $abstract
+ * @param  array  $parameters
+ * @return mixed
+ */
+function app($abstract = null, array $parameters = []): mixed
+{
+    if (is_null($abstract)) {
+        return \App\Application::getInstance();
+    }
+
+    return \App\Application::getInstance()->make($abstract, $parameters);
+}
+
+/**
+ * Resolve a service from the container.
+ *
+ * @param string $name
+ * @return mixed
+ */
+function resolve(string $name): mixed
+{
+    return \Sura\app($name);
+}

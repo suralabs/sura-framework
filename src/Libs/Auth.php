@@ -1,8 +1,9 @@
 <?php
-
+declare(strict_types=1);
 namespace Sura\Libs;
 
 
+use JetBrains\PhpStorm\NoReturn;
 use Sura\Contracts\AuthInterface;
 
 /**
@@ -33,9 +34,15 @@ class Auth implements AuthInterface
 		//Если есть данные сесии
 		if(isset($_SESSION['user_id']) > 0){
 
-			$logged_user_id = $id = intval($_SESSION['user_id']);
+			$id = (int)$_SESSION['user_id'];
 
-            $user_info = $db->super_query("SELECT user_id,user_name, user_lastname, time_zone, notifications_list, user_email, user_group, user_friends_demands, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, user_pm_num, invties_pub_num, user_balance, balance_rub FROM `users` WHERE user_id = '".$logged_user_id."'");
+            $database = Model::getDB();
+            $user_info = $database->fetch('SELECT user_id,user_name, user_lastname, time_zone, notifications_list, user_email, user_group, user_friends_demands, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, user_pm_num, invties_pub_num, user_balance, balance_rub FROM users WHERE user_id = ?', (array)$id);
+//            $user_info = (array)$user_info[0];
+//
+//            $user_info = $db->super_query("SELECT user_id,user_name, user_lastname, time_zone, notifications_list, user_email, user_group, user_friends_demands,
+//       user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit,
+//       user_pm_num, invties_pub_num, user_balance, balance_rub FROM `users` WHERE user_id = '".$logged_user_id."'");
 			//Если есть данные о сесии, но нет инфы о юзере, то выкидываем его
             if(!$user_info['user_id']){
                 header('Location: https://'.$server['HTTP_HOST'].'/logout/');
@@ -60,8 +67,17 @@ class Auth implements AuthInterface
         }
         //Если есть данные о COOKIE то проверяем
         elseif(isset($request['user_id']) > 0  AND $request['hash']){
-			$cookie_user_id = intval($request['user_id']);
-			$user_info = $db->super_query("SELECT notifications_list, time_zone, user_id, user_email, user_group, user_password, user_hash, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$cookie_user_id."'");
+			$id = (int)$request['user_id'];
+
+//            $config = Settings::load();
+//            $dsn = 'mysql:host='.$config['dbhost'].';dbname='.$config['dbname'];
+//            $user = $config['dbuser'];
+//            $password = $config['dbpass'];
+//            $database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
+
+            $database = Model::getDB(); // the same arguments as uses PDO
+            $user_info = $database->fetch('SELECT user_id,user_name, user_lastname, time_zone, notifications_list, user_email, user_group, user_friends_demands, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, user_pm_num, invties_pub_num FROM users WHERE user_id = ?', (array)$id);
+//			$user_info = $db->super_query("SELECT notifications_list, time_zone, user_id, user_email, user_group, user_password, user_hash, user_friends_demands, user_pm_num, user_support, user_lastupdate, user_photo, user_msg_type, user_delet, user_ban_date, user_new_mark_photos, user_search_pref, user_status, user_last_visit, invties_pub_num FROM `users` WHERE user_id = '".$cookie_user_id."'");
 
 			//ava
             if($user_info['user_photo'])
@@ -78,11 +94,15 @@ class Auth implements AuthInterface
 				$_SESSION['user_id'] = $user_info['user_id'];
 				
 				//Вставляем лог в бд
-				$db->query("UPDATE `log` SET browser = '".$_BROWSER."', ip = '".$_IP."' WHERE uid = '".$user_info['user_id']."'");
-				
+//				$db->query("UPDATE `log` SET browser = '".$_BROWSER."', ip = '".$_IP."' WHERE uid = '".$user_info['user_id']."'");
+                $database->query('UPDATE log SET', [
+                    'browser' => $_BROWSER,
+                    'ip' => $_IP,
+                ], 'WHERE uid = ?', $user_info['user_id']);
+
 				//Удаляем все рание события
-				$db->query("DELETE FROM `updates` WHERE for_user_id = '{$user_info['user_id']}'");
-						
+//				$db->query("DELETE FROM `updates` WHERE for_user_id = '{$user_info['user_id']}'");
+                $database->query('DELETE FROM updates WHERE for_user_id = ?', $user_info['user_id']);
 				$logged = true;
 
 			} else {
@@ -118,7 +138,7 @@ class Auth implements AuthInterface
 			//Приготавливаем данные
 			$email = strip_tags($_POST['email']);
 
-			$password = password_hash(Tools::GetVar($_POST['password']), PASSWORD_DEFAULT);
+			$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
 			// if( _strlen( $name, $config['charset'] ) > 40 OR _strlen(trim($name), $config['charset']) < 3) $stop = 'error';
 
@@ -130,45 +150,55 @@ class Auth implements AuthInterface
 			    $logged = false;
                 return array('user_info' => $user_info, 'logged' => $logged);
 				//msgbox('', $lang['not_loggin'].'<br /><a href="/restore" onClick="Page.Go(this.href); return false">Забыли пароль?r</a>', 'info_red');
-			} else {
+			}
 
-                $check_user = $db->super_query("SELECT user_id FROM `users` WHERE user_email = '".$email."' AND user_password = '".$password."'");
+            $database = Model::getDB();
+            $user_info = $database->fetchAll('SELECT user_id  FROM users WHERE user_email = ?AND user_password = ?', (array)$email, (array)$password);
+            $user_info = (array)$user_info[0];
+//                $check_user = $db->super_query("SELECT user_id FROM `users` WHERE user_email = '".$email."' AND user_password = '".$password."'");
 
-                //Если есть юзер то пропускаем
-                if($check_user){
-                    //Hash ID
-                    $hid = $password.md5(md5($_IP));
+            //Если есть юзер то пропускаем
+            if($user_info){
+                //Hash ID
+                $hid = $password.md5(md5($_IP));
 
-                    //Обновляем хэш входа
-                    $db->query("UPDATE `users` SET user_hash = '".$hid."' WHERE user_id = '".$check_user['user_id']."'");
+                //Обновляем хэш входа
+//                    $db->query("UPDATE `users` SET user_hash = '".$hid."' WHERE user_id = '".$check_user['user_id']."'");
+                $database->query('UPDATE users SET', [
+                    'user_hash' => $hid,
+                ], 'WHERE user_id = ?', $user_info['user_id']);
 
-                    //Удаляем все рание события
-                    $db->query("DELETE FROM `updates` WHERE for_user_id = '{$check_user['user_id']}'");
+                //Удаляем все рание события
+//                    $db->query("DELETE FROM `updates` WHERE for_user_id = '{$check_user['user_id']}'");
+                $database->query('DELETE FROM updates WHERE for_user_id = ?', $user_info['user_id']);
 
-                    //Устанавливаем в сессию ИД юзера
-                    $_SESSION['user_id'] = intval($check_user['user_id']);
+                //Устанавливаем в сессию ИД юзера
+                $_SESSION['user_id'] = (int)$user_info['user_id'];
 
-                    //Записываем COOKIE
-                    Tools::set_cookie("user_id", intval($check_user['user_id']), 365);
-                    Tools::set_cookie("password", $password, 365);
-                    Tools::set_cookie("hid", $hid, 365);
+                //Записываем COOKIE
+                Tools::set_cookie("user_id", (int)$user_info['user_id'], 365);
+                Tools::set_cookie("password", $password, 365);
+                Tools::set_cookie("hid", $hid, 365);
 
-                    //Вставляем лог в бд
-                    $db->query("UPDATE `log` SET browser = '".$_BROWSER."', ip = '".$_IP."' WHERE uid = '".$check_user['user_id']."'");
+                //Вставляем лог в бд
+                $db->query("UPDATE `log` SET browser = '".$_BROWSER."', ip = '".$_IP."' WHERE uid = '".$user_info['user_id']."'");
+                $database->query('UPDATE log SET', [
+                    'browser' => $_BROWSER,
+                    'ip' => $_IP,
+                ], 'WHERE uid = ?', $user_info['user_id']);
 
 //                    if($config['temp'] != 'mobile')
-                        header('Location: https://'.$server['HTTP_HOST'].'/u'.$check_user['user_id']);
+                    header('Location: https://'.$server['HTTP_HOST'].'/u'.$user_info['user_id']);
 //                    else
 //                        header('Location: https://'.$server['HTTP_HOST'].'/');
-                } else
-                {
-                    //TODO update
-                    $logged = false;
-                    return array('user_info' => $user_info, 'logged' => $logged);
-                    //msgbox('', $lang['not_loggin'].'<br /><br /><a href="/restore/" onClick="Page.Go(this.href); return false">Забыли пароль?</a>', 'info_red');
-                }
-			}
-		}
+            } else
+            {
+                //TODO update
+                $logged = false;
+                return array('user_info' => $user_info, 'logged' => $logged);
+                //msgbox('', $lang['not_loggin'].'<br /><br /><a href="/restore/" onClick="Page.Go(this.href); return false">Забыли пароль?</a>', 'info_red');
+            }
+        }
 		return array('user_info' => $user_info, 'logged' => $logged);
 	}
 
@@ -176,7 +206,8 @@ class Auth implements AuthInterface
      * logout site
      * @param bool $redirect
      */
-    public static function logout($redirect = false)
+    #[NoReturn]
+    public static function logout($redirect = false): void
     {
 //        $redirect = false;
         if(!empty($_SESSION['user_id'])){
@@ -188,7 +219,7 @@ class Auth implements AuthInterface
         unset($_SESSION['user_id']);
         session_destroy();
         session_unset();
-        if ($redirect == true){
+        if ($redirect){
             header('Location: https://'.$_SERVER['HTTP_HOST'].'/');
         }
     }

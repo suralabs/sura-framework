@@ -1,7 +1,8 @@
 <?php
-
+declare(strict_types=1);
 namespace Sura\Libs;
 
+use JetBrains\PhpStorm\Pure;
 use Sura\Contracts\DbInterface;
 use \Sura\Log\Log;
 
@@ -34,12 +35,12 @@ final class Db implements DbInterface
         public string $mysql_error = '',
         public string $mysql_version = '',
         public int $mysql_error_num = 0,
-        public int $MySQL_time_taken = 0,
+        public float $MySQL_time_taken = 0,
         public bool|string|object $query_id = false,
         public $db_config = array(),
     )
     {
-        return $this->db_config = Settings::loadsettings();
+        $this->db_config = Settings::load();
     }
 
     /**
@@ -48,7 +49,7 @@ final class Db implements DbInterface
     public function __destruct()
     {
 //        if ($this->mysqli) $this->mysqli->close();
-        return $this->close();
+//        return $this->close();
 
     }
 
@@ -72,7 +73,7 @@ final class Db implements DbInterface
      * @param int $show_error
      * @return bool
      */
-    function connect($db_user, $db_pass, $db_name, $db_location = 'localhost', $show_error = 1) : bool
+    public function connect($db_user, $db_pass, $db_name, $db_location = 'localhost', $show_error = 1) : bool
     {
         $db_location = explode(":", $db_location);
         if (isset($db_location[1])) {
@@ -98,7 +99,6 @@ final class Db implements DbInterface
     /**
      * @param $query
      * @param bool $show_error
-     * @return \mysqli_result
      */
     function query($query, $show_error = true)
     {
@@ -123,7 +123,7 @@ final class Db implements DbInterface
      * @param string $query_id
      * @return array|string[]|null
      */
-    function get_row($query_id = '') : array|string|null
+    public function get_row($query_id = '') : array|string|null
     {
         if ($query_id == '') $query_id = $this->query_id;
         return is_object($query_id) ? mysqli_fetch_assoc($query_id) : [];
@@ -133,7 +133,7 @@ final class Db implements DbInterface
      * @param string $query_id
      * @return array|null
      */
-    function get_array($query_id = '') : array|null
+    public function get_array($query_id = '') : array|null
     {
         if ($query_id == '') $query_id = $this->query_id;
         return mysqli_fetch_array($query_id);
@@ -186,7 +186,7 @@ final class Db implements DbInterface
      * @param string $query_id
      * @return mixed
      */
-    function get_result_fields($query_id = '') : array
+    public function get_result_fields($query_id = '') : array
     {
         if ($query_id == '') $query_id = $this->query_id;
         while ($field = mysqli_fetch_field($query_id)) {
@@ -199,7 +199,7 @@ final class Db implements DbInterface
      * @param $source
      * @return string
      */
-    function safesql($source) : string
+    public function safesql($source) : string
     {
         $config = $this->db_config;
         if (!$this->db_id)
@@ -210,7 +210,7 @@ final class Db implements DbInterface
     /**
      * @param string $query_id
      */
-    function free($query_id = '')
+    public function free($query_id = '')
     {
         if ($query_id == '')
             $query_id = $this->query_id;
@@ -229,7 +229,7 @@ final class Db implements DbInterface
     /**
      * @return float
      */
-    function get_real_time() : float
+    #[Pure] function get_real_time() : float
     {
         list($seconds, $microSeconds) = explode(' ', microtime());
         return ((float)$seconds + (float)$microSeconds);
@@ -240,11 +240,14 @@ final class Db implements DbInterface
      * @param $error_num
      * @param string $query
      */
-    function display_error($error, $error_num, $query = '')
+    public function display_error($error, $error_num, $query = '')
     {
-        $name = $filename = __DIR__.'/../../../../../app/cache/system/out.tmp';
-        $file = Log::factory('File', $filename, 'DB');
-        $file->log('Ошибка сервера: ' . $query . ' ' . $error_num);
+//        $dir = resolve('app')->get('path');
+//        $name = $filename = $dir.'/cache/system/out.tmp';
+//        $file = Log::factory('File', $filename, 'DB');
+//        $file->log('Ошибка сервера: ' . $query . ' ' . $error_num);
 
+        echo 'Ошибка сервера: ' . $query . ' ' . $error_num;
+        exit();
     }
 }

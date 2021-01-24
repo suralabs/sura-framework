@@ -1,12 +1,12 @@
 <?php
-
+declare(strict_types=1);
 
 namespace Sura\Contracts;
 
 
 interface GramaticInterface
 {
-    public static function megaDateNoTpl2(string $date, $func = false, bool $full = false);
+    public static function megaDate(int $timestamp, false|string $func = false, bool $full = false);
 
     public static function DeclName(string $name, string $declination);
 

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Sura\Libs;
 
 class Parse{
@@ -9,7 +9,7 @@ class Parse{
      * @param bool $preview
      * @return string
      */
-    function BBparse(string $source, $preview = false) : string
+    public function BBparse(string $source, $preview = false) : string
     {
 //		global $config;
 
@@ -41,10 +41,10 @@ class Parse{
      * @param bool $preview
      * @return string
      */
-    function BBvideo(string $source, bool $preview = false) : string
+    public function BBvideo(string $source, bool $preview = false) : string
     {
 //		global $config;
-        $config = Settings::loadsettings();
+        $config = Settings::load();
 
 		$exp = explode('|', $source);
 		$home_url = $config['home_url'];
@@ -102,9 +102,9 @@ class Parse{
      * @param bool $preview
      * @return string
      */
-    function BBphoto(string $source, $preview = false) : string
+    public function BBphoto(string $source, $preview = false) : string
     {
-        $config = Settings::loadsettings();
+        $config = Settings::load();
 		$exp = explode('|', $source);
 		$home_url = $config['home_url'];
 
@@ -169,7 +169,7 @@ class Parse{
      * @param $source
      * @return string
      */
-    function BBlink(string $source) : string
+    public function BBlink(string $source) : string
     {
 		$exp = explode('|', $source);
 		if($exp['0']){
@@ -185,7 +185,7 @@ class Parse{
      * @param string $source
      * @return string
      */
-    function BBdecode(string $source) : string
+    public function BBdecode(string $source) : string
     {
 		$source = str_ireplace("&#123;", "{", $source);
 		$source = str_ireplace("&#96;", "`", $source);
@@ -208,7 +208,7 @@ class Parse{
      * @param $source
      * @return string
      */
-    function BBdecodePhoto(string $source) : string
+    public function BBdecodePhoto(string $source) : string
     {
 		$start = explode('-->', $source);
 		return "[photo]{$start['0']}[/photo]";
@@ -218,7 +218,7 @@ class Parse{
      * @param $source
      * @return string
      */
-    function BBdecodeVideo(string $source) : string
+    public function BBdecodeVideo(string $source) : string
     {
 		$start = explode('-->', $source);
 		return "[video]{$start['0']}[/video]";
@@ -228,7 +228,7 @@ class Parse{
      * @param $source
      * @return string
      */
-    function BBdecodeLink(string $source) : string{
+    public function BBdecodeLink(string $source) : string{
 		$start = explode('-->', $source);
 		return "[link]{$start['0']}[/link]";
 	}

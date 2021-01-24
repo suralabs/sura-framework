@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Sura\Libs;
 
@@ -38,9 +39,9 @@ class TimeZona
 
     /**
      * @param $id
-     * @return string
+     * @return bool
      */
-    public static function time_zone(int $id)  : string
+    public static function time_zone(int $id)  : bool
     {
         return date_default_timezone_set(self::$time_zone[$id]);
     }

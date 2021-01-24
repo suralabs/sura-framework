@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Sura\Libs;
 
@@ -34,7 +35,7 @@ class Router
      * @var array|null $params
      * @deprecated
      */
-    private ?array $params = [];
+    private static ?array $params = [];
 
     /**
      * @var string[] $placeholders
@@ -51,9 +52,9 @@ class Router
     private static string $controllerName;
 
     /**
-     * @var $actionName
+     * @var string $actionName
      */
-    private static  $actionName;
+    private static string $actionName;
 
     /**
      * Router constructor.
@@ -72,7 +73,7 @@ class Router
      */
     public static function fromGlobals(): Router
     {
-        $config = Settings::loadsettings();
+        $config = Settings::load();
         $requests = Request::getRequest();
         $server = $requests->server;
         $method = $requests->getMethod();
@@ -216,7 +217,7 @@ class Router
         }
         return false;
     }
-    
+
     /**
      * Execute Request Handler.
      * Запуск соответствующего действия/экшена/метода контроллера
@@ -224,9 +225,8 @@ class Router
      * @param callable|null|string $handler
      * @param array $params
      * @return mixed
-     * @throws \RuntimeException
      */
-    public function executeHandler(callable|null|string $handler = null, array|null $params = null): mixed
+    public function executeHandler(callable|null|string $handler = null, array $params = array()): mixed
     {
         if ($handler === null) {
             throw SuraException::Error('Request handler not setted out. Please check '.__CLASS__.'::isFound() first');
@@ -240,20 +240,21 @@ class Router
         if (strpos($handler, '@')) {
             $ca = explode('@', $handler);
 
-            $controllername = self::$controllerName = $ca['0'];
+            $controller_name = self::$controllerName = $ca['0'];
             $action = self::$actionName = $ca['1'];
 
-            if (class_exists('\\App\\Modules\\'.$controllername)) {
-                if (!method_exists('\\App\\Modules\\'.$controllername, $action)) {
-                    throw SuraException::Error("Method '\\App\\Modules\\{$controllername}::{$action}()' not found");
-                }else{
-                    $class = 'App\Modules\\'.$controllername;
-                    $foo = new $class();
-                    return call_user_func_array(array($foo, $action), $params);
+            if (class_exists('\\App\\Modules\\'.$controller_name)) {
+                if (!method_exists('\\App\\Modules\\'.$controller_name, $action)) {
+                    throw SuraException::Error("Method '\\App\\Modules\\{$controller_name}::{$action}()' not found");
                 }
-            }else{
-                throw SuraException::Error("Class '{$controllername}' not found");
+
+                $class = 'App\Modules\\'.$controller_name;
+                $foo = new $class();
+                return call_user_func_array(array($foo, $action), array());
+//                    return call_user_func_array(array($foo, $action), $params);
             }
+
+            throw SuraException::Error("Class '{$controller_name}' not found");
         }
         throw SuraException::Error("Execute handler error");
     }

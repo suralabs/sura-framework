@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Sura\Log\Handler;
 
 use Sura\Log\Log;
@@ -28,14 +28,14 @@ class File extends Log
      * @var string
      * @access private
      */
-    var $_filename = 'php.log';
+    private string $_filename = 'php.log';
 
     /**
      * Handle to the log file.
      * @var resource
      * @access private
      */
-    var $_fp = false;
+    private $_fp = false;
 
     /**
      * Should new log entries be append to an existing log file, or should the
@@ -43,21 +43,21 @@ class File extends Log
      * @var boolean
      * @access private
      */
-    var $_append = true;
+    private $_append = true;
 
     /**
      * Should advisory file locking (i.e., flock()) be used?
      * @var boolean
      * @access private
      */
-    var $_locking = false;
+    private $_locking = false;
 
     /**
      * Integer (in octal) containing the log file's permissions mode.
      * @var integer
      * @access private
      */
-    var $_mode = 0644;
+    private $_mode = 0644;
 
     /**
      * Integer (in octal) specifying the file permission mode that will be
@@ -65,14 +65,14 @@ class File extends Log
      * @var integer
      * @access private
      */
-    var $_dirmode = 0755;
+    private $_dirmode = 0755;
 
     /**
      * String containing the format of a log line.
      * @var string
      * @access private
      */
-    var $_lineFormat = '%1$s %2$s [%3$s] %4$s';
+    private $_lineFormat = '%1$s %2$s [%3$s] %4$s';
 
     /**
      * String containing the timestamp format.  It will be passed directly to
@@ -81,28 +81,28 @@ class File extends Log
      * @var string
      * @access private
      */
-    var $_timeFormat = '%b %d %H:%M:%S';
+    private $_timeFormat = '%b %d %H:%M:%S';
 
     /**
      * String containing the end-on-line character sequence.
      * @var string
      * @access private
      */
-    var $_eol = "\n";
+    private $_eol = "\n";
 
     /**
      * Constructs a new Log_file object.
      *
-     * @param string $name     Ignored.
-     * @param string $ident    The identity string.
-     * @param array  $conf     The configuration array.
-     * @param int    $level    Log messages up to and including this level.
+     * @param string $name Ignored.
+     * @param string $ident The identity string.
+     * @param array $conf The configuration array.
+     * @param int $level Log messages up to and including this level.
      * @access public
      */
-    public function __construct($name, $ident = '', $conf = array(),
+    public function __construct(string $name, $ident = '', $conf = array(),
                                 $level = PEAR_LOG_DEBUG)
     {
-        $this->_id = md5(microtime().rand());
+        $this->_id = md5(microtime().mt_rand());
         $this->_filename = $name;
         $this->_ident = $ident;
         $this->_mask = Log::UPTO($level);
@@ -144,7 +144,7 @@ class File extends Log
         if (!empty($conf['eol'])) {
             $this->_eol = $conf['eol'];
         } else {
-            $this->_eol = (strstr(PHP_OS, 'WIN')) ? "\r\n" : "\n";
+            $this->_eol = (strpos(PHP_OS, 'WIN') !== false) ? "\r\n" : "\n";
         }
 
         register_shutdown_function(array(&$this, '_Log_file'));
@@ -153,7 +153,7 @@ class File extends Log
     /**
      * Destructor
      */
-    function _Log_file()
+    public function _Log_file(): void
     {
         if ($this->_opened) {
             $this->close();
@@ -166,8 +166,8 @@ class File extends Log
      *
      * This implementation is inspired by Python's os.makedirs function.
      *
-     * @param   string  $path       The full directory path to create.
-     * @param   integer $mode       The permissions mode with which the
+     * @param string $path The full directory path to create.
+     * @param integer $mode The permissions mode with which the
      *                              directories will be created.
      *
      * @return  True if the full path is successfully created or already
@@ -175,7 +175,7 @@ class File extends Log
      *
      * @access  private
      */
-    function _mkpath($path, $mode = 0700)
+    public function _mkpath(string $path, $mode = 0700): bool
     {
         /* Separate the last pathname component from the rest of the path. */
         $head = dirname($path);
@@ -205,7 +205,7 @@ class File extends Log
      *
      * @access public
      */
-    function open()
+    public function open(): bool
     {
         if (!$this->_opened) {
             /* If the log file's directory doesn't exist, create it. */
@@ -236,7 +236,7 @@ class File extends Log
      *
      * @access public
      */
-    function close()
+    public function close(): bool
     {
         /* If the log file is open, close it. */
         if ($this->_opened && fclose($this->_fp)) {
@@ -252,7 +252,7 @@ class File extends Log
      * @access public
      * @since Log 1.8.2
      */
-    function flush()
+    public function flush(): bool
     {
         if (is_resource($this->_fp)) {
             return fflush($this->_fp);
@@ -265,15 +265,15 @@ class File extends Log
      * Logs $message to the output window.  The message is also passed along
      * to any Log_observer instances that are observing this Log.
      *
-     * @param mixed  $message  String or object containing the message to log.
-     * @param string $priority The priority of the message.  Valid
+     * @param mixed $message String or object containing the message to log.
+     * @param null $priority The priority of the message.  Valid
      *                  values are: PEAR_LOG_EMERG, PEAR_LOG_ALERT,
      *                  PEAR_LOG_CRIT, PEAR_LOG_ERR, PEAR_LOG_WARNING,
      *                  PEAR_LOG_NOTICE, PEAR_LOG_INFO, and PEAR_LOG_DEBUG.
      * @return boolean  True on success or false on failure.
      * @access public
      */
-    function log($message, $priority = null)
+    public function log(mixed $message, $priority = null): bool
     {
         /* If a priority hasn't been specified, use the default value. */
         if ($priority === null) {

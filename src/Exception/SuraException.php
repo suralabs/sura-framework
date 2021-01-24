@@ -17,4 +17,9 @@ class SuraException extends \InvalidArgumentException
     {
         return new static( $message);
     }
+
+    public static function err(): bool
+    {
+        return true;
+    }
 }

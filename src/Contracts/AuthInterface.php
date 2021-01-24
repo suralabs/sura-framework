@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Sura\Contracts;
 
 
@@ -17,5 +17,5 @@ interface AuthInterface
      * logout site
      * @param bool $redirect
      */
-    public static function logout($redirect = false);
+    public static function logout($redirect = false): void;
 }

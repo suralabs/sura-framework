@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Статический класс registry
  */
@@ -40,9 +42,9 @@ class Registry
      * Возвращает данные по ключу или null, если не данных нет
      *
      * @param string $name
-     * @return array|string|null
+     * @return string|bool|null
      */
-    public static function get(mixed $name) : string | array|null
+    public static function get(mixed $name) : string|bool|null|array
     {
         return (isset(self::$store[$name])) ? self::$store[$name] : null;
     }
@@ -54,7 +56,7 @@ class Registry
      * @param mixed $obj
      * @return string
      */
-    public static function set(mixed $name, mixed $obj): string
+    public static function set(mixed $name, mixed $obj): mixed
     {
         return self::$store[$name] = $obj;
     }
