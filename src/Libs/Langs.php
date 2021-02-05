@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Sura\Libs;
 
  use JetBrains\PhpStorm\NoReturn;
@@ -109,7 +111,7 @@ class Langs {
             return $lang_list[$useLang]['iso1'];
         }
         if (!isset($_COOKIE['lang'])){
-            Tools::set_cookie("lang", 0, 365);
+            Tools::set_cookie("lang", '0', 365);
         }
 
         return $lang_list[0]['iso1'];

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sura\Libs;
@@ -24,7 +25,11 @@ class Module implements ModuleInterface
      */
     public function logged(): bool
     {
-        return Registry::get('logged');
+        if (!Registry::get('logged')){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     /**

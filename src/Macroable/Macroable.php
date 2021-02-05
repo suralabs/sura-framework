@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Sura\Macroable;
 
 use Closure;

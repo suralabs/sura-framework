@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Sura\Libs;
 
 use JetBrains\PhpStorm\Pure;
@@ -62,15 +64,17 @@ class Tools
      * @param $value
      * @param $expires
      */
-    public static function set_cookie($name, $value, $expires): void
+    public static function set_cookie(string $name, string $value, int $expires): void
     {
         if ($expires) {
             $expires = time() + ($expires * 86400);
         } else {
-            $expires = FALSE;
+            $expires = time() + ($expires * 86400);
+//            $expires = FALSE;
         }
         $domain = self::domain_cookie();
-        setcookie($name, $value, $expires, "/", $domain, NULL, TRUE);
+
+        setcookie($name, $value, $expires, "/", $domain, true, TRUE);
     }
 
     /**

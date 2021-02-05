@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Sura\Libs;
 
 use JetBrains\PhpStorm\Pure;
@@ -82,7 +84,7 @@ class Gramatic implements GramaticInterface
      * @param bool $punkt
      * @return string
      */
-    public static function totranslit(mixed $var, bool $lower = true, bool $punkt = true): string
+    public static function totranslit(string $var, bool $lower = true, bool $punkt = true): string
     {
         $langtranslit = array(
         'а' => 'a', 'б' => 'b', 'в' => 'v',

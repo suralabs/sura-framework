@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sura\Libs;
-
 
 use JetBrains\PhpStorm\NoReturn;
 use JetBrains\PhpStorm\Pure;
@@ -66,12 +66,13 @@ class Request
         }
         $_GET = $this->get;
         $_POST = $this->post;
-        $_FILES = $this->files;
+//        $_FILES = $this->files;
         $_COOKIE = $this->cookie;
         $_SERVER = $this->server;
 
         //$this->request = $_REQUEST = array_merge($this->get, $this->post, $this->cookie);
         $this->request = $_REQUEST = array_merge($this->get, $this->post, $this->cookie);
+        $this->request = $_REQUEST = array_merge($this->cookie, $this->get, $this->post );
     }
 
     /**
@@ -100,7 +101,8 @@ class Request
     #[NoReturn] public function unsetGlobal(): void
     {
 //        $_REQUEST = $_SESSION = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
-        $_REQUEST = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
+//        $_REQUEST = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
+        $_REQUEST = $_COOKIE = $_POST = $_SERVER = $_GET = array();
     }
 
     /**
@@ -164,6 +166,28 @@ class Request
     public function checkAjax() : bool
     {
         return isset($this->post['ajax']) and $this->post['ajax'] == 'yes';
+    }
+
+    static public function newcheckAjax()
+    {
+        $json = file_get_contents('php://input');
+        if (!empty($json)){
+            $obj = json_decode($json, TRUE);
+
+            if ($obj['ajax'] == 'yes'){
+                return true;
+            }
+        }
+
+//        if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+//            // Если к нам идёт Ajax запрос, то ловим его
+//            return true;
+//        }else
+            if (isset($_POST['ajax']) and $_POST['ajax'] == 'yes'){
+            return true;
+        }
+        return false;
+
     }
 
     /**

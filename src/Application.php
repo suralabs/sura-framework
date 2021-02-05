@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types = 1);
+
 namespace Sura;
 
 use Exception;
@@ -53,6 +55,44 @@ class Application extends Container
      */
     protected string $storagePath;
 
+
+    /**
+     * The bootstrap classes for the application.
+     *
+     * @var string[]
+     */
+    protected $bootstrappers = [
+        \Sura\Bootstrap\Provider::class,
+    ];
+
+    /**
+     * Indicates if the application has "booted".
+     *
+     * @var bool
+     */
+    protected $booted = false;
+
+    /**
+     * The array of booting callbacks.
+     *
+     * @var callable[]
+     */
+    protected $bootingCallbacks = [];
+
+    /**
+     * The array of booted callbacks.
+     *
+     * @var callable[]
+     */
+    protected $bootedCallbacks = [];
+
+    /**
+     * All of the registered service providers.
+     *
+     * @var \Illuminate\Support\ServiceProvider[]
+     */
+    protected $serviceProviders = [];
+
     /**
      * Application constructor.
      * @param string|null $basePath
@@ -74,17 +114,187 @@ class Application extends Container
         
 //        $this->user_online();
 //        $this->routing();
+
+//        $this->syncMiddlewareToRouter();
+    }
+
+    /**
+     * Determine if the application configuration is cached.
+     *
+     * @return bool
+     */
+    public function configurationIsCached()
+    {
+        return is_file($this->getCachedConfigPath());
+    }
+
+    /**
+     * Get the path to the configuration cache file.
+     *
+     * @return string
+     */
+    public function getCachedConfigPath()
+    {
+        return $this->normalizeCachePath('APP_CONFIG_CACHE', 'cache/config.php');
+    }
+
+    /**
+     * Normalize a relative or absolute path to a cache file.
+     *
+     * @param  string  $key
+     * @param  string  $default
+     * @return string
+     */
+    protected function normalizeCachePath($key, $default)
+    {
+        if (is_null($env = Env::get($key))) {
+            return $this->bootstrapPath($default);
+        }
+
+        return Str::startsWith($env, $this->absoluteCachePathPrefixes)
+            ? $env
+            : $this->basePath($env);
+    }
+
+    /**
+     * Boot the application's service providers.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        if ($this->isBooted()) {
+            return;
+        }
+
+        // Once the application has booted we will also fire some "booted" callbacks
+        // for any listeners that need to do work after this initial booting gets
+        // finished. This is useful when ordering the boot-up processes we run.
+        $this->fireAppCallbacks($this->bootingCallbacks);
+
+        array_walk($this->serviceProviders, function ($p) {
+            $this->bootProvider($p);
+        });
+
+        $this->booted = true;
+
+        $this->fireAppCallbacks($this->bootedCallbacks);
+    }
+
+    /**
+     * Boot the given service provider.
+     *
+     * @param  \Illuminate\Support\ServiceProvider  $provider
+     * @return void
+     */
+    protected function bootProvider(\Sura\Libs\ServiceProvider $provider)
+    {
+        $provider->callBootingCallbacks();
+
+        if (method_exists($provider, 'boot')) {
+            $this->call([$provider, 'boot']);
+        }
+
+        $provider->callBootedCallbacks();
+    }
+
+    /**
+     * Call the booting callbacks for the application.
+     *
+     * @param  callable[]  $callbacks
+     * @return void
+     */
+    protected function fireAppCallbacks(array $callbacks)
+    {
+        foreach ($callbacks as $callback) {
+            $callback($this);
+        }
+    }
+
+
+    /**
+     * Determine if the application has booted.
+     *
+     * @return bool
+     */
+    public function isBooted()
+    {
+        return $this->booted;
+    }
+
+    /**
+     * Sync the current state of the middleware to the router.
+     *
+     * @return void
+     */
+    protected function syncMiddlewareToRouter()
+    {
+//        $this->router->middlewarePriority = $this->middlewarePriority;
+
+        foreach ($this->middlewareGroups as $key => $middleware) {
+            $this->router->middlewareGroup($key, $middleware);
+        }
+
+        foreach ($this->routeMiddleware as $key => $middleware) {
+            $this->router->aliasMiddleware($key, $middleware);
+        }
     }
 
     public function handle(): void
     {
         $this->user_online();
+
+        $this->bootstrap();
+
         try {
             $this->routing();
         } catch (Exception $e) {
             var_dump($e);
         } catch (Throwable $e){
             var_dump($e);
+        }
+    }
+
+    /**
+     * Bootstrap the application for HTTP requests.
+     *
+     * @return void
+     */
+    public function bootstrap()
+    {
+//        if (! $this->app->hasBeenBootstrapped()) {
+        $this->app->bootstrapWith($this->bootstrappers());
+
+//        }
+    }
+
+    /**
+     * Get the bootstrap classes for the application.
+     *
+     * @return array
+     */
+    protected function bootstrappers()
+    {
+        return $this->bootstrappers;
+    }
+
+
+    /**
+     * Run the given array of bootstrap classes.
+     *
+     * @param  string[]  $bootstrappers
+     * @return void
+     */
+    public function bootstrapWith(array $bootstrappers)
+    {
+        $this->hasBeenBootstrapped = true;
+
+        foreach ($bootstrappers as $bootstrapper) {
+//            $this['events']->dispatch('bootstrapping: '.$bootstrapper, [$this]);
+
+            $this->make($bootstrapper)->bootstrap($this);
+
+//            $this['events']->dispatch('bootstrapped: '.$bootstrapper, [$this]);
         }
     }
 
@@ -150,12 +360,13 @@ class Application extends Container
 
 //        $this->get('path.base');
 
+        $params = array();
         $routers = require $this->get('path.base').'/routes/web.php';
         $router->add($routers);
         try {
             if ($router->isFound()) {
                 $router->executeHandler(
-                    $router->getRequestHandler());
+                    $router->getRequestHandler(), $params);
             } else {
                 http_response_code(404);
                 $class = 'App\Modules\ErrorController';

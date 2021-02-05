@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types = 1);
+
 namespace Sura\Container;
 
 use ArrayAccess;
@@ -655,7 +657,7 @@ class Container implements ArrayAccess
                 throw $e;
             }
 
-            throw SuraException::Error("err");
+            throw SuraException::Error("err get".$id);
 
 //            throw new EntryNotFoundException($id, $e->getCode(), $e);
         }
@@ -1038,8 +1040,8 @@ class Container implements ArrayAccess
     protected function unresolvablePrimitive(ReflectionParameter $parameter)
     {
         $message = "Unresolvable dependency resolving [$parameter] in class {$parameter->getDeclaringClass()->getName()}";
-
-        throw SuraException::Error($message);
+        //FIXME
+//        throw SuraException::Error($message);
 //        throw new BindingResolutionException($message);
     }
 

@@ -17,7 +17,7 @@ class Structure implements IStructure
 	/** @var Connection */
 	protected $connection;
 
-	/** @var Sura\Caching\Cache */
+	/** @var Sura\Cache\Cache */
 	protected $cache;
 
 	/** @var array */
@@ -27,10 +27,10 @@ class Structure implements IStructure
 	protected $isRebuilt = false;
 
 
-	public function __construct(Connection $connection, Sura\Caching\IStorage $cacheStorage)
+	public function __construct(Connection $connection, Sura\Cache\IStorage $cacheStorage)
 	{
 		$this->connection = $connection;
-		$this->cache = new Sura\Caching\Cache($cacheStorage, 'Sura.Database.Structure.' . md5($this->connection->getDsn()));
+		$this->cache = new Sura\Cache\Cache($cacheStorage, 'Sura.Database.Structure.' . md5($this->connection->getDsn()));
 	}
 
 

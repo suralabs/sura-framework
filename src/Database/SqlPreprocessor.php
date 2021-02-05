@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Sura\Database;
 
 use Sura;
-
+use Sura\Exception\InvalidArgumentException;
 
 /**
  * SQL preprocessor.
@@ -102,7 +102,7 @@ class SqlPreprocessor
 					\Closure::fromCallable([$this, 'callback'])
 				);
 			} else {
-				throw new Sura\InvalidArgumentException('There are more parameters than placeholders.');
+				throw new Sura\Exception\InvalidArgumentException('There are more parameters than placeholders.');
 			}
 		}
 
@@ -115,7 +115,7 @@ class SqlPreprocessor
 		$m = $m[0];
 		if ($m[0] === '?') { // placeholder
 			if ($this->counter >= count($this->params)) {
-				throw new Sura\InvalidArgumentException('There are more placeholders than passed parameters.');
+				throw new Sura\Exception\InvalidArgumentException('There are more placeholders than passed parameters.');
 			}
 			return $this->formatValue($this->params[$this->counter++], substr($m, 1) ?: self::MODE_AUTO);
 
@@ -124,7 +124,7 @@ class SqlPreprocessor
 
 		} elseif (preg_match('~^IN\s~i', $m)) { // IN (?)
 			if ($this->counter >= count($this->params)) {
-				throw new Sura\InvalidArgumentException('There are more placeholders than passed parameters.');
+				throw new Sura\Exception\InvalidArgumentException('There are more placeholders than passed parameters.');
 			}
 			return 'IN (' . $this->formatValue($this->params[$this->counter++], self::MODE_LIST) . ')';
 
@@ -185,7 +185,7 @@ class SqlPreprocessor
 		} elseif ($mode === 'name') {
 			if (!is_string($value)) {
 				$type = gettype($value);
-				throw new Sura\InvalidArgumentException("Placeholder ?$mode expects string, $type given.");
+				throw new Sura\Exception\InvalidArgumentException("Placeholder ?$mode expects string, $type given.");
 			}
 			return $this->delimite($value);
 		}
@@ -203,7 +203,7 @@ class SqlPreprocessor
 			if ($mode === self::MODE_VALUES) { // (key, key, ...) VALUES (value, value, ...)
 				if (array_key_exists(0, $value)) { // multi-insert
 					if (!is_array($value[0]) && !$value[0] instanceof Row) {
-						throw new Sura\InvalidArgumentException('Automaticaly detected multi-insert, but values aren\'t array. If you need try to change mode like "?[' . implode('|', self::MODES) . ']". Mode "' . $mode . '" was used.');
+						throw new Sura\Exception\InvalidArgumentException('Automaticaly detected multi-insert, but values aren\'t array. If you need try to change mode like "?[' . implode('|', self::MODES) . ']". Mode "' . $mode . '" was used.');
 					}
 					foreach ($value[0] as $k => $v) {
 						$kx[] = $this->delimite($k);
@@ -281,18 +281,18 @@ class SqlPreprocessor
 				return implode(', ', $vx);
 
 			} else {
-				throw new Sura\InvalidArgumentException("Unknown placeholder ?$mode.");
+				throw new InvalidArgumentException("Unknown placeholder ?$mode.");
 			}
 
 		} elseif (in_array($mode, self::MODES, true)) {
 			$type = gettype($value);
-			throw new Sura\InvalidArgumentException("Placeholder ?$mode expects array or Traversable object, $type given.");
+			throw new Sura\Exception\InvalidArgumentException("Placeholder ?$mode expects array or Traversable object, $type given.");
 
 		} elseif ($mode && $mode !== self::MODE_AUTO) {
-			throw new Sura\InvalidArgumentException("Unknown placeholder ?$mode.");
+			throw new Sura\Exception\InvalidArgumentException("Unknown placeholder ?$mode.");
 
 		} else {
-			throw new Sura\InvalidArgumentException('Unexpected type of parameter: ' . (is_object($value) ? get_class($value) : gettype($value)));
+			throw new Sura\Exception\InvalidArgumentException('Unexpected type of parameter: ' . (is_object($value) ? get_class($value) : gettype($value)));
 		}
 	}
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Sura\Libs;
@@ -250,8 +251,11 @@ class Router
 
                 $class = 'App\Modules\\'.$controller_name;
                 $foo = new $class();
-                return call_user_func_array(array($foo, $action), array());
-//                    return call_user_func_array(array($foo, $action), $params);
+
+                $params['params'] = '';
+                $params = array($params);
+//                return call_user_func_array(array($foo, $action), array());
+                return call_user_func_array(array($foo, $action), $params );
             }
 
             throw SuraException::Error("Class '{$controller_name}' not found");

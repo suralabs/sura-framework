@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Sura\Sitemap;
 
 class FileSystem implements IFileSystem

@@ -1,7 +1,8 @@
 <?php
-declare(strict_types=1);
-namespace Sura\Libs;
 
+declare(strict_types=1);
+
+namespace Sura\Libs;
 
 use JetBrains\PhpStorm\NoReturn;
 use Sura\Contracts\AuthInterface;
@@ -153,7 +154,7 @@ class Auth implements AuthInterface
 			}
 
             $database = Model::getDB();
-            $user_info = $database->fetchAll('SELECT user_id  FROM users WHERE user_email = ?AND user_password = ?', (array)$email, (array)$password);
+            $user_info = $database->fetchAll('SELECT user_id  FROM users WHERE user_email = ? AND user_password = ?', (array)$email, (array)$password);
             $user_info = (array)$user_info[0];
 //                $check_user = $db->super_query("SELECT user_id FROM `users` WHERE user_email = '".$email."' AND user_password = '".$password."'");
 

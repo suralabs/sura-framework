@@ -2,7 +2,6 @@
 
 namespace Sura\Contracts;
 
-
 /**
  * Class Db
  * @package Sura\Libs
