@@ -22,33 +22,33 @@ use Sura;
 class CachingIterator extends \CachingIterator implements \Countable
 {
 	use Sura\SmartObject;
-
+	
 	/** @var int */
 	private $counter = 0;
-
-
+	
+	
 	public function __construct($iterator)
 	{
 		if (is_array($iterator) || $iterator instanceof \stdClass) {
 			$iterator = new \ArrayIterator($iterator);
-
+			
 		} elseif ($iterator instanceof \IteratorAggregate) {
 			do {
 				$iterator = $iterator->getIterator();
 			} while ($iterator instanceof \IteratorAggregate);
 			assert($iterator instanceof \Iterator);
-
+			
 		} elseif ($iterator instanceof \Iterator) {
 		} elseif ($iterator instanceof \Traversable) {
 			$iterator = new \IteratorIterator($iterator);
 		} else {
 			throw new Sura\Exception\InvalidArgumentException(sprintf('Invalid argument passed to %s; array or Traversable expected, %s given.', self::class, is_object($iterator) ? get_class($iterator) : gettype($iterator)));
 		}
-
+		
 		parent::__construct($iterator, 0);
 	}
-
-
+	
+	
 	/**
 	 * Is the current element the first one?
 	 */
@@ -56,8 +56,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	{
 		return $this->counter === 1 || ($gridWidth && $this->counter !== 0 && (($this->counter - 1) % $gridWidth) === 0);
 	}
-
-
+	
+	
 	/**
 	 * Is the current element the last one?
 	 */
@@ -65,8 +65,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	{
 		return !$this->hasNext() || ($gridWidth && ($this->counter % $gridWidth) === 0);
 	}
-
-
+	
+	
 	/**
 	 * Is the iterator empty?
 	 */
@@ -74,8 +74,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	{
 		return $this->counter === 0;
 	}
-
-
+	
+	
 	/**
 	 * Is the counter odd?
 	 */
@@ -83,8 +83,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	{
 		return $this->counter % 2 === 1;
 	}
-
-
+	
+	
 	/**
 	 * Is the counter even?
 	 */
@@ -92,8 +92,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	{
 		return $this->counter % 2 === 0;
 	}
-
-
+	
+	
 	/**
 	 * Returns the counter.
 	 */
@@ -101,8 +101,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	{
 		return $this->counter;
 	}
-
-
+	
+	
 	/**
 	 * Returns the count of elements.
 	 */
@@ -111,13 +111,13 @@ class CachingIterator extends \CachingIterator implements \Countable
 		$inner = $this->getInnerIterator();
 		if ($inner instanceof \Countable) {
 			return $inner->count();
-
+			
 		} else {
 			throw new Sura\Exception\NotSupportedException('Iterator is not countable.');
 		}
 	}
-
-
+	
+	
 	/**
 	 * Forwards to the next element.
 	 */
@@ -128,8 +128,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 			$this->counter++;
 		}
 	}
-
-
+	
+	
 	/**
 	 * Rewinds the Iterator.
 	 */
@@ -138,8 +138,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 		parent::rewind();
 		$this->counter = parent::valid() ? 1 : 0;
 	}
-
-
+	
+	
 	/**
 	 * Returns the next key.
 	 * @return mixed
@@ -148,8 +148,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	{
 		return $this->getInnerIterator()->key();
 	}
-
-
+	
+	
 	/**
 	 * Returns the next element.
 	 * @return mixed

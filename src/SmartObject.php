@@ -22,7 +22,7 @@ trait SmartObject
 	public function __call(string $name, array $args)
 	{
 		$class = static::class;
-
+		
 		if (ObjectHelpers::hasProperty($class, $name) === 'event') { // calling event handlers
 			$handlers = $this->$name ?? null;
 			if (is_iterable($handlers)) {
@@ -32,32 +32,32 @@ trait SmartObject
 			} elseif ($handlers !== null) {
 				throw new \Sura\Exception\UnexpectedValueException("Property $class::$$name must be iterable or null, " . gettype($handlers) . ' given.');
 			}
-
+			
 		} else {
 			ObjectHelpers::strictCall($class, $name);
 		}
 	}
-
-
-    /**
-     * @throws MemberAccessException
-     * @param string $name
-     * @param array $args
-     */
+	
+	
+	/**
+	 * @param string $name
+	 * @param array $args
+	 * @throws MemberAccessException
+	 */
 	public static function __callStatic(string $name, array $args)
 	{
 		ObjectHelpers::strictStaticCall(static::class, $name);
 	}
-
-
+	
+	
 	/**
 	 * @return mixed
 	 * @throws MemberAccessException if the property is not defined.
 	 */
 	public function &__get(string $name): mixed
-    {
+	{
 		$class = static::class;
-
+		
 		if ($prop = ObjectHelpers::getMagicProperties($class)[$name] ?? null) { // property getter
 			if (!($prop & 0b0001)) {
 				throw new MemberAccessException("Cannot read a write-only property $class::\$$name.");
@@ -66,38 +66,38 @@ trait SmartObject
 			if ($prop & 0b0100) { // return by reference
 				return $this->$m();
 			}
-
-            return $this->$m();
-        }
-
-        ObjectHelpers::strictGet($class, $name);
-    }
-
-
+			
+			return $this->$m();
+		}
+		
+		ObjectHelpers::strictGet($class, $name);
+	}
+	
+	
 	/**
-	 * @param  mixed  $value
+	 * @param mixed $value
 	 * @return void
 	 * @throws MemberAccessException if the property is not defined or is read-only
 	 */
 	public function __set(string $name, $value)
 	{
 		$class = static::class;
-
+		
 		if (ObjectHelpers::hasProperty($class, $name)) { // unsetted property
 			$this->$name = $value;
-
+			
 		} elseif ($prop = ObjectHelpers::getMagicProperties($class)[$name] ?? null) { // property setter
 			if (!($prop & 0b1000)) {
 				throw new MemberAccessException("Cannot write to a read-only property $class::\$$name.");
 			}
 			$this->{'set' . $name}($value);
-
+			
 		} else {
 			ObjectHelpers::strictSet($class, $name);
 		}
 	}
-
-
+	
+	
 	/**
 	 * @return void
 	 * @throws MemberAccessException
@@ -109,8 +109,8 @@ trait SmartObject
 			throw new MemberAccessException("Cannot unset the property $class::\$$name.");
 		}
 	}
-
-
+	
+	
 	public function __isset(string $name): bool
 	{
 		return isset(ObjectHelpers::getMagicProperties(static::class)[$name]);

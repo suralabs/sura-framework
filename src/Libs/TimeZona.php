@@ -38,30 +38,30 @@ abstract class TimeZona implements TimeZonaInterface
         24 => 'Australia/Sydney',
         25 => 'Asia/Kamchatka',
     );
-
-    /**
-     * Set timezone
-     *
-     * @param $id
-     * @return bool
-     */
-    public static function time_zone(int $id)  : bool
-    {
-        return date_default_timezone_set(self::$time_zone[$id]);
-    }
-
-    /**
-     * Language list
-     *
-     * @return string
-     */
-    public static function list(): string
-    {
-        $row = '';
-        $time_zone = self::$time_zone;
-        foreach ($time_zone as $key => $value){
-            $row.= '<option value="'.$key.'">'.$value.'</option>'.printf($row);
-        }
+	
+	/**
+	 * Set timezone
+	 *
+	 * @param $id
+	 * @return bool
+	 */
+	public static function time_zone(int $id): bool
+	{
+		return date_default_timezone_set(self::$time_zone[$id]);
+	}
+	
+	/**
+	 * Language list
+	 *
+	 * @return string
+	 */
+	public static function list(): string
+	{
+		$row = '';
+		$time_zone = self::$time_zone;
+		foreach ($time_zone as $key => $value) {
+			$row .= '<option value="' . $key . '">' . $value . '</option>' . printf($row);
+		}
         return $row;
     }
 }

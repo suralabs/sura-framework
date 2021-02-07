@@ -8,18 +8,18 @@ use JetBrains\PhpStorm\Pure;
 
 class SuraException extends \InvalidArgumentException
 {
-
-    /**
-     * @param string $message
-     * @return static
-     */
-    #[Pure] public static function Error(string $message): self
-    {
-        return new static( $message);
-    }
-
-    public static function err(): bool
-    {
-        return true;
-    }
+	
+	/**
+	 * @param string $message
+	 * @return static
+	 */
+	#[Pure] public static function Error(string $message): self
+	{
+		return new static($message);
+	}
+	
+	public static function err(): bool
+	{
+		return true;
+	}
 }
