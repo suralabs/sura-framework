@@ -38,6 +38,8 @@ class TimeZona
     );
 
     /**
+     * Set timezone
+     *
      * @param $id
      * @return bool
      */
@@ -47,14 +49,16 @@ class TimeZona
     }
 
     /**
+     * Language list
+     *
      * @return string
      */
     public static function list(): string
     {
-         $row = '';
-
-        for ($i=0; $i < 26; $i++) {
-            $row.= '<option value="'.$i.'">'.self::$time_zone[$i].'</option>';
+        $row = '';
+        $time_zone = self::$time_zone;
+        foreach ($time_zone as $key => $value){
+            $row.= '<option value="'.$key.'">'.$value.'</option>'.printf($row);
         }
         return $row;
     }

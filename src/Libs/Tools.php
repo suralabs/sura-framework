@@ -116,7 +116,12 @@ class Tools
      * @param $id
      * @param $options
      * @return string
+     * @deprecated
      */
+    #[Deprecated(
+        reason: 'use CheckBlackList() instead',
+        replacement: 'App\Libs\Support->compile_list(%parameter0%, %parameter1%)'
+    )]
     public static function InstallationSelectedNew($id, $options): string
     {
         return str_replace('val="' . $id . '" class="', 'val="' . $id . '" class="active ', $options);

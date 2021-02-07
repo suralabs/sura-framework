@@ -1,7 +1,8 @@
 <?php
-declare(strict_types=1);
-namespace Sura\Libs;
 
+declare(strict_types=1);
+
+namespace Sura\Libs;
 
 use JetBrains\PhpStorm\NoReturn;
 use Sura\Contracts\AuthInterface;

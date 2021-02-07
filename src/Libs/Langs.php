@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Sura\Libs;
 
  use JetBrains\PhpStorm\NoReturn;
@@ -120,11 +122,7 @@ class Langs {
      */
     public static function lang_list() : array
     {
-//        $config = Settings::load();
-//        $lang_list = nl2br($config['lang_list']);
         /** @var array $expLangList  all languages*/
-//        $expLangList = explode(' | ', $lang_list);
-//        return $expLangList;
         return self::$langs;
     }
 }
