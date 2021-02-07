@@ -153,6 +153,7 @@ class Tools
     /**
      * @param $userId int not owner user
      * @return bool
+     * @deprecated
      */
     public static function CheckBlackList(int $userId): bool
     {
@@ -179,6 +180,7 @@ class Tools
      * check user to friends
      * @param int $for_user_id
      * @return bool
+     * @deprecated
      */
     public static function CheckFriends(int $for_user_id): bool
     {
