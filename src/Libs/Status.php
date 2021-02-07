@@ -7,47 +7,40 @@ namespace Sura\Libs;
 
 class Status
 {
-    public const  OK = 1;
+    public const OK = 1;
     public const BAD = 0;
-
-    const LOGGED = 2;
-    const BAD_LOGGED = 3;
-    const BAD_MAIL = 4;
-    const BAD_PASSWORD = 5;
-    const PASSWORD_DOESNT_MATCH = 6;
-    const BAD_USER = 7;
-    const NOT_USER = 8;
-
-    const NOT_VALID = 10;
-    const BAD_CODE = 11;
-    const BAD_MOVE = 12;
-    const FILE_NOT_EXIST = 12;
-    const FILE_EXIST = 13;
-    const BIG_SIZE = 14;
-    const BAD_FORMAT = 15;
-
-    const NOT_FOUND = 16;
-    const FOUND = 17;
-    const OWNER_FOUND = 18;
-    const OWNER = 11;
-    const NOT_DATA = 19;
-    const LIMIT = 20;
-    const MAX = 21;
-    const BAD_RIGHTS = 11;
-    const PERMISSION = 11;
-    const PRIVACY = 11;
-
-    const BAD_FRIEND = 11;
-    const FRIEND = 11;
-
-    const BAD_DEMAND = 11;
-    const DEMAND = 11;
-    const BAD_DEMAND_OWNER = 11;
-    const DEMAND_OWNER = 11;
-
-    const NOT_MONEY = 11;
-    const BLACKLIST = 11;
-    const ANTISPAM = 11;
-    const SUBSCRIPTION = 11;
-
+    public const LOGGED = 2;
+    public const BAD_LOGGED = 3;
+    public const BAD_MAIL = 4;
+    public const BAD_PASSWORD = 5;
+    public const PASSWORD_DOESNT_MATCH = 6;
+    public const BAD_USER = 7;
+    public const NOT_USER = 8;
+    public const NOT_VALID = 9;
+    public const BAD_CODE = 10;
+    public const BAD_MOVE = 11;
+    public const FILE_NOT_EXIST = 12;
+    public const FILE_EXIST = 13;
+    public const BIG_SIZE = 14;
+    public const BAD_FORMAT = 15;
+    public const NOT_FOUND = 16;
+    public const FOUND = 17;
+    public const OWNER_FOUND = 18;
+    public const OWNER = 19;
+    public const NOT_DATA = 20;
+    public const LIMIT = 21;
+    public const MAX = 22;
+    public const BAD_RIGHTS = 23;
+    public const PERMISSION = 24;
+    public const PRIVACY = 25;
+    public const BAD_FRIEND = 26;
+    public const FRIEND = 27;
+    public const BAD_DEMAND = 28;
+    public const DEMAND = 29;
+    public const BAD_DEMAND_OWNER = 30;
+    public const DEMAND_OWNER = 31;
+    public const NOT_MONEY = 32;
+    public const BLACKLIST = 33;
+    public const ANTISPAM = 34;
+    public const SUBSCRIPTION = 35;
 }
