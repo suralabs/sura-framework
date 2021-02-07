@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Sura\Libs;
 
-class TimeZona
+use Sura\Contracts\TimeZonaInterface;
+
+abstract class TimeZona implements TimeZonaInterface
 {
     /**
      * @var array|string[]

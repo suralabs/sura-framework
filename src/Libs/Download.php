@@ -2,7 +2,9 @@
 declare(strict_types=1);
 namespace Sura\Libs;
 
-class Download {
+use Sura\Contracts\DownloadInterface;
+
+class Download implements DownloadInterface{
 
     /** @var string[]  */
 	var array $properties = array ('old_name' => "", 'new_name' => "", 'type' => "", 'size' => "", 'resume' => "", 'max_speed' => "" );

@@ -13,9 +13,7 @@ class Profile_check
         return TimeZona::time_zone($id);
     }
 
-    /**
-     * @return string
-     */
+    /** @return string */
     public static function list(): string
     {
         return TimeZona::list();

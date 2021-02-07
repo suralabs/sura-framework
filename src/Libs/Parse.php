@@ -2,7 +2,9 @@
 declare(strict_types=1);
 namespace Sura\Libs;
 
-class Parse{
+use Sura\Contracts\ParseInterface;
+
+class Parse implements ParseInterface{
 
     /**
      * @param string $source

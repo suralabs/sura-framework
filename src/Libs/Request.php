@@ -6,12 +6,13 @@ namespace Sura\Libs;
 
 use JetBrains\PhpStorm\NoReturn;
 use JetBrains\PhpStorm\Pure;
+use Sura\Contracts\RequestInterface;
 
 /**
  * Class Request
  * @package Sura\Libs
  */
-class Request
+class Request implements RequestInterface
 {
     /** @var \Sura\Libs\Request|null */
     private static Request|null $requests = null;
@@ -209,8 +210,4 @@ class Request
     {
         return !(getenv['SERVER_PORT'] !== 443);
     }
-
-
-
-
 }

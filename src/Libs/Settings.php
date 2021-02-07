@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Sura\Libs;
 
+use Sura\Contracts\SettingsInterface;
 use function Sura\resolve;
 
-class Settings
+class Settings implements SettingsInterface
 {
     /**
      * load settings

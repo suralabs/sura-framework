@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sura\Libs;
 
  use JetBrains\PhpStorm\NoReturn;
+ use Sura\Contracts\LangsInterface;
  use function Sura\resolve;
  
  /**
@@ -12,7 +13,7 @@ namespace Sura\Libs;
  * @package System\Libs
  */
 
-class Langs {
+class Langs implements LangsInterface{
 
     /**
      * @var \string[][]

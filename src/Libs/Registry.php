@@ -6,25 +6,21 @@ declare(strict_types=1);
  */
 namespace Sura\Libs;
 
+use Sura\Contracts\RegistryInterface;
+
 /**
  * Class Registry
  * @package Sura\Libs
  */
-class Registry
+class Registry implements RegistryInterface
 {
-    /**
-     * Статическое хранилище для данных
-     */
+    /** Статическое хранилище для данных */
     protected static array $store = array();
  
-    /**
-     * Защита от создания экземпляров статического класса
-     */
+    /** Защита от создания экземпляров статического класса */
     protected function __construct() {}
 
-    /**
-     *
-     */
+    /**  */
     protected function __clone() {}
 
     /**

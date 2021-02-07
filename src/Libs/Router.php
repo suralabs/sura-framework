@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace Sura\Libs;
 
+use Sura\Contracts\RouterInterface;
 use Sura\Exception\SuraException;
 
 /**
  * Class Router
  * @package Sura\Libs
  */
-class Router
+class Router implements RouterInterface
 {
     /**
      * @var array $routes

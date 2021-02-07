@@ -10,7 +10,6 @@ use Sura\Exception\FileException;
 
 class File extends SplFileInfo
 {
-
     /**
      * 文件hash规则
      * @var array
@@ -35,7 +34,6 @@ class File extends SplFileInfo
     }
 
     /**
-     * 获取文件的哈希散列值
      * @access public
      * @param string $type
      * @return string

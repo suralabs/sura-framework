@@ -6,5 +6,15 @@ namespace Sura\Contracts;
 
 interface SettingsInterface
 {
-    public static function load() : array;
+    /**
+     * load settings
+     * @return array
+     */
+    public static function load(): array;
+
+    /**
+     * @param string $parameter
+     * @return string
+     */
+    public static function get(string $parameter): string;
 }

@@ -27,7 +27,7 @@ final class Db implements DbInterface
      * @param string $mysql_error
      * @param string $mysql_version
      * @param int $mysql_error_num
-     * @param int $MySQL_time_taken
+     * @param float $MySQL_time_taken
      * @param bool|string|object $query_id
      * @param array $db_config
      */

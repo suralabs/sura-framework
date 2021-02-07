@@ -12,7 +12,6 @@ use Sura\Contracts\AuthInterface;
  */
 class Auth implements AuthInterface
 {
-
     /**
      * @return array
      */

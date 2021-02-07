@@ -120,7 +120,7 @@ class Tools
      */
     #[Deprecated(
         reason: 'use CheckBlackList() instead',
-        replacement: 'App\Libs\Support->compile_list(%parameter0%, %parameter1%)'
+        replacement: '\App\Libs\Support->compile_list(%parameter0%, %parameter1%)'
     )]
     public static function InstallationSelectedNew($id, $options): string
     {
@@ -160,7 +160,7 @@ class Tools
      */
     #[Deprecated(
         reason: 'use CheckBlackList() instead',
-        replacement: 'App\Libs\Friends->CheckBlackList(!%parameter0%)'
+        replacement: '\App\Libs\Friends->CheckBlackList(!%parameter0%)'
     )]
     public static function CheckBlackList(int $userId): bool
     {
@@ -187,7 +187,7 @@ class Tools
      */
     #[Deprecated(
         reason: 'use CheckFriends() instead',
-        replacement: 'App\Libs\Friends->CheckFriends(!%parameter0%)'
+        replacement: '\App\Libs\Friends->CheckFriends(!%parameter0%)'
     )]
     public static function CheckFriends(int $for_user_id): bool
     {
