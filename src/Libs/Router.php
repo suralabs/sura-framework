@@ -34,7 +34,6 @@ class Router implements RouterInterface
 	
 	/**
 	 * @var array|null $params
-	 * @deprecated
 	 */
 	private static ?array $params = [];
 	
@@ -141,8 +140,7 @@ class Router implements RouterInterface
 	 */
 	public static function getParams(): array
 	{
-		//TODO
-		return self::$params; //old
+		return self::$params;
 	}
 	
 	/**

@@ -98,7 +98,6 @@ class Auth implements AuthInterface
 			} else {
 				$user_info = array();
 				$logged = false;
-//				echo 'e';
 				self::logout();
 //                header('Location: https://'.$_SERVER['HTTP_HOST'].'/h/');
 			
@@ -134,9 +133,7 @@ class Auth implements AuthInterface
 			
 			//Проверяем правильность e-mail
 			if (Validation::check_email($email) == false and $_POST['token'] !== $_SESSION['_mytoken'] || empty($_POST['token'])) {
-				//TODO update
-				$logged = false;
-				return array('user_info' => $user_info, 'logged' => $logged);
+				return array('user_info' => $user_info, 'logged' => false);
 				//msgbox('', $lang['not_loggin'].'<br /><a href="/restore" onClick="Page.Go(this.href); return false">Забыли пароль?r</a>', 'info_red');
 			}
 			
@@ -162,7 +159,7 @@ class Auth implements AuthInterface
 				$_SESSION['user_id'] = (int)$user_info['user_id'];
 				
 				//Записываем COOKIE
-				Tools::set_cookie("user_id", (int)$user_info['user_id'], 365);
+				Tools::set_cookie("user_id", (string)$user_info['user_id'], 365);
 				Tools::set_cookie("password", $password, 365);
 				Tools::set_cookie("hid", $hid, 365);
 				
@@ -175,9 +172,7 @@ class Auth implements AuthInterface
 //                    else
 //                        header('Location: https://'.$server['HTTP_HOST'].'/');
 			} else {
-				//TODO update
-				$logged = false;
-				return array('user_info' => $user_info, 'logged' => $logged);
+				return array('user_info' => $user_info, 'logged' => false);
 				//msgbox('', $lang['not_loggin'].'<br /><br /><a href="/restore/" onClick="Page.Go(this.href); return false">Забыли пароль?</a>', 'info_red');
 			}
 		}

@@ -338,8 +338,6 @@ class SitemapGenerator
      * @param array|null $alternates
      * @return SitemapGenerator
      * @throws InvalidArgumentException
-     * @todo add scheme and domain check
-     * @todo check that port of url is the same as base url port
      * @see http://php.net/manual/en/function.date.php
      * @see http://en.wikipedia.org/wiki/ISO_8601
      */
