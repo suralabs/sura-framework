@@ -14,14 +14,14 @@ use Sura\Exception\InvalidArgumentException;
  */
 class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \IteratorAggregate
 {
-    /**
-     * Transforms array to ArrayHash.
-     * @param array $array
-     * @param bool $recursive
-     * @return static
-     */
+	/**
+	 * Transforms array to ArrayHash.
+	 * @param array $array
+	 * @param bool $recursive
+	 * @return static
+	 */
 	public static function from(array $array, bool $recursive = true): static
-    {
+	{
 		$obj = new static;
 		foreach ($array as $key => $value) {
 			$obj->$key = $recursive && is_array($value)
@@ -30,8 +30,8 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 		}
 		return $obj;
 	}
-
-
+	
+	
 	/**
 	 * Returns an iterator over all items.
 	 */
@@ -39,8 +39,8 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	{
 		return new \RecursiveArrayIterator((array) $this);
 	}
-
-
+	
+	
 	/**
 	 * Returns items count.
 	 */
@@ -48,13 +48,13 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	{
 		return count((array) $this);
 	}
-
-
-    /**
-     * Replaces or appends a item.
-     * @param string|int $key
-     * @param mixed $value
-     */
+	
+	
+	/**
+	 * Replaces or appends a item.
+	 * @param string|int $key
+	 * @param mixed $value
+	 */
 	public function offsetSet($key, mixed $value): void
 	{
 		if (!is_scalar($key)) { // prevents null
@@ -62,30 +62,30 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 		}
 		$this->$key = $value;
 	}
-
-
+	
+	
 	/**
 	 * Returns a item.
 	 * @param  string|int  $key
 	 * @return mixed
 	 */
-	public function offsetGet($key): mixed
-    {
+	public function offsetGet($key)
+	{
 		return $this->$key;
 	}
-
-
-    /**
-     * Determines whether a item exists.
-     * @param string|int $key
-     * @return bool
-     */
+	
+	
+	/**
+	 * Determines whether a item exists.
+	 * @param string|int $key
+	 * @return bool
+	 */
 	public function offsetExists($key): bool
 	{
 		return isset($this->$key);
 	}
-
-
+	
+	
 	/**
 	 * Removes the element from this list.
 	 * @param  string|int  $key

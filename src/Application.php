@@ -102,14 +102,12 @@ class Application extends Container
 		
 		$this->registerBaseBindings();
 		$this->registerCoreContainerAliases();
-
+		
 	}
 	
 	public function handle(): void
 	{
 		$this->user_online();
-		
-		$this->bootstrap();
 		
 		try {
 			$this->routing();
@@ -118,19 +116,6 @@ class Application extends Container
 		} catch (Throwable $e) {
 			var_dump($e);
 		}
-	}
-	
-	/**
-	 * Bootstrap the application for HTTP requests.
-	 *
-	 * @return void
-	 */
-	public function bootstrap()
-	{
-//        if (! $this->app->hasBeenBootstrapped()) {
-		$this->app->bootstrapWith($this->bootstrappers());
-
-//        }
 	}
 	
 	/**
