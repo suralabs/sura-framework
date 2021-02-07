@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types=1);
-
 namespace Sura\Libs;
 
 class Profile_check

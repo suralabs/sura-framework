@@ -6,6 +6,7 @@ namespace Sura;
 
 use Sura\Utils\ObjectHelpers;
 
+
 /**
  * Strict class for better experience.
  * - 'did you mean' hints

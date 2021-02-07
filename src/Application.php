@@ -1,7 +1,5 @@
 <?php
-
 declare(strict_types = 1);
-
 namespace Sura;
 
 use Exception;
@@ -63,7 +61,7 @@ class Application extends Container
      */
     protected $bootstrappers = [
         \Sura\Bootstrap\Provider::class,
-    ];
+   ];
 
     /**
      * Indicates if the application has "booted".
@@ -89,7 +87,7 @@ class Application extends Container
     /**
      * All of the registered service providers.
      *
-     * @var \Illuminate\Support\ServiceProvider[]
+     * @var \Support\ServiceProvider[]
      */
     protected $serviceProviders = [];
 
@@ -184,7 +182,7 @@ class Application extends Container
     /**
      * Boot the given service provider.
      *
-     * @param  \Illuminate\Support\ServiceProvider  $provider
+     * @param  \Support\ServiceProvider  $provider
      * @return void
      */
     protected function bootProvider(\Sura\Libs\ServiceProvider $provider)

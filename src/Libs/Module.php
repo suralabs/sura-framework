@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Sura\Libs;
@@ -30,6 +29,7 @@ class Module implements ModuleInterface
         }else{
             return true;
         }
+        return Registry::get('logged');
     }
 
     /**
