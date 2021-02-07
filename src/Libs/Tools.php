@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace Sura\Libs;
 
+use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
-use Sura\Exception\SuraException;
 use Sura\Utils\DateTime;
 
 /**
@@ -76,12 +76,12 @@ class Tools
     }
 
     /**
-     *
+     * @param string $url
      */
-    public static function NoAjaxQuery($url = NULL): void
+    public static function NoAjaxQuery(string $url = ''): void
     {
         if (self::clean_url($_SERVER['HTTP_REFERER']) !== self::clean_url($_SERVER['HTTP_HOST']) and $_SERVER['REQUEST_METHOD'] != 'POST') {
-            if ($url !== NULL) {
+            if ($url !== '') {
                 header('Location: ' . $url);
             } else {
                 header('Location: https://' . $_SERVER['HTTP_HOST'] . '/none/');
@@ -153,17 +153,18 @@ class Tools
      * @return bool
      * @deprecated
      */
+    #[Deprecated(
+        reason: 'use CheckBlackList() instead',
+        replacement: 'App\Libs\Friends->CheckBlackList(!%parameter0%)'
+    )]
     public static function CheckBlackList(int $userId): bool
     {
         $user_info = Registry::get('user_info');
         $user_id = $user_info['user_id'];
         $bad_user_id = $userId;
-
         if ($user_id !== $bad_user_id) {
             $db = Db::getDB();
-
             $row_blacklist = $db->super_query("SELECT id FROM `users_blacklist` WHERE users = '{$bad_user_id}|{$user_id}'");
-
             if ($row_blacklist) {
                 return true;
             }
@@ -171,7 +172,6 @@ class Tools
         } else {
             return false;
         }
-
     }
 
     /**
@@ -180,6 +180,10 @@ class Tools
      * @return bool
      * @deprecated
      */
+    #[Deprecated(
+        reason: 'use CheckFriends() instead',
+        replacement: 'App\Libs\Friends->CheckFriends(!%parameter0%)'
+    )]
     public static function CheckFriends(int $for_user_id): bool
     {
         $user_info = Registry::get('user_info');
