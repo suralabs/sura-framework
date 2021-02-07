@@ -58,7 +58,7 @@ class DateTime extends \DateTime implements \JsonSerializable
 
 	/**
 	 * Creates DateTime object.
-	 * @throws Sura\InvalidArgumentException if the date and time are not valid.
+	 * @throws Sura\Exception\InvalidArgumentException if the date and time are not valid.
      * @param int $year
      * @param int $month
      * @param int $day
@@ -101,7 +101,7 @@ class DateTime extends \DateTime implements \JsonSerializable
      * @return bool|int|DateTime
      * @throws \Exception
      */
-	public static function createFromFormat($format,$time, $timezone = null)
+	public static function createFromFormat($format,$time, $timezone = null): DateTime|bool|int
     {
 		if ($timezone === null) {
 			$timezone = new \DateTimeZone(date_default_timezone_get());
@@ -140,12 +140,13 @@ class DateTime extends \DateTime implements \JsonSerializable
 	}
 
 
-	/**
-	 * Creates a copy with a modified time.
-	 * @return static
-	 */
-	public function modifyClone(string $modify = '')
-	{
+    /**
+     * Creates a copy with a modified time.
+     * @param string $modify
+     * @return static
+     */
+	public function modifyClone(string $modify = ''): DateTime|static
+    {
 		$dolly = clone $this;
 		return $modify ? $dolly->modify($modify) : $dolly;
 	}

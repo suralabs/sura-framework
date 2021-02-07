@@ -14,10 +14,12 @@ final class FileSystem
 {
 	use Sura\StaticClass;
 
-	/**
-	 * Creates a directory if it doesn't exist.
-	 * @throws Sura\Exception\IOException  on error occurred
-	 */
+    /**
+     * Creates a directory if it doesn't exist.
+     * @throws Sura\Exception\IOException  on error occurred
+     * @param string $dir
+     * @param int $mode
+     */
 	public static function createDir(string $dir, int $mode = 0777): void
 	{
 		if (!is_dir($dir) && !@mkdir($dir, $mode, true) && !is_dir($dir)) { // @ - dir may already exist
@@ -26,11 +28,14 @@ final class FileSystem
 	}
 
 
-	/**
-	 * Copies a file or a directory. Overwrites existing files and directories by default.
-	 * @throws Sura\Exception\IOException  on error occurred
-	 * @throws Sura\Exception\InvalidStateException  if $overwrite is set to false and destination already exists
-	 */
+    /**
+     * Copies a file or a directory. Overwrites existing files and directories by default.
+     * @param string $origin
+     * @param string $target
+     * @param bool $overwrite
+     * @throws Sura\Exception\IOException  on error occurred
+     * @throws Sura\Exception\InvalidStateException  if $overwrite is set to false and destination already exists
+     */
 	public static function copy(string $origin, string $target, bool $overwrite = true): void
 	{
 		if (stream_is_local($origin) && !file_exists($origin)) {
@@ -65,10 +70,11 @@ final class FileSystem
 	}
 
 
-	/**
-	 * Deletes a file or directory if exists.
-	 * @throws Sura\Exception\IOException  on error occurred
-	 */
+    /**
+     * Deletes a file or directory if exists.
+     * @param string $path
+     * @throws Sura\Exception\IOException  on error occurred
+     */
 	public static function delete(string $path): void
 	{
 		if (is_file($path) || is_link($path)) {
@@ -88,11 +94,14 @@ final class FileSystem
 	}
 
 
-	/**
-	 * Renames or moves a file or a directory. Overwrites existing files and directories by default.
-	 * @throws Sura\Exception\IOException  on error occurred
-	 * @throws Sura\Exception\InvalidStateException  if $overwrite is set to false and destination already exists
-	 */
+    /**
+     * Renames or moves a file or a directory. Overwrites existing files and directories by default.
+     * @param string $origin
+     * @param string $target
+     * @param bool $overwrite
+     * @throws Sura\Exception\IOException  on error occurred
+     * @throws Sura\Exception\InvalidStateException  if $overwrite is set to false and destination already exists
+     */
 	public static function rename(string $origin, string $target, bool $overwrite = true): void
 	{
 		if (!$overwrite && file_exists($target)) {
@@ -113,10 +122,12 @@ final class FileSystem
 	}
 
 
-	/**
-	 * Reads the content of a file.
-	 * @throws Sura\Exception\IOException  on error occurred
-	 */
+    /**
+     * Reads the content of a file.
+     * @param string $file
+     * @return string
+     * @throws Sura\Exception\IOException  on error occurred
+     */
 	public static function read(string $file): string
 	{
 		$content = @file_get_contents($file); // @ is escalated to exception
@@ -127,10 +138,13 @@ final class FileSystem
 	}
 
 
-	/**
-	 * Writes the string to a file.
-	 * @throws Sura\Exception\IOException  on error occurred
-	 */
+    /**
+     * Writes the string to a file.
+     * @param string $file
+     * @param string $content
+     * @param int|null $mode
+     * @throws Sura\Exception\IOException  on error occurred
+     */
 	public static function write(string $file, string $content, ?int $mode = 0666): void
 	{
 		static::createDir(dirname($file));
@@ -143,18 +157,22 @@ final class FileSystem
 	}
 
 
-	/**
-	 * Determines if the path is absolute.
-	 */
+    /**
+     * Determines if the path is absolute.
+     * @param string $path
+     * @return bool
+     */
 	public static function isAbsolute(string $path): bool
 	{
 		return (bool) preg_match('#([a-z]:)?[/\\\\]|[a-z][a-z0-9+.-]*://#Ai', $path);
 	}
 
 
-	/**
-	 * Normalizes `..` and `.` and directory separators in path.
-	 */
+    /**
+     * Normalizes `..` and `.` and directory separators in path.
+     * @param string $path
+     * @return string
+     */
 	public static function normalizePath(string $path): string
 	{
 		$parts = $path === '' ? [] : preg_split('~[/\\\\]+~', $path);
@@ -172,9 +190,11 @@ final class FileSystem
 	}
 
 
-	/**
-	 * Joins all segments of the path and normalizes the result.
-	 */
+    /**
+     * Joins all segments of the path and normalizes the result.
+     * @param string ...$paths
+     * @return string
+     */
 	public static function joinPaths(string ...$paths): string
 	{
 		return self::normalizePath(implode('/', $paths));
