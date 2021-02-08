@@ -92,7 +92,6 @@ class Application extends Container
 	/**
 	 * Application constructor.
 	 * @param string|null $basePath
-	 * TODO update
 	 */
 	public function __construct(string|null $basePath = null)
 	{
@@ -212,21 +211,6 @@ class Application extends Container
 			}
 			
 			//Определяем устройство
-			//TODO update
-//            if(check_smartphone()){
-//                if($_SESSION['mobile'] != 2)
-//                    $config['temp'] = "mobile";
-//                $check_smartphone = true;
-//            }else{
-//                $check_smartphone = false;
-//            }
-//
-//            if($check_smartphone) {
-//                $device_user = 1;
-//            } else {
-//                $device_user = 0;
-//            }
-			
 			$device_user = 0;
 			if (($user_info['user_last_visit'] + 60) <= $server_time) {
 				$db = Db::getDB();

@@ -126,4 +126,15 @@ class Langs implements LangsInterface{
         /** @var array $expLangList  all languages*/
         return self::$langs;
     }
+    
+	/**
+	 * @param $format
+	 * @param $stamp
+	 * @return string
+	 */
+	public static function lang_date($format, int $stamp): string
+	{
+		$lang_date = Langs::get_langdate();
+		return strtr(@date($format, $stamp), $lang_date);
+	}
 }
