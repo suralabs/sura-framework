@@ -10,7 +10,7 @@ interface ModuleInterface
 {
     public function user_info() : string|array|null;
 
-    public function logged() : bool;
+    public function logged() : bool|null;
 
     public function db() : null|Db;
 

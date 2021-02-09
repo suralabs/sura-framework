@@ -22,7 +22,7 @@ class Module implements ModuleInterface
 	/**
 	 * @return bool
 	 */
-	public function logged(): bool
+	public function logged(): bool|null
 	{
 		return Registry::get('logged');
 	}
