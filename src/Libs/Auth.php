@@ -152,7 +152,10 @@ class Auth implements AuthInterface
                 //msgbox('', $lang['not_loggin'].'<br /><br /><a href="/restore/" onClick="Page.Go(this.href); return false">Забыли пароль?</a>', 'info_red');
             }
         }
-        return array('user_info' => $user_info, 'logged' => $logged);
+        return array(
+            'user_info' => $user_info,
+            'logged' => $logged
+        );
     }
 
     /**
