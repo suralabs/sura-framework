@@ -29,4 +29,13 @@ class Date
 		}
 		return Langs::lang_date('j M Y в H:i', $timestamp);
 	}
+
+    /**
+     * Server time
+     */
+    public static function time(): int
+    {
+        $server = Request::getRequest()->server;
+        return (int)$server['REQUEST_TIME'];
+    }
 }

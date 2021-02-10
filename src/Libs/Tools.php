@@ -189,11 +189,14 @@ class Tools
 		if ($check) {
 			return true;
 		}
-		
 		return false;
 	}
-	
-	public static function Online($time): bool
+
+    /**
+     * @param $time
+     * @return bool
+     */
+	public static function Online(int $time): bool
 	{
 		$config = Settings::load();
 		$server_time = (int)$_SERVER['REQUEST_TIME'];
@@ -330,6 +333,7 @@ class Tools
 	
 	/**
 	 * Server time
+     * @deprecated
 	 */
 	public static function time(): int
 	{

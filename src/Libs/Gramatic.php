@@ -25,7 +25,7 @@ class Gramatic implements GramaticInterface
 	 * @param false|string $func
 	 * @param bool $full
 	 * @return string
-     * @deprecated 
+     * @deprecated
 	 */
 	public static function megaDate(int $timestamp, false|string $func = false, bool $full = false): string
 	{
