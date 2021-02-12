@@ -11,6 +11,7 @@ use \Sura\Log\Log;
 /**
  * Class Db
  * @package Sura\Libs
+ * @deprecated
  */
 final class Db implements DbInterface
 {
@@ -59,6 +60,7 @@ final class Db implements DbInterface
 	}
 	
 	/**
+     * connect to DB
 	 * @param $db_user
 	 * @param $db_pass
 	 * @param $db_name

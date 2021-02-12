@@ -7,6 +7,8 @@ namespace Sura\Libs;
 class Date
 {
 	/**
+     *  generate date
+     * TODO l18n
 	 * @param int $timestamp - date
 	 * @param false|string $func - no_year
 	 * @param bool $full - full
@@ -31,7 +33,7 @@ class Date
 	}
 
     /**
-     * Server time
+     * Get server time
      */
     public static function time(): int
     {

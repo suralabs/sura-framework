@@ -63,7 +63,7 @@ class Langs implements LangsInterface{
     );
 
     /**
-     *
+     * ser locale
      */
     #[NoReturn]
     public static function setlocale(): void
@@ -77,6 +77,7 @@ class Langs implements LangsInterface{
     }
 
     /**
+     * get translate values
      * @return array
      */
     public static function get_langs():array
@@ -97,7 +98,7 @@ class Langs implements LangsInterface{
     }
 
     /**
-     * Check language
+     * Check your language
      *
      * @return string
      */

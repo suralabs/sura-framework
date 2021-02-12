@@ -11,7 +11,7 @@ use Sura\Exception\FileException;
 class File extends SplFileInfo
 {
 	/**
-	 * 文件hash规则
+	 * hash
 	 * @var array
 	 */
 	protected array $hash = [];
@@ -48,7 +48,7 @@ class File extends SplFileInfo
 	}
 	
 	/**
-	 * 获取文件的MD5值
+	 * MD5
 	 * @access public
 	 * @return string
 	 */
@@ -58,7 +58,7 @@ class File extends SplFileInfo
 	}
 	
 	/**
-	 * 获取文件的SHA1值
+	 * SHA1
 	 * @access public
 	 * @return string
 	 */
@@ -69,7 +69,7 @@ class File extends SplFileInfo
 	}
 	
 	/**
-	 * 获取文件类型信息
+	 * getMime
 	 * @access public
 	 * @return string
 	 */
