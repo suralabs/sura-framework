@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Sura\Libs;
 
-
+/**
+ * Class Status
+ * @package Sura\Libs
+ */
 class Status
 {
 	public const OK = 1;
