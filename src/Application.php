@@ -202,7 +202,7 @@ class Application extends Container
 			}
 
 //            $server_time = intval($_SERVER['REQUEST_TIME']);
-			$server_time = Tools::time();
+            $server_time = \Sura\Libs\Date::time();
 			
 			if (date('Y-m-d', (int)$user_info['user_lastupdate']) < date('Y-m-d', $server_time)) {
 				$sql_balance = ", user_balance = user_balance+1, user_lastupdate = '{$server_time}'";
