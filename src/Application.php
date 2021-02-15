@@ -111,9 +111,12 @@ class Application extends Container
 		try {
 			$this->routing();
 		} catch (Exception $e) {
-			var_dump($e);
+//			var_dump($e);
+            $class = 'App\Modules\ErrorController';
+            $foo = new $class();
+            echo call_user_func_array(array($foo, $action = 'Index'), array());
 		} catch (Throwable $e) {
-			var_dump($e);
+//			var_dump($e);
 		}
 	}
 	
