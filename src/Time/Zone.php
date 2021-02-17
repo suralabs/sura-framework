@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Sura\Libs;
+namespace Sura\Time;
 
-use Sura\Contracts\TimeZonaInterface;
+use Sura\Contracts\ZoneInterface;
 
-abstract class TimeZona implements TimeZonaInterface
+abstract class Zone implements ZoneInterface
 {
     /**
      * @var array|string[]
@@ -45,11 +45,11 @@ abstract class TimeZona implements TimeZonaInterface
 	 * @param $id
 	 * @return bool
 	 */
-	public static function time_zone(int $id): bool
+	public static function zone(int $id): bool
 	{
 		return date_default_timezone_set(self::$time_zone[$id]);
 	}
-	
+
 	/**
 	 * Language list
 	 *
@@ -60,7 +60,7 @@ abstract class TimeZona implements TimeZonaInterface
 		$row = '';
 		$time_zone = self::$time_zone;
 		foreach ($time_zone as $key => $value) {
-			$row .= '<option value="' . $key . '">' . $value . '</option>' . printf($row);
+			$row .= '<option value="' . $key . '">' . $value . '</option>';
 		}
         return $row;
     }

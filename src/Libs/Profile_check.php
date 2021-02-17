@@ -3,20 +3,31 @@ declare(strict_types=1);
 
 namespace Sura\Libs;
 
+use Sura\Time\Zone;
+
+/**
+ * Class Profile_check
+ * @package Sura\Libs
+ * @deprecated
+ */
 class Profile_check
 {
 	/**
 	 * @param $id
 	 * @return bool
+     * @deprecated
 	 */
 	public static function time_zone(int $id): bool
 	{
-		return TimeZona::time_zone($id);
+		return Zone::zone($id);
 	}
-	
-	/** @return string */
+
+    /**
+     * @return string
+     * @deprecated
+     */
 	public static function list(): string
 	{
-		return TimeZona::list();
+		return Zone::list();
 	}
 }
