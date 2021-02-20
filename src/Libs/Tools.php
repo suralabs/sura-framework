@@ -149,61 +149,7 @@ class Tools
 			}
 		}
 	}
-	
-	/**
-	 * @param $userId int not owner user
-	 * @return bool
-	 * @deprecated
-	 */
-	#[Deprecated(reason: 'use CheckBlackList() instead', replacement: '\App\Libs\Friends->CheckBlackList(!%parameter0%)')]
-	public static function CheckBlackList(int $userId): bool
-	{
-		$user_info = Registry::get('user_info');
-		$user_id = $user_info['user_id'];
-		$bad_user_id = $userId;
-		if ($user_id !== $bad_user_id) {
-			$db = Db::getDB();
-			$row_blacklist = $db->super_query("SELECT id FROM `users_blacklist` WHERE users = '{$bad_user_id}|{$user_id}'");
-			if ($row_blacklist) {
-				return true;
-			}
-			return false;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * check user to friends
-	 * @param int $for_user_id
-	 * @return bool
-	 * @deprecated
-	 */
-	#[Deprecated(reason: 'use CheckFriends() instead', replacement: '\App\Libs\Friends->CheckFriends(!%parameter0%)')]
-	public static function CheckFriends(int $for_user_id): bool
-	{
-		$user_info = Registry::get('user_info');
-		$from_user_id = $user_info['user_id'];
-		$db = Db::getDB();
-		$check = $db->super_query("SELECT user_id FROM `friends` WHERE friend_id = '{$for_user_id}' AND user_id = '{$from_user_id}' AND subscriptions = 0");
-		if ($check) {
-			return true;
-		}
-		return false;
-	}
 
-    /**
-     * @param $time
-     * @return bool
-     */
-	public static function Online(int $time): bool
-	{
-		$config = Settings::load();
-		$server_time = (int)$_SERVER['REQUEST_TIME'];
-		$online_time = $server_time - $config['online_time'];
-		return $time >= $online_time;
-	}
-	
 	/**
 	 * !Дубликат
 	 *

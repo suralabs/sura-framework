@@ -11,10 +11,10 @@ class Mail
 	var $site_name = "";
 	var $from = "";
 	var $to = "";
-	var string $subject = "";
+	public string $subject = "";
 	var string $message = "";
 	var string $header = "";
-	var ?string $additional_parameters = null;
+	private string $additional_parameters = '';
 	var string $error = "";
 	var array $bcc = array();
 	var string $mail_headers = "";
@@ -47,11 +47,19 @@ class Mail
 		$this->from = $config['admin_mail'];
 		$this->charset = $config['charset'];
 		$this->site_name = $config['home'];
-		$this->additional_parameters = trim($config['mail_additional']) ? trim($config['mail_additional']) : null;
-		$this->smtp_mail = trim($config['smtp_mail']) ? trim($config['smtp_mail']) : '';
-		
+		if (isset($config['mail_additional'])){
+            $this->additional_parameters = trim($config['mail_additional']) ? trim($config['mail_additional']) : '';
+        }else{
+            $config['mail_additional'] = '';
+        }
+		if (isset($config['smtp_mail'])){
+            $this->smtp_mail = trim($config['smtp_mail']) ? trim($config['smtp_mail']) : '';
+        }else{
+            $config['smtp_mail'] = '';
+        }
+
 		$this->smtp_host = $config['smtp_host'];
-		$this->smtp_port = intval($config['smtp_port']);
+		$this->smtp_port = (int)$config['smtp_port'];
 		$this->smtp_user = $config['smtp_user'];
 		$this->smtp_pass = $config['smtp_pass'];
 		

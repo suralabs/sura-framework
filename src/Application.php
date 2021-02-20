@@ -111,12 +111,28 @@ class Application extends Container
 		try {
 			$this->routing();
 		} catch (Exception $e) {
+//            $params = array();
+////			var_dump($e);
+//            $class = 'App\Modules\ErrorController';
+//            $foo = new $class();
+//            $params['param'] = '';
+//            $params = (array)$params;
+//            echo call_user_func_array(array($foo, $action = 'Index'), $params);
+		} catch (Throwable $e) {
+            $params = array();
 //			var_dump($e);
             $class = 'App\Modules\ErrorController';
             $foo = new $class();
-            echo call_user_func_array(array($foo, $action = 'Index'), array());
-		} catch (Throwable $e) {
-//			var_dump($e);
+//            $params['param'] = '';
+
+            $params['error'] = $e->getLine();
+            $params['error_name'] = $e->getMessage();
+//            $params['error'] = 1;
+//            $params = (array)$params;
+            echo call_user_func_array(
+                array($foo,
+                    $action = 'Index'),
+                array($params));
 		}
 	}
 	
@@ -179,7 +195,7 @@ class Application extends Container
 				http_response_code(404);
 				$class = 'App\Modules\ErrorController';
 				$foo = new $class();
-				echo call_user_func_array(array($foo, $action = 'Index'), array());
+				echo call_user_func_array(array($foo, $action = 'Index'), array($params));
 //                throw SuraException::Error("Page not found");
 			}
 		} catch (InvalidArgumentException $e) {

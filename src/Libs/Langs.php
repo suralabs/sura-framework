@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Sura\Libs;
 
- use JetBrains\PhpStorm\NoReturn;
- use Sura\Contracts\LangsInterface;
- use function Sura\resolve;
- 
- /**
+use JetBrains\PhpStorm\NoReturn;
+use Sura\Contracts\LangsInterface;
+use function Sura\resolve;
+
+/**
  * Class Langs
  * @package System\Libs
  */
-
-class Langs implements LangsInterface{
+class Langs implements LangsInterface
+{
 
     /**
      * @var \string[][]
@@ -69,9 +69,9 @@ class Langs implements LangsInterface{
     public static function setlocale(): void
     {
         $checkLang = self::check_lang();
-        if($checkLang == 'ru'){
+        if ($checkLang == 'ru') {
             setlocale(LC_ALL, "ru");
-        }else{
+        } else {
             setlocale(LC_ALL, "ru");
         }
     }
@@ -80,21 +80,21 @@ class Langs implements LangsInterface{
      * get translate values
      * @return array
      */
-    public static function get_langs():array
+    public static function get_langs(): array
     {
-        $checkLang = self::check_lang() ? self::check_lang() :'ru';
+        $checkLang = self::check_lang() ? self::check_lang() : 'ru';
         $dir = resolve('app')->get('path');
-        return include $dir."/lang/{$checkLang}.php";
+        return include $dir . "/lang/{$checkLang}.php";
     }
 
     /**
      * @return array
      */
-    public static function get_langdate():array
+    public static function get_langdate(): array
     {
         $dir = resolve('app')->get('path.base');
-        $checkLang = self::check_lang() ? self::check_lang() :'ru';
-        return include $dir.'/lang/'.$checkLang.'/date.lng';
+        $checkLang = self::check_lang() ? self::check_lang() : 'ru';
+        return include $dir . '/lang/' . $checkLang . '/date.lng';
     }
 
     /**
@@ -102,17 +102,17 @@ class Langs implements LangsInterface{
      *
      * @return string
      */
-    public static function check_lang() : string
+    public static function check_lang(): string
     {
         $request = Request::getRequest()->getGlobal();
 
         $lang_list = self::lang_list();
-        $useLang = (int) $request['lang'];
+        $useLang = (int)$request['lang'];
 
-        if ($useLang > 0){
+        if ($useLang > 0) {
             return $lang_list[$useLang]['iso1'];
         }
-        if (!isset($_COOKIE['lang'])){
+        if (!isset($_COOKIE['lang'])) {
             Tools::set_cookie("lang", '0', 365);
         }
 
@@ -122,20 +122,20 @@ class Langs implements LangsInterface{
     /**
      * @return array Languages list
      */
-    public static function lang_list() : array
+    public static function lang_list(): array
     {
-        /** @var array $expLangList  all languages*/
+        /** @var array $expLangList all languages */
         return self::$langs;
     }
-    
-	/**
-	 * @param $format
-	 * @param $stamp
-	 * @return string
-	 */
-	public static function lang_date($format, int $stamp): string
-	{
-		$lang_date = Langs::get_langdate();
-		return strtr(@date($format, $stamp), $lang_date);
-	}
+
+    /**
+     * @param $format
+     * @param $stamp
+     * @return string
+     */
+    public static function lang_date(string $format, int $stamp): string
+    {
+        $lang_date = Langs::get_langdate();
+        return strtr(@date($format, $stamp), $lang_date);
+    }
 }

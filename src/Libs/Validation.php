@@ -156,6 +156,7 @@ class Validation
 	/**
 	 * @param $source
 	 * @return mixed
+     * @deprecated
 	 */
 	public static function ajax_utf8(string $source): string
 	{
