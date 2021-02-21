@@ -111,13 +111,20 @@ class Application extends Container
 		try {
 			$this->routing();
 		} catch (Exception $e) {
-//            $params = array();
-////			var_dump($e);
-//            $class = 'App\Modules\ErrorController';
-//            $foo = new $class();
+            $params = array();
+//			var_dump($e);
+            $class = 'App\Modules\ErrorController';
+            $foo = new $class();
 //            $params['param'] = '';
+
+            $params['error'] = $e->getLine();
+            $params['error_name'] = $e->getMessage();
+//            $params['error'] = 1;
 //            $params = (array)$params;
-//            echo call_user_func_array(array($foo, $action = 'Index'), $params);
+            echo call_user_func_array(
+                array($foo,
+                    $action = 'Index'),
+                array($params));
 		} catch (Throwable $e) {
             $params = array();
 //			var_dump($e);
