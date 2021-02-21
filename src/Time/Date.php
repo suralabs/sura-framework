@@ -6,6 +6,7 @@ namespace Sura\Time;
 
 use Sura\Libs\Langs;
 use Sura\Libs\Request;
+use Sura\Utils\DateTime;
 
 class Date
 {
@@ -42,5 +43,25 @@ class Date
     {
         $server = Request::getRequest()->server;
         return (int)$server['REQUEST_TIME'];
+    }
+
+    /**
+     * @param $timestamp - date
+     * @param string $format - to format
+     * @return string
+     * @throws \Exception
+     */
+    public static function date_convert($timestamp, string $format): string
+    {
+        if (is_numeric($timestamp)) {
+            $date = new DateTime();
+            $date->setTimestamp($timestamp);
+        } else {
+            $date = new DateTime($timestamp);
+        }
+        $date = $date->format('Y-m-d H:i:s');
+
+        $date = new DateTime($date);
+        return $date->format($format);
     }
 }

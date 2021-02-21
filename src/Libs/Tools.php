@@ -117,10 +117,8 @@ class Tools
 	 * @param $id
 	 * @param $options
 	 * @return string
-	 * @deprecated
 	 */
-	#[Deprecated(reason: 'use CheckBlackList() instead', replacement: '\App\Libs\Support->compile_list(%parameter0%, %parameter1%)')]
-	public static function InstallationSelectedNew($id, $options): string
+	public static function InstallationSelected($id, $options): string
 	{
 		return str_replace('val="' . $id . '" class="', 'val="' . $id . '" class="active ', $options);
 	}
@@ -275,35 +273,5 @@ class Tools
 		$config = Settings::load();
 		
 		return '<div class="nav" id="nav">' . $pages . '</div>';
-	}
-	
-	/**
-	 * Server time
-     * @deprecated
-	 */
-	public static function time(): int
-	{
-		$server = Request::getRequest()->server;
-		return (int)$server['REQUEST_TIME'];
-	}
-	
-	/**
-	 * @param $timestamp - date
-	 * @param string $format - to format
-	 * @return int|string|bool
-	 * @throws \Exception
-	 */
-	public static function date_convert($timestamp, string $format): int|string|bool
-	{
-		if (is_numeric($timestamp)) {
-			$date = new DateTime();
-			$date->setTimestamp($timestamp);
-		} else {
-			$date = new DateTime($timestamp);
-		}
-		$date = $date->format('Y-m-d H:i:s');
-		
-		$date = new DateTime($date);
-		return $date->format($format);
 	}
 }

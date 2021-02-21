@@ -6,6 +6,7 @@ namespace Sura\Libs;
 
 use JetBrains\PhpStorm\Pure;
 use Sura\Contracts\GramaticInterface;
+use Sura\Time\Date;
 
 /**
  * Class Gramatic
@@ -18,31 +19,6 @@ class Gramatic implements GramaticInterface
 	{
 		$lang_date = Langs::get_langdate();
 		return strtr(@date($format, $stamp), $lang_date);
-	}
-	
-	/**
-	 * @param int $timestamp
-	 * @param false|string $func
-	 * @param bool $full
-	 * @return string
-     * @deprecated
-	 */
-	public static function megaDate(int $timestamp, false|string $func = false, bool $full = false): string
-	{
-		$server_time = Tools::time();
-		if (date('Y-m-d', $timestamp) == date('Y-m-d', $server_time)) {
-			return langdate('сегодня в H:i', $timestamp);
-		}
-		if (date('Y-m-d', $timestamp) == date('Y-m-d', ($server_time - 84600))) {
-			return langdate('вчера в H:i', $timestamp);
-		}
-		if ($func == 'no_year') {
-			return langdate('j M в H:i', $timestamp);
-		}
-		if ($full) {
-			return langdate('j F Y в H:i', $timestamp);
-		}
-		return langdate('j M Y в H:i', $timestamp);
 	}
 	
 	/**
