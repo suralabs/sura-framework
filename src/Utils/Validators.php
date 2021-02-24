@@ -240,27 +240,29 @@ class Validators
      * @param mixed $value
      * @return bool
      */
-	public static function isCallable($value): bool
+	public static function isCallable(mixed $value): bool
 	{
 		return $value && is_callable($value, true);
 	}
 
 
-	/**
-	 * Checks if the value is a valid UTF-8 string.
-	 * @param  mixed  $value
-	 */
-	public static function isUnicode($value): bool
+    /**
+     * Checks if the value is a valid UTF-8 string.
+     * @param mixed $value
+     * @return bool
+     */
+	public static function isUnicode(mixed $value): bool
 	{
 		return is_string($value) && preg_match('##u', $value);
 	}
 
 
-	/**
-	 * Checks if the value is 0, '', false or null.
-	 * @param  mixed  $value
-	 */
-	public static function isNone($value): bool
+    /**
+     * Checks if the value is 0, '', false or null.
+     * @param mixed $value
+     * @return bool
+     */
+	public static function isNone(mixed $value): bool
 	{
 		return $value == null; // intentionally ==
 	}
@@ -273,23 +275,26 @@ class Validators
 	}
 
 
-	/**
-	 * Checks if a variable is a zero-based integer indexed array.
-	 * @param  mixed  $value
-	 * @deprecated  use Sura\Utils\Arrays::isList
-	 */
-	public static function isList($value): bool
+    /**
+     * Checks if a variable is a zero-based integer indexed array.
+     * @param mixed $value
+     * @return bool
+     * @deprecated  use Sura\Utils\Arrays::isList
+     */
+	public static function isList(mixed $value): bool
 	{
 		return Arrays::isList($value);
 	}
 
 
-	/**
-	 * Checks if the value is in the given range [min, max], where the upper or lower limit can be omitted (null).
-	 * Numbers, strings and DateTime objects can be compared.
-	 * @param  mixed  $value
-	 */
-	public static function isInRange($value, array $range): bool
+    /**
+     * Checks if the value is in the given range [min, max], where the upper or lower limit can be omitted (null).
+     * Numbers, strings and DateTime objects can be compared.
+     * @param mixed $value
+     * @param array $range
+     * @return bool
+     */
+	#[Pure] public static function isInRange(mixed $value, array $range): bool
 	{
 		if ($value === null || !(isset($range[0]) || isset($range[1]))) {
 			return false;
@@ -310,9 +315,11 @@ class Validators
 	}
 
 
-	/**
-	 * Checks if the value is a valid email address. It does not verify that the domain actually exists, only the syntax is verified.
-	 */
+    /**
+     * Checks if the value is a valid email address. It does not verify that the domain actually exists, only the syntax is verified.
+     * @param string $value
+     * @return bool
+     */
 	public static function isEmail(string $value): bool
 	{
 		$atom = "[-a-z0-9!#$%&'*+/=?^_`{|}~]"; // RFC 5322 unquoted characters in local-part
@@ -329,9 +336,11 @@ XX
 	}
 
 
-	/**
-	 * Checks if the value is a valid URL address.
-	 */
+    /**
+     * Checks if the value is a valid URL address.
+     * @param string $value
+     * @return bool
+     */
 	public static function isUrl(string $value): bool
 	{
 		$alpha = "a-z\x80-\xFF";
@@ -353,27 +362,33 @@ XX
 	}
 
 
-	/**
-	 * Checks if the value is a valid URI address, that is, actually a string beginning with a syntactically valid schema.
-	 */
+    /**
+     * Checks if the value is a valid URI address, that is, actually a string beginning with a syntactically valid schema.
+     * @param string $value
+     * @return bool
+     */
 	public static function isUri(string $value): bool
 	{
 		return (bool) preg_match('#^[a-z\d+\.-]+:\S+$#Di', $value);
 	}
 
 
-	/**
-	 * Checks whether the input is a class, interface or trait.
-	 */
+    /**
+     * Checks whether the input is a class, interface or trait.
+     * @param string $type
+     * @return bool
+     */
 	public static function isType(string $type): bool
 	{
 		return class_exists($type) || interface_exists($type) || trait_exists($type);
 	}
 
 
-	/**
-	 * Checks whether the input is a valid PHP identifier.
-	 */
+    /**
+     * Checks whether the input is a valid PHP identifier.
+     * @param string $value
+     * @return bool
+     */
 	public static function isPhpIdentifier(string $value): bool
 	{
 		return is_string($value) && preg_match('#^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$#D', $value);
