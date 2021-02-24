@@ -48,20 +48,24 @@ class CachingIterator extends \CachingIterator implements \Countable
 		
 		parent::__construct($iterator, 0);
 	}
-	
-	
-	/**
-	 * Is the current element the first one?
-	 */
+
+
+    /**
+     * Is the current element the first one?
+     * @param int|null $gridWidth
+     * @return bool
+     */
 	public function isFirst(int $gridWidth = null): bool
 	{
 		return $this->counter === 1 || ($gridWidth && $this->counter !== 0 && (($this->counter - 1) % $gridWidth) === 0);
 	}
-	
-	
-	/**
-	 * Is the current element the last one?
-	 */
+
+
+    /**
+     * Is the current element the last one?
+     * @param int|null $gridWidth
+     * @return bool
+     */
 	public function isLast(int $gridWidth = null): bool
 	{
 		return !$this->hasNext() || ($gridWidth && ($this->counter % $gridWidth) === 0);
@@ -145,8 +149,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * Returns the next key.
 	 * @return mixed
 	 */
-	public function getNextKey()
-	{
+	public function getNextKey(): mixed
+    {
 		return $this->getInnerIterator()->key();
 	}
 	
@@ -155,8 +159,8 @@ class CachingIterator extends \CachingIterator implements \Countable
 	 * Returns the next element.
 	 * @return mixed
 	 */
-	public function getNextValue()
-	{
+	public function getNextValue(): mixed
+    {
 		return $this->getInnerIterator()->current();
 	}
 }
