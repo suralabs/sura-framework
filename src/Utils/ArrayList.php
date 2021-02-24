@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use JetBrains\PhpStorm\Pure;
 use Sura;
 use Sura\Exception\OutOfRangeException;
 
@@ -16,7 +17,7 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 	use Sura\SmartObject;
 
 	/** @var mixed[] */
-	private $list = [];
+	private array $list = [];
 
 
 	/**
@@ -31,19 +32,19 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Returns items count.
 	 */
-	public function count(): int
+	#[Pure] public function count(): int
 	{
 		return count($this->list);
 	}
 
 
-	/**
-	 * Replaces or appends a item.
-	 * @param  int|null  $index
-	 * @param  mixed  $value
-	 * @throws OutOfRangeException
-	 */
-	public function offsetSet($index, $value): void
+    /**
+     * Replaces or appends a item.
+     * @param int|null $index
+     * @param mixed $value
+     * @throws OutOfRangeException
+     */
+	public function offsetSet(mixed $index, $value): void
 	{
 		if ($index === null) {
 			$this->list[] = $value;
