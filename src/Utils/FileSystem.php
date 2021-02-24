@@ -45,20 +45,20 @@ final class FileSystem
 			throw new Sura\Exception\InvalidStateException("File or directory '$target' already exists.");
 
 		} elseif (is_dir($origin)) {
-			static::createDir($target);
+			FileSystem::createDir($target);
 			foreach (new \FilesystemIterator($target) as $item) {
-				static::delete($item->getPathname());
+				FileSystem::delete($item->getPathname());
 			}
 			foreach ($iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($origin, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $item) {
 				if ($item->isDir()) {
-					static::createDir($target . '/' . $iterator->getSubPathName());
+					FileSystem::createDir($target . '/' . $iterator->getSubPathName());
 				} else {
-					static::copy($item->getPathname(), $target . '/' . $iterator->getSubPathName());
+					FileSystem::copy($item->getPathname(), $target . '/' . $iterator->getSubPathName());
 				}
 			}
 
 		} else {
-			static::createDir(dirname($target));
+			FileSystem::createDir(dirname($target));
 			if (
 				($s = @fopen($origin, 'rb'))
 				&& ($d = @fopen($target, 'wb'))
@@ -85,7 +85,7 @@ final class FileSystem
 
 		} elseif (is_dir($path)) {
 			foreach (new \FilesystemIterator($path) as $item) {
-				static::delete($item->getPathname());
+				FileSystem::delete($item->getPathname());
 			}
 			if (!@rmdir($path)) { // @ is escalated to exception
 				throw new Sura\Exception\IOException("Unable to delete directory '$path'. " . Helpers::getLastError());
@@ -111,9 +111,9 @@ final class FileSystem
 			throw new Sura\Exception\IOException("File or directory '$origin' not found.");
 
 		} else {
-			static::createDir(dirname($target));
+			FileSystem::createDir(dirname($target));
 			if (realpath($origin) !== realpath($target)) {
-				static::delete($target);
+				FileSystem::delete($target);
 			}
 			if (!@rename($origin, $target)) { // @ is escalated to exception
 				throw new Sura\Exception\IOException("Unable to rename file or directory '$origin' to '$target'. " . Helpers::getLastError());
@@ -147,7 +147,7 @@ final class FileSystem
      */
 	public static function write(string $file, string $content, ?int $mode = 0666): void
 	{
-		static::createDir(dirname($file));
+		FileSystem::createDir(dirname($file));
 		if (@file_put_contents($file, $content) === false) { // @ is escalated to exception
 			throw new Sura\Exception\IOException("Unable to write file '$file'. " . Helpers::getLastError());
 		}

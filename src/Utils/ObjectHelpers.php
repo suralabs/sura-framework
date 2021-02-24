@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use ReflectionException;
 use Sura;
-use Sura\MemberAccessException;
+use Sura\Exception\MemberAccessException;
 
 
 /**
@@ -15,7 +16,7 @@ final class ObjectHelpers
 {
 	use Sura\StaticClass;
 
-	/** @throws Sura\Exception\MemberAccessException */
+	/** @throws Sura\Exception\MemberAccessException|ReflectionException */
 	public static function strictGet(string $class, string $name): void
 	{
 		$rc = new \ReflectionClass($class);
@@ -39,8 +40,13 @@ final class ObjectHelpers
 	}
 
 
-	/** @throws MemberAccessException */
-	public static function strictCall(string $class, string $method, array $additionalMethods = []): void
+    /**
+     * @param string $class
+     * @param string $method
+     * @param array $additionalMethods
+     * @throws MemberAccessException|ReflectionException
+     */
+	public static function strictCall(string $class, string $method, array $additionalMethods = []): mixed
 	{
 		$hint = self::getSuggestion(array_merge(
 			get_class_methods($class),
@@ -55,7 +61,11 @@ final class ObjectHelpers
 	}
 
 
-	/** @throws Sura\Exception\MemberAccessException */
+    /**
+     * @param string $class
+     * @param string $method
+     * @throws MemberAccessException|ReflectionException
+     */
 	public static function strictStaticCall(string $class, string $method): void
 	{
 		$hint = self::getSuggestion(
@@ -66,11 +76,13 @@ final class ObjectHelpers
 	}
 
 
-	/**
-	 * Returns array of magic properties defined by annotation @property.
-	 * @return array of [name => bit mask]
-	 * @internal
-	 */
+    /**
+     * Returns array of magic properties defined by annotation @param string $class
+     * @return array of [name => bit mask]
+     * @throws ReflectionException
+     * @property.
+     * @internal
+     */
 	public static function getMagicProperties(string $class): array
 	{
 		static $cache;
@@ -151,13 +163,15 @@ final class ObjectHelpers
 	}
 
 
-	/**
-	 * Checks if the public non-static property exists.
-	 * @return bool|string returns 'event' if the property exists and has event like name
-	 * @internal
-	 */
-	public static function hasProperty(string $class, string $name)
-	{
+    /**
+     * Checks if the public non-static property exists.
+     * @param string $class
+     * @param string $name
+     * @return bool|string returns 'event' if the property exists and has event like name
+     * @internal
+     */
+	public static function hasProperty(string $class, string $name): bool|string
+    {
 		static $cache;
 		$prop = &$cache[$class][$name];
 		if ($prop === null) {
@@ -167,7 +181,7 @@ final class ObjectHelpers
 				if ($rp->isPublic() && !$rp->isStatic()) {
 					$prop = $name >= 'onA' && $name < 'on_' ? 'event' : true;
 				}
-			} catch (\ReflectionException $e) {
+			} catch (ReflectionException $e) {
 			}
 		}
 		return $prop;

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use DateTimeInterface;
+use JetBrains\PhpStorm\Pure;
+use ReflectionException;
 use Sura;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -53,7 +56,7 @@ class Finder implements \IteratorAggregate, \Countable
 	public static function find(...$masks): self
 	{
 		$masks = $masks && is_array($masks[0]) ? $masks[0] : $masks;
-		return (new static)->select($masks, 'isDir')->select($masks, 'isFile');
+		return (new Finder)->select($masks, 'isDir')->select($masks, 'isFile');
 	}
 
 
@@ -65,7 +68,7 @@ class Finder implements \IteratorAggregate, \Countable
 	public static function findFiles(...$masks): self
 	{
 		$masks = $masks && is_array($masks[0]) ? $masks[0] : $masks;
-		return (new static)->select($masks, 'isFile');
+		return (new Finder)->select($masks, 'isFile');
 	}
 
 
@@ -77,7 +80,7 @@ class Finder implements \IteratorAggregate, \Countable
 	public static function findDirectories(...$masks): self
 	{
 		$masks = $masks && is_array($masks[0]) ? $masks[0] : $masks;
-		return (new static)->select($masks, 'isDir');
+		return (new Finder)->select($masks, 'isDir');
 	}
 
 
@@ -188,7 +191,7 @@ class Finder implements \IteratorAggregate, \Countable
 	public function getIterator(): \Iterator
 	{
         if (!$this->paths) {
-            throw new Sura\InvalidStateException('Call in() or from() to specify directory to search.');
+            throw new Sura\Exception\InvalidStateException('Call in() or from() to specify directory to search.');
 
         }
 
@@ -205,9 +208,11 @@ class Finder implements \IteratorAggregate, \Countable
     }
 
 
-	/**
-	 * Returns per-path iterator.
-	 */
+    /**
+     * Returns per-path iterator.
+     * @param string $path
+     * @return \Iterator
+     */
 	private function buildIterator(string $path): \Iterator
 	{
 		$iterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::FOLLOW_SYMLINKS);
@@ -284,10 +289,11 @@ class Finder implements \IteratorAggregate, \Countable
 	}
 
 
-	/**
-	 * Limits recursion level.
-	 * @return static
-	 */
+    /**
+     * Limits recursion level.
+     * @param int $depth
+     * @return static
+     */
 	public function limitDepth(int $depth): self
 	{
 		$this->maxDepth = $depth;
@@ -295,12 +301,13 @@ class Finder implements \IteratorAggregate, \Countable
 	}
 
 
-	/**
-	 * Restricts the search by size.
-	 * @param  string  $operator  "[operator] [size] [unit]" example: >=10kB
-	 * @return static
-	 */
-	public function size(string $operator, int $size = null): self
+    /**
+     * Restricts the search by size.
+     * @param string $operator "[operator] [size] [unit]" example: >=10kB
+     * @param int $size
+     * @return static
+     */
+	public function size(string $operator, int $size = 0): self
 	{
 		if (func_num_args() === 1) { // in $operator is predicate
 			if (!preg_match('#^(?:([=<>!]=?|<>)\s*)?((?:\d*\.)?\d+)\s*(K|M|G|)B?$#Di', $operator, $matches)) {
@@ -317,12 +324,13 @@ class Finder implements \IteratorAggregate, \Countable
 	}
 
 
-	/**
-	 * Restricts the search by modified time.
-	 * @param  string  $operator  "[operator] [date]" example: >1978-01-23
-	 * @param  string|int|\DateTimeInterface  $date
-	 * @return static
-	 */
+    /**
+     * Restricts the search by modified time.
+     * @param string $operator "[operator] [date]" example: >1978-01-23
+     * @param string|int|DateTimeInterface $date
+     * @return static
+     * @throws \Exception
+     */
 	public function date(string $operator, $date = null): self
 	{
 		if (func_num_args() === 1) { // in $operator is predicate
@@ -339,38 +347,35 @@ class Finder implements \IteratorAggregate, \Countable
 	}
 
 
-	/**
-	 * Compares two values.
-	 */
-	public static function compare($l, string $operator, $r): bool
+    /**
+     * Compares two values.
+     * @param $l
+     * @param string $operator
+     * @param $r
+     * @return bool
+     */
+	#[Pure] public static function compare($l, string $operator, $r): bool
 	{
-		switch ($operator) {
-			case '>':
-				return $l > $r;
-			case '>=':
-				return $l >= $r;
-			case '<':
-				return $l < $r;
-			case '<=':
-				return $l <= $r;
-			case '=':
-			case '==':
-				return $l == $r;
-			case '!':
-			case '!=':
-			case '<>':
-				return $l != $r;
-			default:
-				throw new Sura\Exception\InvalidArgumentException("Unknown operator $operator.");
-		}
+        return match ($operator) {
+            '>' => $l > $r,
+            '>=' => $l >= $r,
+            '<' => $l < $r,
+            '<=' => $l <= $r,
+            '=', '==' => $l == $r,
+            '!', '!=', '<>' => $l != $r,
+            default => throw new Sura\Exception\InvalidArgumentException("Unknown operator $operator."),
+        };
 	}
 
 
-	/********************* extension methods ****************d*g**/
-
-
-	public function __call(string $name, array $args)
-	{
+    /**
+     * @param string $name
+     * @param array $args
+     * @return mixed
+     * @throws ReflectionException
+     */
+	public function __call(string $name, array $args): mixed
+    {
 		return isset(self::$extMethods[$name])
 			? (self::$extMethods[$name])($this, ...$args)
 			: Sura\Utils\ObjectHelpers::strictCall(get_class($this), $name, array_keys(self::$extMethods));

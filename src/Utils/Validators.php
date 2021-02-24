@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use JetBrains\PhpStorm\Pure;
 use Sura;
 
 
@@ -80,12 +81,14 @@ class Validators
 	];
 
 
-	/**
-	 * Verifies that the value is of expected types separated by pipe.
-	 * @param  mixed  $value
-	 * @throws Sura\Exception\AssertionException
-	 */
-	public static function assert($value, string $expected, string $label = 'variable'): void
+    /**
+     * Verifies that the value is of expected types separated by pipe.
+     * @param mixed $value
+     * @param string $expected
+     * @param string $label
+     * @throws Sura\Exception\AssertionException
+     */
+	public static function assert(mixed $value, string $expected, string $label = 'variable'): void
 	{
 		if (!static::is($value, $expected)) {
 			$expected = str_replace(['|', ':'], [' or ', ' in range '], $expected);
@@ -101,17 +104,19 @@ class Validators
 	}
 
 
-	/**
-	 * Verifies that element $key in array is of expected types separated by pipe.
-	 * @param  mixed[]  $array
-	 * @param  int|string  $key
-	 * @throws Sura\Exception\AssertionException
-	 */
+    /**
+     * Verifies that element $key in array is of expected types separated by pipe.
+     * @param mixed[] $array
+     * @param int|string $key
+     * @param string|null $expected
+     * @param string $label
+     * @throws Sura\Exception\AssertionException
+     */
 	public static function assertField(
-		array $array,
-		$key,
-		string $expected = null,
-		string $label = "item '%' in array"
+        array $array,
+        int|string $key,
+        string $expected = null,
+        string $label = "item '%' in array"
 	): void {
 		if (!array_key_exists($key, $array)) {
 			throw new Sura\Exception\AssertionException('Missing ' . str_replace('%', $key, $label) . '.');
@@ -122,11 +127,13 @@ class Validators
 	}
 
 
-	/**
-	 * Verifies that the value is of expected types separated by pipe.
-	 * @param  mixed  $value
-	 */
-	public static function is($value, string $expected): bool
+    /**
+     * Verifies that the value is of expected types separated by pipe.
+     * @param mixed $value
+     * @param string $expected
+     * @return bool
+     */
+	public static function is(mixed $value, string $expected): bool
 	{
 		foreach (explode('|', $expected) as $item) {
 			if (substr($item, -2) === '[]') {
@@ -144,7 +151,8 @@ class Validators
 			[$type] = $item = explode(':', $item, 2);
 			if (isset(static::$validators[$type])) {
 				try {
-					if (!static::$validators[$type]($value)) {
+//                    $validators = null;
+                    if (!static::$validators[$type]($value)) {
 						continue;
 					}
 				} catch (\TypeError $e) {
@@ -178,10 +186,11 @@ class Validators
 	}
 
 
-	/**
-	 * Finds whether all values are of expected types separated by pipe.
-	 * @param  mixed[]  $values
-	 */
+    /**
+     * Finds whether all values are of expected types separated by pipe.
+     * @param mixed[] $values
+     * @return bool
+     */
 	public static function everyIs(iterable $values, string $expected): bool
 	{
 		foreach ($values as $value) {
@@ -193,40 +202,44 @@ class Validators
 	}
 
 
-	/**
-	 * Checks if the value is an integer or a float.
-	 * @param  mixed  $value
-	 */
-	public static function isNumber($value): bool
+    /**
+     * Checks if the value is an integer or a float.
+     * @param mixed $value
+     * @return bool
+     */
+	#[Pure] public static function isNumber(mixed $value): bool
 	{
 		return is_int($value) || is_float($value);
 	}
 
 
-	/**
-	 * Checks if the value is an integer or a integer written in a string.
-	 * @param  mixed  $value
-	 */
-	public static function isNumericInt($value): bool
+    /**
+     * Checks if the value is an integer or a integer written in a string.
+     * @param mixed $value
+     * @return bool
+     */
+	public static function isNumericInt(mixed $value): bool
 	{
 		return is_int($value) || (is_string($value) && preg_match('#^[+-]?[0-9]+$#D', $value));
 	}
 
 
-	/**
-	 * Checks if the value is a number or a number written in a string.
-	 * @param  mixed  $value
-	 */
-	public static function isNumeric($value): bool
+    /**
+     * Checks if the value is a number or a number written in a string.
+     * @param mixed $value
+     * @return bool
+     */
+	public static function isNumeric(mixed $value): bool
 	{
 		return is_float($value) || is_int($value) || (is_string($value) && preg_match('#^[+-]?[0-9]*[.]?[0-9]+$#D', $value));
 	}
 
 
-	/**
-	 * Checks if the value is a syntactically correct callback.
-	 * @param  mixed  $value
-	 */
+    /**
+     * Checks if the value is a syntactically correct callback.
+     * @param mixed $value
+     * @return bool
+     */
 	public static function isCallable($value): bool
 	{
 		return $value && is_callable($value, true);

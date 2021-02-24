@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use JetBrains\PhpStorm\Pure;
 use Sura;
 use function is_array, is_object, strlen;
 
@@ -18,29 +19,34 @@ class Strings
 	public const TRIM_CHARACTERS = " \t\n\r\0\x0B\u{A0}";
 
 
-	/**
-	 * Checks if the string is valid in UTF-8 encoding.
-	 */
-	public static function checkEncoding(string $s): bool
+    /**
+     * Checks if the string is valid in UTF-8 encoding.
+     * @param string $s
+     * @return bool
+     */
+	#[Pure] public static function checkEncoding(string $s): bool
 	{
 		return $s === self::fixEncoding($s);
 	}
 
 
-	/**
-	 * Removes all invalid UTF-8 characters from a string.
-	 */
-	public static function fixEncoding(string $s): string
+    /**
+     * Removes all invalid UTF-8 characters from a string.
+     * @param string $s
+     * @return string
+     */
+	#[Pure] public static function fixEncoding(string $s): string
 	{
 		// removes xD800-xDFFF, x110000 and higher
 		return htmlspecialchars_decode(htmlspecialchars($s, ENT_NOQUOTES | ENT_IGNORE, 'UTF-8'), ENT_NOQUOTES);
 	}
 
 
-	/**
-	 * Returns a specific character in UTF-8 from code point (number in range 0x0000..D7FF or 0xE000..10FFFF).
-	 * @throws Sura\Exception\InvalidArgumentException if code point is not in valid range
-	 */
+    /**
+     * Returns a specific character in UTF-8 from code point (number in range 0x0000..D7FF or 0xE000..10FFFF).
+     * @param int $code
+     * @return string
+     */
 	public static function chr(int $code): string
 	{
 		if ($code < 0 || ($code >= 0xD800 && $code <= 0xDFFF) || $code > 0x10FFFF) {
@@ -52,37 +58,50 @@ class Strings
 	}
 
 
-	/**
-	 * Starts the $haystack string with the prefix $needle?
-	 */
-	public static function startsWith(string $haystack, string $needle): bool
+    /**
+     * Starts the $haystack string with the prefix $needle?
+     * @param string $haystack
+     * @param string $needle
+     * @return bool
+     */
+	#[Pure] public static function startsWith(string $haystack, string $needle): bool
 	{
 		return strncmp($haystack, $needle, strlen($needle)) === 0;
 	}
 
 
-	/**
-	 * Ends the $haystack string with the suffix $needle?
-	 */
-	public static function endsWith(string $haystack, string $needle): bool
+    /**
+     * Ends the $haystack string with the suffix $needle?
+     * @param string $haystack
+     * @param string $needle
+     * @return bool
+     */
+	#[Pure] public static function endsWith(string $haystack, string $needle): bool
 	{
 		return $needle === '' || substr($haystack, -strlen($needle)) === $needle;
 	}
 
 
-	/**
-	 * Does $haystack contain $needle?
-	 */
-	public static function contains(string $haystack, string $needle): bool
+    /**
+     * Does $haystack contain $needle?
+     * @param string $haystack
+     * @param string $needle
+     * @return bool
+     */
+	#[Pure] public static function contains(string $haystack, string $needle): bool
 	{
-		return strpos($haystack, $needle) !== false;
+		return str_contains($haystack, $needle);
 	}
 
 
-	/**
-	 * Returns a part of UTF-8 string specified by starting position and length. If start is negative,
-	 * the returned string will start at the start'th character from the end of string.
-	 */
+    /**
+     * Returns a part of UTF-8 string specified by starting position and length. If start is negative,
+     * the returned string will start at the start'th character from the end of string.
+     * @param string $s
+     * @param int $start
+     * @param int|null $length
+     * @return string
+     */
 	public static function substring(string $s, int $start, int $length = null): string
 	{
 		if (function_exists('mb_substr')) {
@@ -98,10 +117,13 @@ class Strings
 	}
 
 
-	/**
-	 * Removes control characters, normalizes line breaks to `\n`, removes leading and trailing blank lines,
-	 * trims end spaces on lines, normalizes UTF-8 to the normal form of NFC.
-	 */
+    /**
+     * Removes control characters, normalizes line breaks to `\n`, removes leading and trailing blank lines,
+     * trims end spaces on lines, normalizes UTF-8 to the normal form of NFC.
+     * @param string $s
+     * @return string
+     * @throws Sura\Exception\RegexpException
+     */
 	public static function normalize(string $s): string
 	{
 		// convert to compressed normal form (NFC)

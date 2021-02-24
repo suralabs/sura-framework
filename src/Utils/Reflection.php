@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use JetBrains\PhpStorm\Pure;
 use Sura;
 
 
@@ -20,81 +21,97 @@ final class Reflection
 	];
 
 
-	/**
-	 * Determines if type is PHP built-in type. Otherwise, it is the class name.
-	 */
-	public static function isBuiltinType(string $type): bool
+    /**
+     * Determines if type is PHP built-in type. Otherwise, it is the class name.
+     * @param string $type
+     * @return bool
+     */
+	#[Pure] public static function isBuiltinType(string $type): bool
 	{
 		return isset(self::BUILTIN_TYPES[strtolower($type)]);
 	}
 
 
-	/**
-	 * Returns the type of return value of given function or method and normalizes `self`, `static`, and `parent` to actual class names.
-	 * If the function does not have a return type, it returns null.
-	 * If the function has union type, it throws Sura\InvalidStateException.
-	 */
+    /**
+     * Returns the type of return value of given function or method and normalizes `self`, `static`, and `parent` to actual class names.
+     * If the function does not have a return type, it returns null.
+     * If the function has union type, it throws Sura\InvalidStateException.
+     * @param \ReflectionFunctionAbstract $func
+     * @return string|null
+     */
 	public static function getReturnType(\ReflectionFunctionAbstract $func): ?string
 	{
 		return self::getType($func, $func->getReturnType());
 	}
 
 
-	/**
-	 * Returns the types of return value of given function or method and normalizes `self`, `static`, and `parent` to actual class names.
-	 */
+    /**
+     * Returns the types of return value of given function or method and normalizes `self`, `static`, and `parent` to actual class names.
+     * @param \ReflectionFunctionAbstract $func
+     * @return array
+     */
 	public static function getReturnTypes(\ReflectionFunctionAbstract $func): array
 	{
 		return self::getType($func, $func->getReturnType(), true);
 	}
 
 
-	/**
-	 * Returns the type of given parameter and normalizes `self` and `parent` to the actual class names.
-	 * If the parameter does not have a type, it returns null.
-	 * If the parameter has union type, it throws Sura\InvalidStateException.
-	 */
+    /**
+     * Returns the type of given parameter and normalizes `self` and `parent` to the actual class names.
+     * If the parameter does not have a type, it returns null.
+     * If the parameter has union type, it throws Sura\InvalidStateException.
+     * @param \ReflectionParameter $param
+     * @return string|null
+     */
 	public static function getParameterType(\ReflectionParameter $param): ?string
 	{
 		return self::getType($param, $param->getType());
 	}
 
 
-	/**
-	 * Returns the types of given parameter and normalizes `self` and `parent` to the actual class names.
-	 */
+    /**
+     * Returns the types of given parameter and normalizes `self` and `parent` to the actual class names.
+     * @param \ReflectionParameter $param
+     * @return array
+     */
 	public static function getParameterTypes(\ReflectionParameter $param): array
 	{
 		return self::getType($param, $param->getType(), true);
 	}
 
 
-	/**
-	 * Returns the type of given property and normalizes `self` and `parent` to the actual class names.
-	 * If the property does not have a type, it returns null.
-	 * If the property has union type, it throws Sura\InvalidStateException.
-	 */
+    /**
+     * Returns the type of given property and normalizes `self` and `parent` to the actual class names.
+     * If the property does not have a type, it returns null.
+     * If the property has union type, it throws Sura\InvalidStateException.
+     * @param \ReflectionProperty $prop
+     * @return string|null
+     */
 	public static function getPropertyType(\ReflectionProperty $prop): ?string
 	{
 		return self::getType($prop, PHP_VERSION_ID >= 70400 ? $prop->getType() : null);
 	}
 
 
-	/**
-	 * Returns the types of given property and normalizes `self` and `parent` to the actual class names.
-	 */
+    /**
+     * Returns the types of given property and normalizes `self` and `parent` to the actual class names.
+     * @param \ReflectionProperty $prop
+     * @return array
+     */
 	public static function getPropertyTypes(\ReflectionProperty $prop): array
 	{
 		return self::getType($prop, PHP_VERSION_ID >= 70400 ? $prop->getType() : null, true);
 	}
 
 
-	/**
-	 * @param  \ReflectionFunction|\ReflectionMethod|\ReflectionParameter|\ReflectionProperty  $reflection
-	 * @return string|array|null
-	 */
-	private static function getType($reflection, ?\ReflectionType $type, bool $asArray = false)
-	{
+    /**
+     * @param \ReflectionFunction|\ReflectionMethod|\ReflectionParameter|\ReflectionProperty $reflection
+     * @param \ReflectionType|null $type
+     * @param bool $asArray
+     * @return string|array|null
+     */
+	private static function getType($reflection, ?\ReflectionType $type, bool $asArray = false): array|string|null
+    {
 		if ($type === null) {
 			return $asArray ? [] : null;
 
@@ -123,10 +140,12 @@ final class Reflection
 	}
 
 
-	/**
-	 * @param  \ReflectionFunction|\ReflectionMethod|\ReflectionParameter|\ReflectionProperty  $reflection
-	 */
-	private static function normalizeType(string $type, $reflection): string
+    /**
+     * @param string $type
+     * @param \ReflectionFunction|\ReflectionMethod|\ReflectionParameter|\ReflectionProperty $reflection
+     * @return string
+     */
+	#[Pure] private static function normalizeType(string $type, $reflection): string
 	{
 		$lower = strtolower($type);
 		if ($reflection instanceof \ReflectionFunction) {
@@ -141,13 +160,14 @@ final class Reflection
 	}
 
 
-	/**
-	 * Returns the default value of parameter. If it is a constant, it returns its value.
-	 * @return mixed
-	 * @throws \ReflectionException  If the parameter does not have a default value or the constant cannot be resolved
-	 */
-	public static function getParameterDefaultValue(\ReflectionParameter $param)
-	{
+    /**
+     * Returns the default value of parameter. If it is a constant, it returns its value.
+     * @param \ReflectionParameter $param
+     * @return mixed
+     * @throws \ReflectionException If the parameter does not have a default value or the constant cannot be resolved
+     */
+	public static function getParameterDefaultValue(\ReflectionParameter $param): mixed
+    {
 		if ($param->isDefaultValueConstant()) {
 			$const = $orig = $param->getDefaultValueConstantName();
 			$pair = explode('::', $const);
@@ -174,9 +194,11 @@ final class Reflection
 	}
 
 
-	/**
-	 * Returns a reflection of a class or trait that contains a declaration of given property. Property can also be declared in the trait.
-	 */
+    /**
+     * Returns a reflection of a class or trait that contains a declaration of given property. Property can also be declared in the trait.
+     * @param \ReflectionProperty $prop
+     * @return \ReflectionClass
+     */
 	public static function getPropertyDeclaringClass(\ReflectionProperty $prop): \ReflectionClass
 	{
 		foreach ($prop->getDeclaringClass()->getTraits() as $trait) {
@@ -191,10 +213,13 @@ final class Reflection
 	}
 
 
-	/**
-	 * Returns a reflection of a method that contains a declaration of $method.
-	 * Usually, each method is its own declaration, but the body of the method can also be in the trait and under a different name.
-	 */
+    /**
+     * Returns a reflection of a method that contains a declaration of $method.
+     * Usually, each method is its own declaration, but the body of the method can also be in the trait and under a different name.
+     * @param \ReflectionMethod $method
+     * @return \ReflectionMethod
+     * @throws \ReflectionException
+     */
 	public static function getMethodDeclaringMethod(\ReflectionMethod $method): \ReflectionMethod
 	{
 		// file & line guessing as workaround for insufficient PHP reflection
@@ -254,11 +279,13 @@ final class Reflection
 	}
 
 
-	/**
-	 * Expands the name of the class to full name in the given context of given class.
-	 * Thus, it returns how the PHP parser would understand $name if it were written in the body of the class $context.
-	 * @throws Sura\Exception\InvalidArgumentException
-	 */
+    /**
+     * Expands the name of the class to full name in the given context of given class.
+     * Thus, it returns how the PHP parser would understand $name if it were written in the body of the class $context.
+     * @param string $name
+     * @param \ReflectionClass $context
+     * @return string
+     */
 	public static function expandClassName(string $name, \ReflectionClass $context): string
 	{
 		$lower = strtolower($name);
@@ -290,7 +317,10 @@ final class Reflection
 	}
 
 
-	/** @return array of [alias => class] */
+    /**
+     * @param \ReflectionClass $class
+     * @return array of [alias => class]
+     */
 	public static function getUseStatements(\ReflectionClass $class): array
 	{
 		if ($class->isAnonymous()) {
@@ -309,9 +339,12 @@ final class Reflection
 	}
 
 
-	/**
-	 * Parses PHP code to [class => [alias => class, ...]]
-	 */
+    /**
+     * Parses PHP code to [class => [alias => class, ...]]
+     * @param string $code
+     * @param string|null $forClass
+     * @return array
+     */
 	private static function parseUseStatements(string $code, string $forClass = null): array
 	{
 		try {
