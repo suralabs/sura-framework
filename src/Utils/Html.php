@@ -438,11 +438,12 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
 	}
 
 
-	/**
-	 * Overloaded setter for element's attribute.
-	 * @param  mixed  $value
-	 */
-	final public function __set(string $name, $value): void
+    /**
+     * Overloaded setter for element's attribute.
+     * @param string $name
+     * @param mixed $value
+     */
+	final public function __set(string $name, mixed $value): void
 	{
 		$this->attrs[$name] = $value;
 	}

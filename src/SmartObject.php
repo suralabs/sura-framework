@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sura;
 
+use Sura\Exception\MemberAccessException;
 use Sura\Utils\ObjectHelpers;
 
 
@@ -16,9 +17,10 @@ use Sura\Utils\ObjectHelpers;
  */
 trait SmartObject
 {
-	/**
-	 * @throws MemberAccessException
-	 */
+    /**
+     * @throws MemberAccessException
+     * @throws \ReflectionException
+     */
 	public function __call(string $name, array $args)
 	{
 		$class = static::class;
@@ -37,23 +39,25 @@ trait SmartObject
 			ObjectHelpers::strictCall($class, $name);
 		}
 	}
-	
-	
-	/**
-	 * @param string $name
-	 * @param array $args
-	 * @throws MemberAccessException
-	 */
+
+
+    /**
+     * @param string $name
+     * @param array $args
+     * @throws MemberAccessException
+     * @throws \ReflectionException
+     */
 	public static function __callStatic(string $name, array $args)
 	{
 		ObjectHelpers::strictStaticCall(static::class, $name);
 	}
-	
-	
-	/**
-	 * @return mixed
-	 * @throws MemberAccessException if the property is not defined.
-	 */
+
+
+    /**
+     * @param string $name
+     * @return mixed
+     * @throws \ReflectionException
+     */
 	public function &__get(string $name): mixed
 	{
 		$class = static::class;
@@ -72,14 +76,15 @@ trait SmartObject
 		
 		ObjectHelpers::strictGet($class, $name);
 	}
-	
-	
-	/**
-	 * @param mixed $value
-	 * @return void
-	 * @throws MemberAccessException if the property is not defined or is read-only
-	 */
-	public function __set(string $name, $value)
+
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return void
+     * @throws \ReflectionException if the property is not defined or is read-only
+     */
+	public function __set(string $name, mixed $value)
 	{
 		$class = static::class;
 		
@@ -96,12 +101,12 @@ trait SmartObject
 			ObjectHelpers::strictSet($class, $name);
 		}
 	}
-	
-	
-	/**
-	 * @return void
-	 * @throws MemberAccessException
-	 */
+
+
+    /**
+     * @param string $name
+     * @return void
+     */
 	public function __unset(string $name)
 	{
 		$class = static::class;
@@ -113,6 +118,9 @@ trait SmartObject
 	
 	public function __isset(string $name): bool
 	{
-		return isset(ObjectHelpers::getMagicProperties(static::class)[$name]);
-	}
+        try {
+            return isset(ObjectHelpers::getMagicProperties(static::class)[$name]);
+        } catch (\ReflectionException $e) {
+        }
+    }
 }
