@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Pure;
 use Sura;
 
 
@@ -124,10 +126,21 @@ class Image
 	private $image;
 
 
-	/**
-	 * Returns RGB color (0..255) and transparency (0..127).
-	 */
-	public static function rgb(int $red, int $green, int $blue, int $transparency = 0): array
+    /**
+     * Returns RGB color (0..255) and transparency (0..127).
+     * @param int $red
+     * @param int $green
+     * @param int $blue
+     * @param int $transparency
+     * @return array
+     */
+	#[ArrayShape([
+	    'red' => "mixed",
+        'green' => "mixed",
+        'blue' => "mixed",
+        'alpha' => "mixed"
+    ])]
+    public static function rgb(int $red, int $green, int $blue, int $transparency = 0): array
 	{
 		return [
 			'red' => max(0, min(255, $red)),
@@ -144,8 +157,8 @@ class Image
 	 * @throws Sura\Exception\UnknownImageFileException if file not found or file type is not known
 	 * @return static
 	 */
-	public static function fromFile(string $file, int &$type = null)
-	{
+	public static function fromFile(string $file, int &$type = null): static
+    {
 		if (!extension_loaded('gd')) {
 			throw new Sura\Exception\NotSupportedException('PHP extension GD is not loaded.');
 		}
@@ -168,8 +181,8 @@ class Image
 	 * @throws Sura\Exception\NotSupportedException if gd extension is not loaded
 	 * @throws Sura\Exception\ImageException
 	 */
-	public static function fromString(string $s, int &$type = null)
-	{
+	public static function fromString(string $s, int &$type = null): static
+    {
 		if (!extension_loaded('gd')) {
 			throw new Sura\Exception\NotSupportedException('PHP extension GD is not loaded.');
 		}
@@ -185,13 +198,15 @@ class Image
 	}
 
 
-	/**
-	 * Creates a new true color image of the given dimensions. The default color is black.
-	 * @return static
-	 * @throws Sura\Exception\NotSupportedException if gd extension is not loaded
-	 */
-	public static function fromBlank(int $width, int $height, array $color = null)
-	{
+    /**
+     * Creates a new true color image of the given dimensions. The default color is black.
+     * @param int $width
+     * @param int $height
+     * @param array|null $color
+     * @return static
+     */
+	public static function fromBlank(int $width, int $height, array $color = null): static
+    {
 		if (!extension_loaded('gd')) {
 			throw new Sura\Exception\NotSupportedException('PHP extension GD is not loaded.');
 		}
@@ -212,9 +227,11 @@ class Image
 	}
 
 
-	/**
-	 * Returns the type of image from file.
-	 */
+    /**
+     * Returns the type of image from file.
+     * @param string $file
+     * @return int|null
+     */
 	public static function detectTypeFromFile(string $file): ?int
 	{
 		$type = @getimagesize($file)[2]; // @ - files smaller than 12 bytes causes read error
@@ -222,9 +239,11 @@ class Image
 	}
 
 
-	/**
-	 * Returns the type of image from string.
-	 */
+    /**
+     * Returns the type of image from string.
+     * @param string $s
+     * @return int|null
+     */
 	public static function detectTypeFromString(string $s): ?int
 	{
 		$type = @getimagesizefromstring($s)[2]; // @ - strings smaller than 12 bytes causes read error
@@ -232,9 +251,11 @@ class Image
 	}
 
 
-	/**
-	 * Returns the file extension for the given `Image::XXX` constant.
-	 */
+    /**
+     * Returns the file extension for the given `Image::XXX` constant.
+     * @param int $type
+     * @return string
+     */
 	public static function typeToExtension(int $type): string
 	{
 		if (!isset(self::FORMATS[$type])) {
@@ -244,9 +265,11 @@ class Image
 	}
 
 
-	/**
-	 * Returns the mime type for the given `Image::XXX` constant.
-	 */
+    /**
+     * Returns the mime type for the given `Image::XXX` constant.
+     * @param int $type
+     * @return string
+     */
 	public static function typeToMimeType(int $type): string
 	{
 		return 'image/' . self::typeToExtension($type);
@@ -267,7 +290,7 @@ class Image
 	/**
 	 * Returns image width.
 	 */
-	public function getWidth(): int
+	#[Pure] public function getWidth(): int
 	{
 		return imagesx($this->image);
 	}
@@ -276,7 +299,7 @@ class Image
 	/**
 	 * Returns image height.
 	 */
-	public function getHeight(): int
+	#[Pure] public function getHeight(): int
 	{
 		return imagesy($this->image);
 	}
@@ -287,8 +310,8 @@ class Image
 	 * @param  resource|\GdImage  $image
 	 * @return static
 	 */
-	protected function setImageResource($image)
-	{
+	protected function setImageResource($image): static
+    {
 		if (!$image instanceof \GdImage && !(is_resource($image) && get_resource_type($image) === 'gd')) {
 			throw new Sura\Exception\InvalidArgumentException('Image is not valid.');
 		}
@@ -307,14 +330,15 @@ class Image
 	}
 
 
-	/**
-	 * Scales an image.
-	 * @param  int|string|null  $width in pixels or percent
-	 * @param  int|string|null  $height in pixels or percent
-	 * @return static
-	 */
-	public function resize($width, $height, int $flags = self::FIT)
-	{
+    /**
+     * Scales an image.
+     * @param int|string|null $width in pixels or percent
+     * @param int|string|null $height in pixels or percent
+     * @param int $flags
+     * @return static
+     */
+	public function resize($width, $height, int $flags = self::FIT): static
+    {
 		if ($flags & self::EXACT) {
 			return $this->resize($width, $height, self::FILL)->crop('50%', '50%', $width, $height);
 		}
@@ -345,11 +369,15 @@ class Image
 	}
 
 
-	/**
-	 * Calculates dimensions of resized image.
-	 * @param  int|string|null  $newWidth in pixels or percent
-	 * @param  int|string|null  $newHeight in pixels or percent
-	 */
+    /**
+     * Calculates dimensions of resized image.
+     * @param int $srcWidth
+     * @param int $srcHeight
+     * @param int|string|null $newWidth in pixels or percent
+     * @param int|string|null $newHeight in pixels or percent
+     * @param int $flags
+     * @return array
+     */
 	public static function calculateSize(
 		int $srcWidth,
 		int $srcHeight,
@@ -366,6 +394,7 @@ class Image
 		}
 
 		if ($newHeight === null) {
+		    //fixme
 		} elseif (self::isPercent($newHeight)) {
 			$newHeight = (int) round($srcHeight / 100 * abs($newHeight));
 			$flags |= empty($percents) ? 0 : self::STRETCH;
@@ -422,8 +451,8 @@ class Image
 	 * @param  int|string  $height in pixels or percent
 	 * @return static
 	 */
-	public function crop($left, $top, $width, $height)
-	{
+	public function crop($left, $top, $width, $height): static
+    {
 		[$r['x'], $r['y'], $r['width'], $r['height']]
 			= static::calculateCutout($this->getWidth(), $this->getHeight(), $left, $top, $width, $height);
 		if (gd_info()['GD Version'] === 'bundled (2.1.0 compatible)') {
@@ -438,13 +467,16 @@ class Image
 	}
 
 
-	/**
-	 * Calculates dimensions of cutout in image.
-	 * @param  int|string  $left in pixels or percent
-	 * @param  int|string  $top in pixels or percent
-	 * @param  int|string  $newWidth in pixels or percent
-	 * @param  int|string  $newHeight in pixels or percent
-	 */
+    /**
+     * Calculates dimensions of cutout in image.
+     * @param int $srcWidth
+     * @param int $srcHeight
+     * @param int|string $left in pixels or percent
+     * @param int|string $top in pixels or percent
+     * @param int|string $newWidth in pixels or percent
+     * @param int|string $newHeight in pixels or percent
+     * @return array
+     */
 	public static function calculateCutout(int $srcWidth, int $srcHeight, $left, $top, $newWidth, $newHeight): array
 	{
 		if (self::isPercent($newWidth)) {
@@ -477,8 +509,8 @@ class Image
 	 * Sharpens image a little bit.
 	 * @return static
 	 */
-	public function sharpen()
-	{
+	public function sharpen(): static
+    {
 		imageconvolution($this->image, [ // my magic numbers ;)
 			[-1, -1, -1],
 			[-1, 24, -1],
@@ -488,15 +520,16 @@ class Image
 	}
 
 
-	/**
-	 * Puts another image into this image.
-	 * @param  int|string  $left in pixels or percent
-	 * @param  int|string  $top in pixels or percent
-	 * @param  int  $opacity 0..100
-	 * @return static
-	 */
-	public function place(self $image, $left = 0, $top = 0, int $opacity = 100)
-	{
+    /**
+     * Puts another image into this image.
+     * @param Image $image
+     * @param int $left in pixels or percent
+     * @param int $top in pixels or percent
+     * @param int $opacity 0..100
+     * @return static
+     */
+	public function place(self $image, $left = 0, $top = 0, int $opacity = 100): static
+    {
 		$opacity = max(0, min(100, $opacity));
 		if ($opacity === 0) {
 			return $this;
@@ -551,10 +584,13 @@ class Image
 	}
 
 
-	/**
-	 * Saves image to the file. Quality is in the range 0..100 for JPEG (default 85) and WEBP (default 80) and 0..9 for PNG (default 9).
-	 * @throws Sura\Exception\ImageException
-	 */
+    /**
+     * Saves image to the file. Quality is in the range 0..100 for JPEG (default 85) and WEBP (default 80) and 0..9 for PNG (default 9).
+     * @param string $file
+     * @param int|null $quality
+     * @param int|null $type
+     * @throws Sura\Exception\ImageException
+     */
 	public function save(string $file, int $quality = null, int $type = null): void
 	{
 		if ($type === null) {
@@ -570,9 +606,13 @@ class Image
 	}
 
 
-	/**
-	 * Outputs image to string. Quality is in the range 0..100 for JPEG (default 85) and WEBP (default 80) and 0..9 for PNG (default 9).
-	 */
+    /**
+     * Outputs image to string. Quality is in the range 0..100 for JPEG (default 85) and WEBP (default 80) and 0..9 for PNG (default 9).
+     * @param int $type
+     * @param int|null $quality
+     * @return string
+     * @throws \Throwable
+     */
 	public function toString(int $type = self::JPEG, int $quality = null): string
 	{
 		return Helpers::capture(function () use ($type, $quality) {
@@ -598,10 +638,12 @@ class Image
 	}
 
 
-	/**
-	 * Outputs image to browser. Quality is in the range 0..100 for JPEG (default 85) and WEBP (default 80) and 0..9 for PNG (default 9).
-	 * @throws Sura\Exception\ImageException
-	 */
+    /**
+     * Outputs image to browser. Quality is in the range 0..100 for JPEG (default 85) and WEBP (default 80) and 0..9 for PNG (default 9).
+     * @param int $type
+     * @param int|null $quality
+     * @throws Sura\Exception\ImageException
+     */
 	public function send(int $type = self::JPEG, int $quality = null): void
 	{
 		header('Content-Type: ' . self::typeToMimeType($type));
@@ -609,10 +651,13 @@ class Image
 	}
 
 
-	/**
-	 * Outputs image to browser or file.
-	 * @throws Sura\Exception\ImageException
-	 */
+    /**
+     * Outputs image to browser or file.
+     * @param int $type
+     * @param int|null $quality
+     * @param string|null $file
+     * @throws Sura\Exception\ImageException
+     */
 	private function output(int $type, ?int $quality, string $file = null): void
 	{
 		switch ($type) {
@@ -648,13 +693,15 @@ class Image
 	}
 
 
-	/**
-	 * Call to undefined method.
-	 * @return mixed
-	 * @throws Sura\MemberAccessException
-	 */
-	public function __call(string $name, array $args)
-	{
+    /**
+     * Call to undefined method.
+     * @param string $name
+     * @param array $args
+     * @return mixed
+     * @throws \ReflectionException
+     */
+	public function __call(string $name, array $args): mixed
+    {
 		$function = 'image' . $name;
 		if (!function_exists($function)) {
 			ObjectHelpers::strictCall(static::class, $name);
@@ -695,10 +742,11 @@ class Image
 	}
 
 
-	/**
-	 * @param  int|string  $num in pixels or percent
-	 */
-	private static function isPercent(&$num): bool
+    /**
+     * @param int|string $num in pixels or percent
+     * @return bool
+     */
+	private static function isPercent(int|string $num): bool
 	{
 		if (is_string($num) && substr($num, -1) === '%') {
 			$num = (float) substr($num, 0, -1);

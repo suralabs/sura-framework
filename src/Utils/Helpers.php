@@ -39,21 +39,23 @@ class Helpers
 	}
 
 
-	/**
-	 * Converts false to null, does not change other values.
-	 * @param  mixed  $value
-	 * @return mixed
-	 */
-	public static function falseToNull($value)
-	{
+    /**
+     * Converts false to null, does not change other values.
+     * @param mixed $value
+     * @return mixed
+     */
+	public static function falseToNull(mixed $value): mixed
+    {
 		return $value === false ? null : $value;
 	}
 
 
-	/**
-	 * Looks for a string from possibilities that is most similar to value, but not the same (for 8-bit encoding).
-	 * @param  string[]  $possibilities
-	 */
+    /**
+     * Looks for a string from possibilities that is most similar to value, but not the same (for 8-bit encoding).
+     * @param string[] $possibilities
+     * @param string $value
+     * @return string|null
+     */
 	public static function getSuggestion(array $possibilities, string $value): ?string
 	{
 		$best = null;

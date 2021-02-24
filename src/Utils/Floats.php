@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use JetBrains\PhpStorm\Pure;
 use Sura;
 
 
@@ -17,22 +18,24 @@ class Floats
 	private const EPSILON = 1e-10;
 
 
-	public static function isZero(float $value): bool
+	#[Pure] public static function isZero(float $value): bool
 	{
 		return abs($value) < self::EPSILON;
 	}
 
 
-	public static function isInteger(float $value): bool
+	#[Pure] public static function isInteger(float $value): bool
 	{
 		return abs(round($value) - $value) < self::EPSILON;
 	}
 
 
-	/**
-	 * Compare two floats. If $a < $b it returns -1, if they are equal it returns 0 and if $a > $b it returns 1
-	 * @throws \LogicException if one of parameters is NAN
-	 */
+    /**
+     * Compare two floats. If $a < $b it returns -1, if they are equal it returns 0 and if $a > $b it returns 1
+     * @param float $a
+     * @param float $b
+     * @return int
+     */
 	public static function compare(float $a, float $b): int
 	{
 		if (is_nan($a) || is_nan($b)) {
@@ -51,50 +54,60 @@ class Floats
 	}
 
 
-	/**
-	 * Returns true if $a = $b
-	 * @throws \LogicException if one of parameters is NAN
-	 */
+    /**
+     * Returns true if $a = $b
+     * @param float $a
+     * @param float $b
+     * @return bool
+     */
 	public static function areEqual(float $a, float $b): bool
 	{
 		return self::compare($a, $b) === 0;
 	}
 
 
-	/**
-	 * Returns true if $a < $b
-	 * @throws \LogicException if one of parameters is NAN
-	 */
+    /**
+     * Returns true if $a < $b
+     * @param float $a
+     * @param float $b
+     * @return bool
+     */
 	public static function isLessThan(float $a, float $b): bool
 	{
 		return self::compare($a, $b) < 0;
 	}
 
 
-	/**
-	 * Returns true if $a <= $b
-	 * @throws \LogicException if one of parameters is NAN
-	 */
+    /**
+     * Returns true if $a <= $b
+     * @param float $a
+     * @param float $b
+     * @return bool
+     */
 	public static function isLessThanOrEqualTo(float $a, float $b): bool
 	{
 		return self::compare($a, $b) <= 0;
 	}
 
 
-	/**
-	 * Returns true if $a > $b
-	 * @throws \LogicException if one of parameters is NAN
-	 */
+    /**
+     * Returns true if $a > $b
+     * @param float $a
+     * @param float $b
+     * @return bool
+     */
 	public static function isGreaterThan(float $a, float $b): bool
 	{
 		return self::compare($a, $b) > 0;
 	}
 
 
-	/**
-	 * Returns true if $a >= $b
-	 * @throws \LogicException if one of parameters is NAN
-	 */
+    /**
+     * Returns true if $a >= $b
+     * @param float $a
+     * @param float $b
+     * @return bool
+     */
 	public static function isGreaterThanOrEqualTo(float $a, float $b): bool
 	{
 		return self::compare($a, $b) >= 0;
