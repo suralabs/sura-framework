@@ -24,7 +24,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 	use Sura\SmartObject;
 	
 	/** @var int */
-	private $counter = 0;
+	private int $counter = 0;
 	
 	
 	public function __construct($iterator)
@@ -39,6 +39,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 			assert($iterator instanceof \Iterator);
 			
 		} elseif ($iterator instanceof \Iterator) {
+//fixme empty
 		} elseif ($iterator instanceof \Traversable) {
 			$iterator = new \IteratorIterator($iterator);
 		} else {
