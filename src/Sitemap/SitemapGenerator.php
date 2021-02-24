@@ -91,19 +91,19 @@ class SitemapGenerator
      * @var string
      * @access public
      */
-    private $robotsFileName = "robots.txt";
+    private string $robotsFileName = "robots.txt";
     /**
      * Name of sitemap file
      * @var string
      * @access public
      */
-    private $sitemapFileName = "sitemap.xml";
+    private string $sitemapFileName = "sitemap.xml";
     /**
      * Name of sitemap index file
      * @var string
      * @access public
      */
-    private $sitemapIndexFileName = "sitemap-index.xml";
+    private string $sitemapIndexFileName = "sitemap-index.xml";
     /**
      * Quantity of URLs per single sitemap file.
      * If Your links are very long, sitemap file can be bigger than 10MB,
@@ -111,7 +111,7 @@ class SitemapGenerator
      * @var int
      * @access public
      */
-    private $maxURLsPerSitemap = self::MAX_URLS_PER_SITEMAP;
+    private int $maxURLsPerSitemap = self::MAX_URLS_PER_SITEMAP;
     /**
      * If true, two sitemap files (.xml and .xml.gz) will be created and added to robots.txt.
      * If true, .gz file will be submitted to search engines.
@@ -120,14 +120,14 @@ class SitemapGenerator
      * @var bool
      * @access public
      */
-    private $createGZipFile = false;
+    private bool $createGZipFile = false;
     /**
      * URL to Your site.
      * Script will use it to send sitemaps to search engines.
      * @var string
      * @access private
      */
-    private $baseURL;
+    private string $baseURL;
     /**
      * Base path. Relative to script location.
      * Use this if Your sitemap and robots files should be stored in other
@@ -135,19 +135,19 @@ class SitemapGenerator
      * @var string
      * @access private
      */
-    private $basePath;
+    private string $basePath;
     /**
      * Version of this class
      * @var string
      * @access private
      */
-    private $classVersion = "1.0.0";
+    private string $classVersion = "1.0.0";
     /**
      * Search engines URLs
      * @var array of strings
      * @access private
      */
-    private $searchEngines = [
+    private array $searchEngines = [
         [
             "http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid=USERID&url=",
             "http://search.yahooapis.com/SiteExplorerService/V1/ping?sitemap=",
@@ -162,7 +162,7 @@ class SitemapGenerator
      * @var array
      * @access private
      */
-    private $urls;
+    private array $urls;
     /**
      * @var integer number of currently added urls
      */
@@ -172,35 +172,35 @@ class SitemapGenerator
      * @var array of strings
      * @access private
      */
-    private $sitemaps = [];
+    private array $sitemaps = [];
     /**
      * Array with sitemap index
      * @var array of strings
      * @access private
      */
-    private $sitemapIndex = [];
+    private array $sitemapIndex = [];
     /**
      * Current sitemap full URL
      * @var string
      * @access private
      */
-    private $sitemapFullURL;
+    private string $sitemapFullURL;
     /**
      * @var DOMDocument
      */
-    private $document;
+    private DOMDocument $document;
     /**
      * Lines for robots.txt file that are written if file does not exist
      * @var array
      */
-    private $sampleRobotsLines = [
+    private array $sampleRobotsLines = [
         "User-agent: *",
         "Allow: /",
     ];
     /**
      * @var array list of valid changefreq values according to the spec
      */
-    private $validChangefreqValues = [
+    private array $validChangefreqValues = [
         'always',
         'hourly',
         'daily',
@@ -212,7 +212,7 @@ class SitemapGenerator
     /**
      * @var float[] list of valid priority values according to the spec
      */
-    private $validPriorities = [
+    private array $validPriorities = [
         0.0,
         0.1,
         0.2,
