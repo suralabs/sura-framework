@@ -75,6 +75,8 @@ trait SmartObject
 		}
 		
 		ObjectHelpers::strictGet($class, $name);
+
+        return $name;//FIXME
 	}
 
 
