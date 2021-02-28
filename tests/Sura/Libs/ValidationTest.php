@@ -13,7 +13,7 @@ class ValidationTest extends TestCase
 
         $instance = Validation::strip_data($text);
 
-        $this->assertEquals('foo', $instance);
+        self::assertEquals('foo', $instance);
 
         return $instance;
     }
@@ -24,129 +24,117 @@ class ValidationTest extends TestCase
 
         $instance = Validation::replace_rn($text);
 
-        $this->assertEquals('foo', $instance);
+        self::assertEquals('foo', $instance);
 
         return $instance;
     }
 
-    public function testMyBr()
+    public function testMyBr(): string
     {
         $text = "foo\r";
 
         $instance = Validation::myBr($text);
 
-        $this->assertEquals('foo<br />', $instance);
+        self::assertEquals('foo<br />', $instance);
 
         return $instance;
     }
 
-    public function testAjax_utf8()
-    {
-        $text = 'foo';
-
-        $instance = Validation::ajax_utf8($text);
-
-        $this->assertEquals('foo', $instance);
-
-        return $instance;
-    }
-
-    public function testRn_replace()
+    public function testRn_replace(): string
     {
         $text = "foo\r";
 
         $instance = Validation::rn_replace($text);
 
-        $this->assertEquals('foo', $instance);
+        self::assertEquals('foo', $instance);
 
         return $instance;
     }
 
-    public function testMyBrRn()
+    public function testMyBrRn(): string
     {
         $text = "foo<br />";
 
         $instance = Validation::myBrRn($text);
 
-        $this->assertEquals('foo
+        self::assertEquals('foo
 ', $instance);
 
         return $instance;
     }
 
-    public function testTextFilter()
+    public function testTextFilter(): string
     {
         $text = 'foo';
 
         $instance = Validation::textFilter($text, 25000, false);
 
-        $this->assertEquals('foo', $instance);
+        self::assertEquals('foo', $instance);
 
         return $instance;
     }
 
-    public function test_strlen()
+    public function test_strlen(): int
     {
         $text = 'foo';
 
         $instance = Validation::_strlen($text, $charset = "utf-8");
 
-        $this->assertEquals('3', $instance);
+        self::assertEquals('3', $instance);
 
         return $instance;
     }
 
-    public function testCheck_ip()
+    public function testCheck_ip(): void
     {
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
-    public function testWord_filter()
+    public function testWord_filter(): void
     {
 //        $source = 'foo';
 //        $instance = Validation::word_filter($source, $encode = true);
 //        $this->assertEquals('foo', $instance);
 //        return $instance;
-        $this->assertNotFalse(true);
+        self::assertNotFalse(true);
     }
 
-    public function testcheck_name()
+    public function testcheck_name(): bool|string
     {
-
         //Проверка имени
         $instance = Validation::check_name('Иван');
 
-        $this->assertEquals('Иван', $instance);
+        self::assertEquals('Иван', $instance);
 
         return $instance;
 
     }
 
-    public function testcheck_email()
+    public function testcheck_email(): bool|string
     {
 
         //Проверка имени
         $instance = Validation::check_email('example@example.com');
 
-        $this->assertEquals('example@example.com', $instance);
+        self::assertEquals('example@example.com', $instance);
 
         return $instance;
 
     }
 
-    public function testcheck_password()
+    public function testcheck_password(): bool|string
     {
         //Проверка имени
         //don`t use password qwerty10
         $instance = Validation::check_password('qwerty10', 'qwerty10');
 
-        $this->assertEquals('qwerty10', $instance);
+        self::assertEquals('qwerty10', $instance);
 
         return $instance;
 
     }
 
-    public function testcheck_password2()
+    public function testcheck_password2(): bool
     {
         $password1 = Validation::check_password('rasmuslerdorf', 'rasmuslerdorf');
         $pass_hash1 = password_hash($password1, PASSWORD_DEFAULT);
@@ -157,13 +145,13 @@ class ValidationTest extends TestCase
         $pass_hash2 = password_hash($password2, PASSWORD_DEFAULT);
 
         $instance = password_verify('rasmuslerdorf', $pass_hash2);
-        $this->assertEquals(true, $instance);
+        self::assertEquals(true, $instance);
 
         return $instance;
 
     }
 
-    public function testcheck_password3()
+    public function testcheck_password3(): void
     {
         // Смотрите пример использования password_hash(), для понимания откуда это взялось.
         $hash = '$2y$10$rkadTE2AWb2CwFK/0J9fbetb4IWTVdgTibsnM4UaFr0D5pl0za2ci';
@@ -173,6 +161,6 @@ class ValidationTest extends TestCase
         } else {
             echo 'Пароль неправильный.';
         }
-        $this->assertEquals(true, $instance);
+        self::assertEquals(true, $instance);
     }
 }

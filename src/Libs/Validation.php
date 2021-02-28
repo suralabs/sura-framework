@@ -51,10 +51,10 @@ class Validation
 		$n = preg_match($regx, $input, $match);
 		if ($n === 0) {
 			return false;
-		} else {
-			return $match[0];
 		}
-	}
+
+        return $match[0];
+    }
 	
 	/**
 	 * @param $ctype
@@ -77,7 +77,7 @@ class Validation
 	 */
 	#[Pure] public static function check_ip(string $ip): bool|string
 	{
-		if (count(explode(".", $ip)) == 4 or filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) or str_contains($ip, ":")) {
+		if (substr_count($ip, ".") + 1 == 4 || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || str_contains($ip, ":")) {
 			return $ip;
 		}
 		return false;
@@ -92,7 +92,7 @@ class Validation
 		if (empty($user_name)) {
 			return false;
 		}
-		if (preg_match("/^[a-zA-Zа-яА-Я]+$/iu", $user_name) and strlen($user_name) >= 2) {
+		if (preg_match("/^[a-zA-Zа-яА-Я]+$/iu", $user_name) && strlen($user_name) >= 2) {
 			return $user_name;
 		}
 		
@@ -108,10 +108,10 @@ class Validation
 	 */
 	#[Pure] public static function check_password(string $password_first, string $password_second): string|bool
 	{
-		if (empty($password_first) or empty($password_second)) {
+		if (empty($password_first) || empty($password_second)) {
 			return false;
 		}
-		if (strlen($password_first) >= 6 and strlen($password_first) <= 72 and $password_first == $password_second) {
+		if (strlen($password_first) >= 6 && strlen($password_first) <= 72 && $password_first == $password_second) {
 			return $password_first;
 		}
 		
@@ -124,9 +124,11 @@ class Validation
 	 */
 	#[Pure] public static function check_email(string $email): string|bool
 	{
-		if (empty($email)) return false;
+		if (empty($email)) {
+            return false;
+        }
 		if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			if (empty($email) or strlen($email) > 40 or count(explode("@", $email)) !== 2) {
+			if (empty($email) || strlen($email) > 40 || substr_count($email, "@") + 1 !== 2) {
 				return false;
 			}
 			
@@ -152,17 +154,6 @@ class Validation
 		$text = str_replace(array($quotes, $goodquotes), array('', $repquotes), $text);
 		return $text;
 	}
-	
-	/**
-	 * @param $source
-	 * @return mixed
-     * @deprecated
-	 */
-	public static function ajax_utf8(string $source): string
-	{
-		return $source;
-	}
-	
 	
 	/**
 	 * @param string $source
@@ -256,11 +247,9 @@ class Validation
 		$source = preg_replace("#<iframe#i", "&lt;iframe", $source);
 		$source = preg_replace("#<script#i", "&lt;script", $source);
 		
-		$source = self::myBr(htmlspecialchars(substr(trim($source), 0, $substr_num)));
-		
-		$source = str_ireplace("{", "&#123;", $source);
-		$source = str_ireplace("`", "&#96;", $source);
-		$source = str_ireplace("{theme}", "&#123;theme}", $source);
+		$source = self::myBr(htmlspecialchars(substr(trim($source), 0, $substr_num), ENT_QUOTES | ENT_HTML5));
+
+        $source = str_ireplace(array("{", "`", "{theme}"), array("&#123;", "&#96;", "&#123;theme}"), $source);
 		
 		$source = preg_replace($find, $replace, $source);
 		
@@ -274,7 +263,7 @@ class Validation
 	 * @param string $charset
 	 * @return int
 	 */
-	#[Pure] public static function _strlen(string $value, string $charset = "utf-8"): int
+	public static function _strlen(string $value, string $charset = "utf-8"): int
 	{
 		
 		if (function_exists('mb_strlen')) {
@@ -325,8 +314,12 @@ class Validation
 				
 				$allow_find = true;
 				
-				if ($word_arr[5] == 1 and $safe_mode) $allow_find = false;
-				if ($word_arr[5] == 2 and !$safe_mode) $allow_find = false;
+				if ($word_arr[5] == 1 && $safe_mode) {
+                    $allow_find = false;
+                }
+				if ($word_arr[5] == 2 && !$safe_mode) {
+                    $allow_find = false;
+                }
 				
 				if ($allow_find) {
 					
@@ -334,13 +327,21 @@ class Validation
 						
 						$find_text = "#(^|\b|\s|\<br \/\>)" . preg_quote($word_arr[1], "#") . "(\b|\s|!|\?|\.|,|$)#" . $register;
 						
-						if ($word_arr[2] == "") $replace_text = "\\1"; else $replace_text = "\\1<!--filter:" . $word_arr[1] . "-->" . $word_arr[2] . "<!--/filter-->\\2";
+						if ($word_arr[2] == "") {
+                            $replace_text = "\\1";
+                        } else {
+                            $replace_text = "\\1<!--filter:" . $word_arr[1] . "-->" . $word_arr[2] . "<!--/filter-->\\2";
+                        }
 						
 					} else {
 						
 						$find_text = "#(" . preg_quote($word_arr[1], "#") . ")#" . $register;
 						
-						if ($word_arr[2] == "") $replace_text = ""; else $replace_text = $word_arr[2];
+						if ($word_arr[2] == "") {
+                            $replace_text = "";
+                        } else {
+                            $replace_text = $word_arr[2];
+                        }
 						
 					}
 					
@@ -372,7 +373,9 @@ class Validation
 					continue;
 				}
 				
-				if ($iValue != "") $source[$i] = preg_replace($find, $replace, $source[$i]);
+				if ($iValue != "") {
+                    $source[$i] = preg_replace($find, $replace, $source[$i]);
+                }
 			}
 			
 			$source = join("", $source);

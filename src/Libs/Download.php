@@ -9,10 +9,10 @@ class Download implements DownloadInterface
 {
 	
 	/** @var string[] */
-	var array $properties = array('old_name' => "", 'new_name' => "", 'type' => "", 'size' => "", 'resume' => "", 'max_speed' => "");
+	public array $properties = array('old_name' => "", 'new_name' => "", 'type' => "", 'size' => "", 'resume' => "", 'max_speed' => "");
 	
 	/** @var int */
-	var int $range = 0;
+	public int $range = 0;
 	
 	/**
 	 * @param $path
@@ -26,8 +26,9 @@ class Download implements DownloadInterface
 		$name = ($name == "") ? substr(strrchr("/" . $path, "/"), 1) : $name;
 		$name = explode("/", $name);
 		$name = end($name);
-		
-		$file_size = @filesize($path);
+
+
+		$file_size = filesize($path);
 		
 		$this->properties = array('old_name' => $path, 'new_name' => $name, 'type' => "application/force-download", 'size' => $file_size, 'resume' => $resume, 'max_speed' => $max_speed);
 		
