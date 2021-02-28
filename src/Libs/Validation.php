@@ -87,56 +87,47 @@ class Validation
 	 * @param $user_name
 	 * @return bool
 	 */
-	public static function check_name(string $user_name): bool|string
+	public static function check_name(string $user_name): bool
 	{
 		if (empty($user_name)) {
 			return false;
 		}
 		if (preg_match("/^[a-zA-Zа-яА-Я]+$/iu", $user_name) && strlen($user_name) >= 2) {
-			return $user_name;
+			return true;
 		}
-		
 		return false;
-		
 	}
-	
-	
-	/**
-	 * @param $password_first
-	 * @param $password_second
-	 * @return bool
-	 */
-	#[Pure] public static function check_password(string $password_first, string $password_second): string|bool
+
+    /**
+     * @param string $password_first
+     * @param string $password_second
+     * @return bool
+     */
+	#[Pure] public static function check_password(string $password_first, string $password_second): bool
 	{
 		if (empty($password_first) || empty($password_second)) {
 			return false;
 		}
 		if (strlen($password_first) >= 6 && strlen($password_first) <= 72 && $password_first == $password_second) {
-			return $password_first;
+			return true;
 		}
 		
 		return false;
 	}
-	
+
 	/**
 	 * @param string $email
-	 * @return string|bool
+	 * @return bool
 	 */
-	#[Pure] public static function check_email(string $email): string|bool
+	#[Pure] public static function check_email(string $email): bool
 	{
 		if (empty($email)) {
             return false;
         }
 		if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			if (empty($email) || strlen($email) > 40 || substr_count($email, "@") + 1 !== 2) {
-				return false;
-			}
-			
-			return $email;
-		}
-		
+            return !(empty($email) && strlen($email) > 40 && substr_count($email, "@") + 1 !== 2);
+        }
 		return false;
-		
 	}
 	
 	/**
