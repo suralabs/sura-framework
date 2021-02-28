@@ -87,7 +87,9 @@ class Auth implements AuthInterface
             /** Если юзер нажимает "Главная" и он зашел не с моб версии. то скидываем на его стр. $host_site */
             $host_site = $server['QUERY_STRING'];
 //            if($logged AND !$host_site AND $config['temp'] != 'mobile')
-            if ($logged and !$host_site) header('Location: https://' . $server['HTTP_HOST'] . '/u' . $user_info['user_id']);
+            if ($logged && !$host_site) {
+                header('Location: https://' . $server['HTTP_HOST'] . '/u' . $user_info['user_id']);
+            }
 
             Registry::set('logged', $logged);
             Registry::set('user_info', $user_info);
@@ -108,7 +110,7 @@ class Auth implements AuthInterface
             //$lang = langs::get_langs();
 
             /** Проверяем правильность e-mail */
-            if (Validation::check_email($email) == false and $_POST['token'] !== $_SESSION['_mytoken'] || empty($_POST['token'])) {
+            if ((!Validation::check_email($email) && $_POST['token'] !== $_SESSION['_mytoken']) || empty($_POST['token'])) {
                 return array('user_info' => $user_info, 'logged' => false);
                 //msgbox('', $lang['not_loggin'].'<br /><a href="/restore" onClick="Page.Go(this.href); return false">Забыли пароль?r</a>', 'info_red');
             }
