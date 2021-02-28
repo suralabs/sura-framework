@@ -84,7 +84,7 @@ class Langs implements LangsInterface
     {
         $dir = resolve('app')->get('path');
         $checkLang = self::check_lang() ? self::check_lang() : 'ru';
-        return require_once $dir . "/lang/{$checkLang}.php";
+        return require $dir . "/lang/{$checkLang}.php";
     }
 
     /**
@@ -94,7 +94,7 @@ class Langs implements LangsInterface
     {
         $dir = resolve('app')->get('path');
         $checkLang = self::check_lang() ? self::check_lang() : 'ru';
-        return require_once $dir . "/lang/date_{$checkLang}.lng";
+        return require $dir . "/lang/date_{$checkLang}.lng";
     }
 
     /**
