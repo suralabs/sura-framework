@@ -33,13 +33,13 @@ class DateTime extends \DateTime implements \JsonSerializable
 	public const YEAR = 31557600;
 
 
-	/**
-	 * Creates a DateTime object from a string, UNIX timestamp, or other DateTimeInterface object.
-	 * @param  string|int|\DateTimeInterface  $time
-	 * @return static
-	 * @throws \Exception if the date and time are not valid.
-	 */
-	public static function from($time): static
+    /**
+     * Creates a DateTime object from a string, UNIX timestamp, or other DateTimeInterface object.
+     * @param string|int|\DateTimeInterface $time
+     * @return static
+     * @throws \Exception if the date and time are not valid.
+     */
+	public static function from(\DateTimeInterface|int|string $time): static
     {
         if ($time instanceof \DateTimeInterface) {
             return new static($time->format('Y-m-d H:i:s.u'), $time->getTimezone());
@@ -101,7 +101,7 @@ class DateTime extends \DateTime implements \JsonSerializable
      * @return bool|int|DateTime
      * @throws \Exception
      */
-	public static function createFromFormat($format,$time, $timezone = null): DateTime|bool|int
+	public static function createFromFormat($format, $time, $timezone = null): DateTime|bool|int
     {
 		if ($timezone === null) {
 			$timezone = new \DateTimeZone(date_default_timezone_get());
