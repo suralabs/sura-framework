@@ -20,7 +20,7 @@ class Download implements DownloadInterface
 	 * @param int $resume
 	 * @param int $max_speed
 	 */
-	function download(string $path, $name = "", $resume = 0, $max_speed = 0)
+	public function download(string $path, $name = "", $resume = 0, $max_speed = 0)
 	{
 		
 		$name = ($name == "") ? substr(strrchr("/" . $path, "/"), 1) : $name;
@@ -46,7 +46,9 @@ class Download implements DownloadInterface
 				
 			}
 			
-			if ($this->range > $this->properties['size']) $this->range = 0;
+			if ($this->range > $this->properties['size']) {
+                $this->range = 0;
+            }
 			
 		} else {
 			
@@ -59,7 +61,7 @@ class Download implements DownloadInterface
 	/**
 	 *
 	 */
-	function download_file()
+	public function download_file(): void
 	{
 		
 		if ($this->range) {
@@ -89,7 +91,7 @@ class Download implements DownloadInterface
 			
 		}
 		
-		@ini_set('max_execution_time', 0);
+		ini_set('max_execution_time', 0);
 //		@set_time_limit();
 		
 		$this->_download($this->properties['old_name'], $this->range);
@@ -100,12 +102,16 @@ class Download implements DownloadInterface
 	 * @param int $range
 	 * @return bool
 	 */
-	function _download(string $filename, int $range = 0): bool
+	public function _download(string $filename, int $range = 0): bool
 	{
 		
-		@ob_end_clean();
+		ob_end_clean();
 		
-		if (($speed = $this->properties['max_speed']) > 0) $sleep_time = (8 / $speed) * 1e6; else $sleep_time = 0;
+		if (($speed = $this->properties['max_speed']) > 0) {
+            $sleep_time = (8 / $speed) * 1e6;
+        } else {
+            $sleep_time = 0;
+        }
 		
 		$handle = fopen($filename, 'rb');
 		fseek($handle, $range);
