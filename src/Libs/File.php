@@ -8,6 +8,11 @@ use Closure;
 use SplFileInfo;
 use Sura\Exception\FileException;
 
+/**
+ * Class File
+ * @package Sura\Libs
+ * @deprecated
+ */
 class File extends SplFileInfo
 {
 	/**
