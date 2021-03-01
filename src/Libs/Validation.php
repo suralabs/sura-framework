@@ -140,8 +140,7 @@ class Validation
 		$quotes = array("\x22", "\x60", "\t", '\n', '\r', "\n", "\r", '\\', ",", "/", "#", ";", ":", "~", "[", "]", "{", "}", ")", "(", "*", "^", "%", "$", "<", ">", "?", "!", '"', "'", " ", "&");
 		$goodquotes = array("-", "+", "#");
 		$repquotes = array("\-", "\+", "\#");
-		$text = stripslashes($text);
-		$text = trim(strip_tags($text));
+        $text = trim(strip_tags(stripslashes($text)));
 		$text = str_replace(array($quotes, $goodquotes), array('', $repquotes), $text);
 		return $text;
 	}
@@ -226,9 +225,6 @@ class Validation
 	 */
 	public static function textFilter(string $source, int $substr_num = 25000, bool $strip_tags = false): string
 	{
-		// global $db;
-		//$db = Db::getDB();
-//		 if(function_exists("get_magic_quotes_gpc") AND get_magic_quotes_gpc())
 		$source = stripslashes($source);
 		
 		$find = array('/data:/i', '/about:/i', '/vbscript:/i', '/onclick/i', '/onload/i', '/onunload/i', '/onabort/i', '/onerror/i', '/onblur/i', '/onchange/i', '/onfocus/i', '/onreset/i', '/onsubmit/i', '/ondblclick/i', '/onkeydown/i', '/onkeypress/i', '/onkeyup/i', '/onmousedown/i', '/onmouseup/i', '/onmouseover/i', '/onmouseout/i', '/onselect/i', '/javascript/i');
@@ -244,7 +240,9 @@ class Validation
 		
 		$source = preg_replace($find, $replace, $source);
 		
-		if ($strip_tags) $source = strip_tags($source);
+		if ($strip_tags) {
+            $source = strip_tags($source);
+        }
 		
 		return $source;
 	}
@@ -298,7 +296,9 @@ class Validation
 					
 					$register = "";
 					
-				} else $register = "i";
+				} else {
+                    $register = "i";
+                }
 				
 				//if($config['charset'] == "utf-8")
 				$register .= "u";
@@ -359,7 +359,7 @@ class Validation
 			$source = preg_split('((>)|(<))', $source, -1, PREG_SPLIT_DELIM_CAPTURE);
 			
 			foreach ($source as $i => $iValue) {
-				if ($iValue == "<" or $iValue == "[") {
+				if ($iValue == "<" || $iValue == "[") {
 					$i++;
 					continue;
 				}
