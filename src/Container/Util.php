@@ -48,7 +48,7 @@ class Util
      * @param  \ReflectionParameter  $parameter
      * @return string|null
      */
-    public static function getParameterClassName($parameter): ?string
+    #[Pure] public static function getParameterClassName($parameter): ?string
     {
         $type = $parameter->getType();
 

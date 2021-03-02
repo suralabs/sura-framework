@@ -13,5 +13,3 @@ interface HtmlStringable
 	public function __toString(): string;
 }
 
-
-interface_exists(Utils\IHtmlString::class);

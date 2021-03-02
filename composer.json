@@ -13,16 +13,8 @@
     ],
     "require": {
       "php": "^8.0",
-      "ext-json": "*",
-      "ext-iconv": "*",
-      "ext-gd": "*",
-      "ext-mysqli": "*",
       "sura/cache": "^2.1.2",
-      "ext-mbstring": "*",
-      "ext-fileinfo": "*",
-      "ext-zlib": "*",
-      "ext-dom": "*",
-      "ext-simplexml": "*"
+      "ext-iconv": "*"
     },
     "require-dev": {
       "phpunit/phpunit": "^9.2"

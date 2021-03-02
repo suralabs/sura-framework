@@ -34,9 +34,7 @@ class Module implements ModuleInterface
             $user = $config['dbuser'];
             $password = $config['dbpass'];
 
-//            $database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
-
-            self::$database = new \Sura\Database\Connection($dsn, $user, $password);
+            self::$database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
         }
         return self::$database;
     }

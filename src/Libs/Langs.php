@@ -135,7 +135,7 @@ class Langs implements LangsInterface
      */
     public static function lang_date(string $format, int $stamp): string
     {
-        $lang_date = Langs::get_langdate();
+        $lang_date = self::get_langdate();
         return strtr(date($format, $stamp), $lang_date);
     }
 }

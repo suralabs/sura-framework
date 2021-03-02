@@ -260,7 +260,7 @@ class Validation
 		}
 		
 		if (function_exists('iconv_strlen')) {
-			return iconv_strlen($value, $charset);
+			return iconv_strlen($value, $charset); //ext-iconv
 		}
 		
 		return strlen($value);
@@ -277,16 +277,16 @@ class Validation
 		
 		if ($encode) {
 			
-			$all_words = file(__DIR__ . '/../../../../../config/wordfilter.db.php');
+			$all_words = file(__DIR__ . '/../../../../../config/wordfilter.db.php');//FIXME
 			$find = array();
 			$replace = array();
 			
-			if (!$all_words or !count($all_words)) return $source;
+			if (!$all_words || !count($all_words)) return $source;
 			
 			foreach ($all_words as $word_line) {
 				$word_arr = explode("|", $word_line);
 				
-				if (function_exists("get_magic_quotes_gpc") and get_magic_quotes_gpc()) {
+				if (function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc()) {//FIXME
 					
 					$word_arr[1] = addslashes($word_arr[1]);
 					
@@ -354,7 +354,9 @@ class Validation
 				
 			}
 			
-			if (!count($find)) return $source;
+			if (!count($find)) {
+                return $source;
+            }
 			
 			$source = preg_split('((>)|(<))', $source, -1, PREG_SPLIT_DELIM_CAPTURE);
 			

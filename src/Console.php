@@ -37,7 +37,7 @@ class Console
 	public function routing($params): mixed
 	{
 		$go = $_SERVER['argv']['1'];
-		$res = $path = explode('-', $go);
+		$res = explode('-', $go);
 		$res = $res['1'];
 		$url = explode(':', $res);
 		$controllerName = ucfirst($url['0'] . 'Controller');

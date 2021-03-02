@@ -116,11 +116,9 @@ class CachingIterator extends \CachingIterator implements \Countable
 		$inner = $this->getInnerIterator();
 		if ($inner instanceof \Countable) {
 			return $inner->count();
-			
-		} else {
-			throw new Sura\Exception\NotSupportedException('Iterator is not countable.');
 		}
-	}
+        throw new Sura\Exception\NotSupportedException('Iterator is not countable.');
+    }
 	
 	
 	/**

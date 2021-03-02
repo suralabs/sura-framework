@@ -18,7 +18,8 @@ use Sura\Utils\ObjectHelpers;
 trait SmartObject
 {
     /**
-     * @throws MemberAccessException
+     * @param string $name
+     * @param array $args
      * @throws \ReflectionException
      */
 	public function __call(string $name, array $args)

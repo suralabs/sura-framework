@@ -17,8 +17,6 @@ class Auth implements AuthInterface
      */
     public static function index(): array
     {
-        $db = Db::getDB();
-
         $requests = Request::getRequest();
         $request = ($requests->getGlobal());
 
@@ -101,7 +99,7 @@ class Auth implements AuthInterface
         }
 
         /** Если данные поступили через пост и пользователь не авторизован */
-        if (isset($_POST['log_in']) and $logged == false) {
+        if (isset($_POST['log_in']) && $logged == false) {
 
             /** Приготавливаем данные */
             $email = strip_tags($_POST['email']);
@@ -142,7 +140,7 @@ class Auth implements AuthInterface
                 Tools::set_cookie("hid", $hid, 365);
 
                 /** Вставляем лог в бд */
-                $db->query("UPDATE `log` SET browser = '" . $_BROWSER . "', ip = '" . $_IP . "' WHERE uid = '" . $user_info['user_id'] . "'");
+//                $db->query("UPDATE `log` SET browser = '" . $_BROWSER . "', ip = '" . $_IP . "' WHERE uid = '" . $user_info['user_id'] . "'");
                 $database->query('UPDATE log SET', ['browser' => $_BROWSER, 'ip' => $_IP,], 'WHERE uid = ?', $user_info['user_id']);
 
 //                    if($config['temp'] != 'mobile')

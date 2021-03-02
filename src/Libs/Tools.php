@@ -81,7 +81,7 @@ class Tools
 	 */
 	public static function NoAjaxQuery(string $url = ''): void
 	{
-		if (self::clean_url($_SERVER['HTTP_REFERER']) !== self::clean_url($_SERVER['HTTP_HOST']) and $_SERVER['REQUEST_METHOD'] != 'POST') {
+		if (self::clean_url($_SERVER['HTTP_REFERER']) !== self::clean_url($_SERVER['HTTP_HOST']) && $_SERVER['REQUEST_METHOD'] != 'POST') {
 			if ($url !== '') {
 				header('Location: ' . $url);
 			} else {
@@ -127,6 +127,8 @@ class Tools
 	
 	/**
 	 * check xss
+     * not used
+     * @deprecated
 	 */
 	public static function check_xss(): void
 	{
@@ -134,7 +136,7 @@ class Tools
 		
 		if ($url) {
 			if ((str_contains($url, '<')) || (str_contains($url, '>')) || (str_contains($url, '"')) || (str_contains($url, './')) || (str_contains($url, '../')) || (str_contains($url, '\'')) || (str_contains($url, '.php'))) {
-				if ($_GET['go'] != "search" and $_GET['go'] != "messages") {
+				if ($_GET['go'] != "search" && $_GET['go'] != "messages") {
 					throw \Sura\Exception\SuraException::Error('Hacking attempt!');
 				}
 			}
@@ -143,7 +145,9 @@ class Tools
 		$url = html_entity_decode(urldecode($_SERVER['REQUEST_URI']));
 		if ($url) {
 			if ((str_contains($url, '<')) || (str_contains($url, '>')) || (str_contains($url, '"')) || (str_contains($url, '\''))) {
-				if ($_GET['go'] != "search" and $_GET['go'] != "messages") die('Hacking attempt!');
+				if ($_GET['go'] != "search" && $_GET['go'] != "messages") {
+                    die('Hacking attempt!');
+                }
 			}
 		}
 	}
