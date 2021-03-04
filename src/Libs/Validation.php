@@ -281,16 +281,18 @@ class Validation
 			$find = array();
 			$replace = array();
 			
-			if (!$all_words || !count($all_words)) return $source;
+			if (!$all_words || !count($all_words)) {
+                return $source;
+            }
 			
 			foreach ($all_words as $word_line) {
 				$word_arr = explode("|", $word_line);
 				
-				if (function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc()) {//FIXME
-					
-					$word_arr[1] = addslashes($word_arr[1]);
-					
-				}
+//				if (function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc()) {//FIXME
+//
+//					$word_arr[1] = addslashes($word_arr[1]);
+//
+//				}
 				
 				if ($word_arr[4]) {
 					
@@ -371,7 +373,7 @@ class Validation
                 }
 			}
 			
-			$source = join("", $source);
+			$source = implode("", $source);
 			
 		} else {
 			
