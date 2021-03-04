@@ -118,13 +118,15 @@ class Validators
         string $expected = null,
         string $label = "item '%' in array"
 	): void {
-		if (!array_key_exists($key, $array)) {
-			throw new Sura\Exception\AssertionException('Missing ' . str_replace('%', $key, $label) . '.');
+        if (!array_key_exists($key, $array)) {
+            throw new Sura\Exception\AssertionException('Missing ' . str_replace('%', $key, $label) . '.');
 
-		} elseif ($expected) {
-			static::assert($array[$key], $expected, str_replace('%', $key, $label));
-		}
-	}
+        }
+
+        if ($expected) {
+            static::assert($array[$key], $expected, str_replace('%', $key, $label));
+        }
+    }
 
 
     /**
@@ -136,19 +138,21 @@ class Validators
 	public static function is(mixed $value, string $expected): bool
 	{
 		foreach (explode('|', $expected) as $item) {
-			if (substr($item, -2) === '[]') {
-				if (is_iterable($value) && self::everyIs($value, substr($item, 0, -2))) {
-					return true;
-				}
-				continue;
-			} elseif (substr($item, 0, 1) === '?') {
-				$item = substr($item, 1);
-				if ($value === null) {
-					return true;
-				}
-			}
+            if (substr($item, -2) === '[]') {
+                if (is_iterable($value) && self::everyIs($value, substr($item, 0, -2))) {
+                    return true;
+                }
+                continue;
+            }
 
-			[$type] = $item = explode(':', $item, 2);
+            if ($item[0] === '?') {
+                $item = substr($item, 1);
+                if ($value === null) {
+                    return true;
+                }
+            }
+
+            [$type] = $item = explode(':', $item, 2);
 			if (isset(static::$validators[$type])) {
 				try {
 //                    $validators = null;
@@ -189,6 +193,7 @@ class Validators
     /**
      * Finds whether all values are of expected types separated by pipe.
      * @param mixed[] $values
+     * @param string $expected
      * @return bool
      */
 	public static function everyIs(iterable $values, string $expected): bool

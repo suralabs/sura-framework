@@ -170,6 +170,7 @@ class Request implements RequestInterface
 
     /**
      * @return bool
+     * @throws \JsonException
      */
     public static function newcheckAjax()
     {
