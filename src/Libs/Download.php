@@ -78,7 +78,9 @@ class Download implements DownloadInterface
 		header('Content-Disposition: attachment; filename="' . $this->properties['new_name'] . '";');
 		header("Content-Transfer-Encoding: binary");
 		
-		if ($this->properties['resume']) header("Accept-Ranges: bytes");
+		if ($this->properties['resume']) {
+            header("Accept-Ranges: bytes");
+        }
 		
 		if ($this->range) {
 			
