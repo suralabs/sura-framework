@@ -175,7 +175,7 @@ class Request implements RequestInterface
     {
         $json = file_get_contents('php://input');
         if (!empty($json)){
-            $obj = json_decode($json, TRUE);
+            $obj = json_decode($json, TRUE, 512, JSON_THROW_ON_ERROR);
 
             if ($obj['ajax'] == 'yes'){
                 return true;
