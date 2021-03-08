@@ -16,6 +16,8 @@ class Langs implements LangsInterface
 {
 
     /**
+     * langs
+     *
      * @var \string[][]
      */
     private static array $langs = array(
