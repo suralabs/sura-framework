@@ -35,7 +35,6 @@ class Auth implements AuthInterface
             /** Если есть данные о сесии, но нет инфы о юзере, то выкидываем его */
             if (!$user_info['user_id']) {
                 self::logout();
-//				header('Location: https://' . $server['HTTP_HOST'] . '/logout/');
             }
 
             /** ava */
@@ -104,8 +103,6 @@ class Auth implements AuthInterface
             /** Приготавливаем данные */
             $email = strip_tags($_POST['email']);
             $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            // if( _strlen( $name, $config['charset'] ) > 40 OR _strlen(trim($name), $config['charset']) < 3) $stop = 'error';
-            //$lang = langs::get_langs();
 
             /** Проверяем правильность e-mail */
             if ((!Validation::check_email($email) && $_POST['token'] !== $_SESSION['_mytoken']) || empty($_POST['token'])) {
@@ -114,9 +111,7 @@ class Auth implements AuthInterface
             }
 
             $database = Model::getDB();
-            $user_info = $database->fetchAll('SELECT user_id  FROM users WHERE user_email = ? AND user_password = ?', (array)$email, (array)$password);
-            $user_info = (array)$user_info[0];
-//                $check_user = $db->super_query("SELECT user_id FROM `users` WHERE user_email = '".$email."' AND user_password = '".$password."'");
+            $user_info = $database->fetch('SELECT user_id  FROM users WHERE user_email = ? AND user_password = ?', (array)$email, (array)$password);
 
             /** Если есть юзер то пропускаем */
             if ($user_info) {
@@ -140,16 +135,11 @@ class Auth implements AuthInterface
                 Tools::set_cookie("hid", $hid, 365);
 
                 /** Вставляем лог в бд */
-//                $db->query("UPDATE `log` SET browser = '" . $_BROWSER . "', ip = '" . $_IP . "' WHERE uid = '" . $user_info['user_id'] . "'");
                 $database->query('UPDATE log SET', ['browser' => $_BROWSER, 'ip' => $_IP,], 'WHERE uid = ?', $user_info['user_id']);
 
-//                    if($config['temp'] != 'mobile')
                 header('Location: https://' . $server['HTTP_HOST'] . '/u' . $user_info['user_id']);
-//                    else
-//                        header('Location: https://'.$server['HTTP_HOST'].'/');
             } else {
                 return array('user_info' => $user_info, 'logged' => false);
-                //msgbox('', $lang['not_loggin'].'<br /><br /><a href="/restore/" onClick="Page.Go(this.href); return false">Забыли пароль?</a>', 'info_red');
             }
         }
         return array(
