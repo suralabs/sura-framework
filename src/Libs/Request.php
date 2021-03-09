@@ -172,7 +172,7 @@ class Request implements RequestInterface
      * @return bool
      * @throws \JsonException
      */
-    public static function newcheckAjax()
+    public static function newcheckAjax(): bool
     {
         $json = file_get_contents('php://input');
         if (!empty($json)){
@@ -187,10 +187,7 @@ class Request implements RequestInterface
 //            // Если к нам идёт Ajax запрос, то ловим его
 //            return true;
 //        }else
-            if (isset($_POST['ajax']) && $_POST['ajax'] == 'yes'){
-            return true;
-        }
-        return false;
+        return isset($_POST['ajax']) && $_POST['ajax'] == 'yes';
 
     }
 
