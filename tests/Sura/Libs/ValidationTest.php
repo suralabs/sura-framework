@@ -146,17 +146,4 @@ class ValidationTest extends TestCase
         return $instance;
 
     }
-
-    public function testcheck_password3(): void
-    {
-        // Смотрите пример использования password_hash(), для понимания откуда это взялось.
-        $hash = '$2y$10$rkadTE2AWb2CwFK/0J9fbetb4IWTVdgTibsnM4UaFr0D5pl0za2ci';
-        $instance = password_verify('Hec2GugBed', $hash);
-        if ($instance) {
-            echo 'Пароль правильный!';
-        } else {
-            echo 'Пароль неправильный.';
-        }
-        self::assertEquals(true, $instance);
-    }
 }
