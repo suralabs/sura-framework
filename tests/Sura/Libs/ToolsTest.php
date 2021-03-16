@@ -1,6 +1,6 @@
 <?php
 
-namespace Libs;
+namespace Sura\Libs;
 
 use Sura\Libs\Tools;
 use PHPUnit\Framework\TestCase;
@@ -8,12 +8,12 @@ use PHPUnit\Framework\TestCase;
 class ToolsTest extends TestCase
 {
 
-    public function testInstallationSelectedNew()
+    public function testInstallationSelected()
     {
         $id = '';
         $options = '';
 
-        Tools::InstallationSelectedNew($id, $options);
+        Tools::InstallationSelected($id, $options);
         $this->expectOutputString('');
 
 //        $this->assertNotFalse(true);

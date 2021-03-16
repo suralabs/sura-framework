@@ -1,6 +1,6 @@
 <?php
 
-namespace Libs;
+namespace Sura\Libs;
 
 use Sura\Libs\Settings;
 use PHPUnit\Framework\TestCase;
