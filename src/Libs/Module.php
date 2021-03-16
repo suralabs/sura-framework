@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Sura\Libs;
 
 use Sura\Contracts\ModuleInterface;
+use Sura\Database\Connection;
 
 /**
  *  Module
@@ -11,7 +12,7 @@ use Sura\Contracts\ModuleInterface;
  */
 class Module implements ModuleInterface
 {
-    private static ?\Sura\Database\Connection $database = null;
+    private static ?Connection $database = null;
 
     /**
      * Model constructor.
@@ -25,7 +26,7 @@ class Module implements ModuleInterface
         self::$database = self::getDB();
     }
 
-    public static function getDB(): \Sura\Database\Connection
+    public static function getDB(): Connection
     {
         if (self::$database == null) {
             $config = Settings::load();
@@ -33,10 +34,7 @@ class Module implements ModuleInterface
             $dsn = 'mysql:host=' . $config['dbhost'] . ';dbname=' . $config['dbname'];
             $user = $config['dbuser'];
             $password = $config['dbpass'];
-
-//            $database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
-
-            self::$database = new \Sura\Database\Connection($dsn, $user, $password);
+            self::$database = new Connection($dsn, $user, $password);
         }
         return self::$database;
     }
