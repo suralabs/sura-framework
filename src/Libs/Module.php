@@ -34,40 +34,43 @@ class Module implements ModuleInterface
             $user = $config['dbuser'];
             $password = $config['dbpass'];
 
-            self::$database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
+//            $database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
+
+            self::$database = new \Sura\Database\Connection($dsn, $user, $password);
         }
         return self::$database;
     }
 
-	/**
-	 * @return string|array|null
-	 */
-	public function user_info(): string|array|null
-	{
-		return Registry::get('user_info');
-	}
-	
-	/**
-	 * @return bool
-	 */
-	public function logged(): bool|null
-	{
-		return Registry::get('logged');
-	}
-	
-	/**
-	 * @return \Sura\Libs\Db|null
-	 */
-	public function db(): null|Db
-	{
-		return Db::getDB();
-	}
-	
-	/**
-	 * @return array
-	 */
-	public function get_langs(): array
-	{
-		return Langs::get_langs();
-	}
+    /**
+     * @return string|array|null
+     */
+    public function user_info(): string|array|null
+    {
+        return Registry::get('user_info');
+    }
+
+    /**
+     * @return bool
+     */
+    public function logged(): bool|null
+    {
+        return Registry::get('logged');
+    }
+
+    /**
+     * @return \Sura\Libs\Db|null
+     * @deprecated
+     */
+    public function db(): null|Db
+    {
+        return Db::getDB();
+    }
+
+    /**
+     * @return array
+     */
+    public function get_langs(): array
+    {
+        return Langs::get_langs();
+    }
 }
