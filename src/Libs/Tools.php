@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Sura\Libs;
 
-use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
-use Sura\Utils\DateTime;
 
 /**
  * Class Tools
@@ -122,7 +120,7 @@ class Tools
 	{
 		return str_replace('val="' . $id . '" class="', 'val="' . $id . '" class="active ', $options);
 	}
-	
+
 	//deprecated
 	
 	/**

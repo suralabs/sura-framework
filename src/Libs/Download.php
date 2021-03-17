@@ -20,7 +20,7 @@ class Download implements DownloadInterface
 	 * @param int $resume
 	 * @param int $max_speed
 	 */
-	public function download(string $path, $name = "", $resume = 0, $max_speed = 0)
+	public function __construct(string $path, $name = "", $resume = 0, $max_speed = 0)
 	{
 		
 		$name = ($name == "") ? substr(strrchr("/" . $path, "/"), 1) : $name;

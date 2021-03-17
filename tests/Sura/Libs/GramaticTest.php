@@ -28,7 +28,7 @@ class GramaticTest extends TestCase
 
     public function testTotranslit()
     {
-        echo Gramatic::totranslit('Андрей', true, true);
+        echo Gramatic::toTranslit('Андрей', true, true);
         $this->expectOutputString('andrey');
     }
 

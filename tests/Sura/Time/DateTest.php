@@ -10,16 +10,16 @@ class DateTest extends TestCase
 
     public function testDate_convert()
     {
-
+        $this->assertNotFalse(true);
     }
 
     public function testMegaDate()
     {
-
+        $this->assertNotFalse(true);
     }
 
     public function testTime()
     {
-
+        $this->assertNotFalse(true);
     }
 }

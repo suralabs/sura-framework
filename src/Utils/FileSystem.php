@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
+use JetBrains\PhpStorm\Pure;
 use Sura;
 use Sura\Exception\InvalidStateException;
 use Sura\Exception\IOException;
@@ -205,4 +206,22 @@ final class FileSystem
 	{
 		return self::normalizePath(implode('/', $paths));
 	}
+
+    /**
+     * @param $file_size
+     * @return string
+     */
+    #[Pure] public static function formatSize($file_size): string
+    {
+        if($file_size >= 1073741824){
+            $file_size = round($file_size / 1073741824 * 100 ) / 100 ." Гб";
+        } elseif($file_size >= 1048576){
+            $file_size = round($file_size / 1048576 * 100 ) / 100 ." Мб";
+        } elseif($file_size >= 1024){
+            $file_size = round($file_size / 1024 * 100 ) / 100 ." Кб";
+        } else {
+            $file_size = $file_size." б";
+        }
+        return $file_size;
+    }
 }

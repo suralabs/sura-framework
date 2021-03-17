@@ -4,15 +4,18 @@ declare(strict_types=1);
 namespace Sura;
 
 use Exception;
-use Sura\Libs\Settings;
 use Throwable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
-use Sura\Container\Container;
-use Sura\Libs\Db;
-use Sura\Libs\Registry;
-use Sura\Libs\Router;
-use Sura\Libs\Tools;
+
+use Sura\{
+    Libs\Model,
+    Libs\Settings,
+    Time\Date,
+    Container\Container,
+    Libs\Registry,
+    Libs\Router,
+};
 
 /**
  * Class Application
@@ -228,7 +231,7 @@ class Application extends Container
             }
 
 //            $server_time = intval($_SERVER['REQUEST_TIME']);
-            $server_time = \Sura\Time\Date::time();
+            $server_time = Date::time();
 
             if (date('Y-m-d', (int)$user_info['user_lastupdate']) < date('Y-m-d', $server_time)) {
                 $sql_balance = ", user_balance = user_balance+1, user_lastupdate = '{$server_time}'";
@@ -239,8 +242,8 @@ class Application extends Container
             //Определяем устройство
             $device_user = 0;
             if (($user_info['user_last_visit'] + 60) <= $server_time) {
-                $db = Db::getDB();
-                $db->query("UPDATE LOW_PRIORITY `users` SET user_logged_mobile = '{$device_user}', user_last_visit = '{$server_time}' {$sql_balance} WHERE user_id = '{$user_info['user_id']}'");
+                $database = Model::getDB();
+                $database->query("UPDATE LOW_PRIORITY `users` SET user_logged_mobile = '{$device_user}', user_last_visit = '{$server_time}' {$sql_balance} WHERE user_id = '{$user_info['user_id']}'");
             }
             return true;
         }

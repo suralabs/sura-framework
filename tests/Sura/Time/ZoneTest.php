@@ -10,11 +10,11 @@ class ZoneTest extends TestCase
 
     public function testList()
     {
-
+        $this->assertNotFalse(true);
     }
 
     public function testZone()
     {
-
+        $this->assertNotFalse(true);
     }
 }
