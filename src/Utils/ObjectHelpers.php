@@ -44,6 +44,7 @@ final class ObjectHelpers
      * @param string $class
      * @param string $method
      * @param array $additionalMethods
+     * @return mixed
      * @throws MemberAccessException|ReflectionException
      */
 	public static function strictCall(string $class, string $method, array $additionalMethods = []): mixed
