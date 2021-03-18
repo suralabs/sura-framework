@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sura\Utils;
 
 use JetBrains\PhpStorm\Pure;
+use Normalizer;
 use Sura;
 use function is_array, is_object, strlen;
 
@@ -78,7 +79,7 @@ class Strings
      */
 	#[Pure] public static function endsWith(string $haystack, string $needle): bool
 	{
-		return $needle === '' || substr($haystack, -strlen($needle)) === $needle;
+		return $needle === '' || str_ends_with($haystack, $needle);
 	}
 
 
@@ -127,7 +128,7 @@ class Strings
 	public static function normalize(string $s): string
 	{
 		// convert to compressed normal form (NFC)
-		if (class_exists('Normalizer', false) && ($n = \Normalizer::normalize($s, \Normalizer::FORM_C)) !== false) {
+		if (class_exists('Normalizer', false) && ($n = Normalizer::normalize($s, Normalizer::FORM_C)) !== false) {
 			$s = $n;
 		}
 
@@ -146,9 +147,11 @@ class Strings
 	}
 
 
-	/**
-	 * Standardize line endings to unix-like.
-	 */
+    /**
+     * Standardize line endings to unix-like.
+     * @param string $s
+     * @return string
+     */
 	public static function normalizeNewLines(string $s): string
 	{
 		return str_replace(["\r\n", "\r"], "\n", $s);
@@ -279,27 +282,33 @@ class Strings
 	}
 
 
-	/**
-	 * Converts the first character of a UTF-8 string to lower case and leaves the other characters unchanged.
-	 */
+    /**
+     * Converts the first character of a UTF-8 string to lower case and leaves the other characters unchanged.
+     * @param string $s
+     * @return string
+     */
 	public static function firstLower(string $s): string
 	{
 		return self::lower(self::substring($s, 0, 1)) . self::substring($s, 1);
 	}
 
 
-	/**
-	 * Converts all characters of a UTF-8 string to upper case.
-	 */
+    /**
+     * Converts all characters of a UTF-8 string to upper case.
+     * @param string $s
+     * @return string
+     */
 	public static function upper(string $s): string
 	{
 		return mb_strtoupper($s, 'UTF-8');
 	}
 
 
-	/**
-	 * Converts the first character of a UTF-8 string to upper case and leaves the other characters unchanged.
-	 */
+    /**
+     * Converts the first character of a UTF-8 string to upper case and leaves the other characters unchanged.
+     * @param string $s
+     * @return string
+     */
 	public static function firstUpper(string $s): string
 	{
 		return self::upper(self::substring($s, 0, 1)) . self::substring($s, 1);
@@ -323,8 +332,8 @@ class Strings
 	public static function compare(string $left, string $right, int $length = null): bool
 	{
 		if (class_exists('Normalizer', false)) {
-			$left = \Normalizer::normalize($left, \Normalizer::FORM_D); // form NFD is faster
-			$right = \Normalizer::normalize($right, \Normalizer::FORM_D); // form NFD is faster
+			$left = Normalizer::normalize($left, Normalizer::FORM_D); // form NFD is faster
+			$right = Normalizer::normalize($right, Normalizer::FORM_D); // form NFD is faster
 		}
 
 		if ($length < 0) {

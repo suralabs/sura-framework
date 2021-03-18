@@ -66,11 +66,12 @@ class Langs implements LangsInterface
 
     /**
      * ser locale
+     * not used
      */
     #[NoReturn]
-    public static function setlocale(): void
+    public static function setLocale(): void
     {
-        $checkLang = self::check_lang();
+        $checkLang = self::checkLang();
         if ($checkLang == 'ru') {
             setlocale(LC_ALL, "ru");
         } else {
@@ -82,20 +83,21 @@ class Langs implements LangsInterface
      * get translate values
      * @return array
      */
-    public static function get_langs(): array
+    public static function getLangs(): array
     {
         $dir = resolve('app')->get('path');
-        $checkLang = self::check_lang() ?: 'ru';
+        $checkLang = self::checkLang() ?: 'ru';
         return require $dir . "/lang/{$checkLang}.php";
     }
 
     /**
      * @return array
+     * not used
      */
-    public static function get_langdate(): array
+    public static function getLangdate(): array
     {
         $dir = resolve('app')->get('path');
-        $checkLang = self::check_lang() ?: 'ru';
+        $checkLang = self::checkLang() ?: 'ru';
         return require $dir . "/lang/date_{$checkLang}.lng";
     }
 
@@ -104,11 +106,11 @@ class Langs implements LangsInterface
      *
      * @return string
      */
-    public static function check_lang(): string
+    public static function checkLang(): string
     {
         $request = Request::getRequest()->getGlobal();
 
-        $lang_list = self::lang_list();
+        $lang_list = self::langList();
         $useLang = (int)$request['lang'];
 
         if ($useLang > 0) {
@@ -124,7 +126,7 @@ class Langs implements LangsInterface
     /**
      * @return array Languages list
      */
-    public static function lang_list(): array
+    public static function langList(): array
     {
         /** @var array $expLangList all languages */
         return self::$langs;
@@ -135,9 +137,41 @@ class Langs implements LangsInterface
      * @param $stamp
      * @return string
      */
-    public static function lang_date(string $format, int $stamp): string
+    public static function langDate(string $format, int $stamp): string
     {
-        $lang_date = self::get_langdate();
+        $lang_date = self::getLangdate();
         return strtr(date($format, $stamp), $lang_date);
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_langdate(): array
+    {
+        // TODO: Implement get_langdate() method.
+    }
+
+    /**
+     * @return array
+     */
+    public static function get_langs(): array
+    {
+        // TODO: Implement get_langs() method.
+    }
+
+    /**
+     * @return string
+     */
+    public static function check_lang(): string
+    {
+        // TODO: Implement check_lang() method.
+    }
+
+    /**
+     * @return array
+     */
+    public static function lang_list(): array
+    {
+        // TODO: Implement lang_list() method.
     }
 }
