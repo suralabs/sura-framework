@@ -129,7 +129,7 @@ class File extends Log
         if (!empty($conf['eol'])) {
             $this->_eol = $conf['eol'];
         } else {
-            $this->_eol = (str_contains(PHP_OS, 'WIN')) ? "\r\n" : "\n";
+            $this->_eol = (strpos(PHP_OS, 'WIN') !== false) ? "\r\n" : "\n";
         }
 
         register_shutdown_function(array(&$this, '_Log_file'));
@@ -250,10 +250,15 @@ class File extends Log
      * Logs $message to the output window.  The message is also passed along
      * to any Log_observer instances that are observing this Log.
      *
+     * @param mixed $message String or object containing the message to log.
+     * @param null $priority The priority of the message.  Valid
+     *                  values are: PEAR_LOG_EMERG, PEAR_LOG_ALERT,
+     *                  PEAR_LOG_CRIT, PEAR_LOG_ERR, PEAR_LOG_WARNING,
+     *                  PEAR_LOG_NOTICE, PEAR_LOG_INFO, and PEAR_LOG_DEBUG.
      * @return boolean  True on success or false on failure.
      * @access public
      */
-    public function log(): bool
+    public function log(mixed $message, $priority = null): bool
     {
         /* If a priority hasn't been specified, use the default value. */
         if ($priority === null) {

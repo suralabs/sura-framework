@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Sura\Libs;
 
 use Sura\Contracts\ModuleInterface;
-use Sura\Database\Connection;
 
 /**
  *  Module
@@ -12,7 +11,7 @@ use Sura\Database\Connection;
  */
 class Module implements ModuleInterface
 {
-    private static ?Connection $database = null;
+    private static ?\Sura\Database\Connection $database = null;
 
     /**
      * Model constructor.
@@ -26,7 +25,7 @@ class Module implements ModuleInterface
         self::$database = self::getDB();
     }
 
-    public static function getDB(): Connection
+    public static function getDB(): \Sura\Database\Connection
     {
         if (self::$database == null) {
             $config = Settings::load();
@@ -34,41 +33,43 @@ class Module implements ModuleInterface
             $dsn = 'mysql:host=' . $config['dbhost'] . ';dbname=' . $config['dbname'];
             $user = $config['dbuser'];
             $password = $config['dbpass'];
-            self::$database = new Connection($dsn, $user, $password);
+
+//            $database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
+
+            self::$database = new \Sura\Database\Connection($dsn, $user, $password);
         }
         return self::$database;
     }
 
-    /**
-     * @return string|array|null
-     */
-    public function user_info(): string|array|null
-    {
-        return Registry::get('user_info');
-    }
-
-    /**
-     * @return bool
-     */
-    public function logged(): bool|null
-    {
-        return Registry::get('logged');
-    }
-
-    /**
-     * @return \Sura\Libs\Db|null
-     * @deprecated
-     */
-    public function db(): null|Db
-    {
-        return Db::getDB();
-    }
-
-    /**
-     * @return array
-     */
-    public function get_langs(): array
-    {
-        return Langs::get_langs();
-    }
+	/**
+	 * @return string|array|null
+	 */
+	public function user_info(): string|array|null
+	{
+		return Registry::get('user_info');
+	}
+	
+	/**
+	 * @return bool
+	 */
+	public function logged(): bool|null
+	{
+		return Registry::get('logged');
+	}
+	
+	/**
+	 * @return \Sura\Libs\Db|null
+	 */
+	public function db(): null|Db
+	{
+		return Db::getDB();
+	}
+	
+	/**
+	 * @return array
+	 */
+	public function get_langs(): array
+	{
+		return Langs::get_langs();
+	}
 }

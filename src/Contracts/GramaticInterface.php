@@ -8,7 +8,7 @@ interface GramaticInterface
 {
     public static function DeclName(string $name, string $declination);
 
-    public static function toTranslit(string $var, bool $lower = true, bool $point = true);
+    public static function totranslit(string $var, bool $lower = true, bool $punkt = true);
 
     public static function declOfNum(int $number, array $titles);
 

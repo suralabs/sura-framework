@@ -69,7 +69,7 @@ class Mail
 	/**
 	 *
 	 */
-	public function compile_headers()
+	function compile_headers()
 	{
 		
 		$this->subject = "=?" . $this->charset . "?b?" . base64_encode($this->subject) . "?=";
@@ -83,7 +83,7 @@ class Mail
 			$this->mail_headers .= "Content-type: text/plain; charset=\"" . $this->charset . "\"" . $this->eol;
 		}
 		
-		if ($this->mail_method !== 'smtp') {
+		if ($this->mail_method != 'smtp') {
 			
 			if (count($this->bcc)) {
 				$this->mail_headers .= "Bcc: " . implode(",", $this->bcc) . $this->eol;
@@ -114,7 +114,7 @@ class Mail
 	 * @param $subject
 	 * @param $message
 	 */
-	public function send($to, $subject, $message)
+	function send($to, $subject, $message)
 	{
 		$this->to = preg_replace("/[ \t]+/", "", $to);
 		$this->from = preg_replace("/[ \t]+/", "", $this->from);
@@ -122,11 +122,8 @@ class Mail
 		$this->to = preg_replace("/,,/", ",", $this->to);
 		$this->from = preg_replace("/,,/", ",", $this->from);
 		
-		if ($this->mail_method != 'smtp') {
-            $this->to = preg_replace("#\#\[\]'\"\(\):;/\$!Ј%\^&\*\{\}#", "", $this->to);
-        } else {
-            $this->to = '<' . preg_replace("#\#\[\]'\"\(\):;/\$!Ј%\^&\*\{\}#", "", $this->to) . '>';
-        }
+		if ($this->mail_method != 'smtp') $this->to = preg_replace("#\#\[\]'\"\(\):;/\$!Ј%\^&\*\{\}#", "", $this->to); else
+			$this->to = '<' . preg_replace("#\#\[\]'\"\(\):;/\$!Ј%\^&\*\{\}#", "", $this->to) . '>';
 		
 		
 		$this->from = preg_replace("#\#\[\]'\"\(\):;/\$!Ј%\^&\*\{\}#", "", $this->from);
@@ -138,8 +135,8 @@ class Mail
 		
 		$this->compile_headers();
 		
-		if (($this->to) && ($this->from) && ($this->subject)) {
-			if ($this->mail_method !== 'smtp') {
+		if (($this->to) and ($this->from) and ($this->subject)) {
+			if ($this->mail_method != 'smtp') {
 				if (!mail($this->to, $this->subject, $this->message, $this->mail_headers, $this->additional_parameters)) {
 					if (!mail($this->to, $this->subject, $this->message, $this->mail_headers)) {
 						$this->smtp_msg = "PHP Mail Error.";
@@ -157,7 +154,7 @@ class Mail
 	/**
 	 *
 	 */
-	public function smtp_get_line()
+	function smtp_get_line()
 	{
 		$this->smtp_msg = "";
 		while ($line = fgets($this->smtp_fp, 515)) {
@@ -171,9 +168,9 @@ class Mail
 	/**
 	 *
 	 */
-	public function smtp_send()
+	function smtp_send()
 	{
-		$this->smtp_fp = fsockopen($this->smtp_host, (int)$this->smtp_port, $errno, $errstr, 30);
+		$this->smtp_fp = @fsockopen($this->smtp_host, intval($this->smtp_port), $errno, $errstr, 30);
 		if (!$this->smtp_fp) {
 			$this->smtp_error("Could not open a socket to the SMTP server");
 			return;
@@ -247,7 +244,7 @@ class Mail
 			$this->smtp_send_cmd("DATA");
 			
 			if ($this->smtp_code == 354) {
-				fwrite($this->smtp_fp, $data . "\r\n");
+				fputs($this->smtp_fp, $data . "\r\n");
 			} else {
 				$this->smtp_error("Error on write to SMTP server");
 				return;
@@ -266,8 +263,8 @@ class Mail
 				$this->smtp_error("Error on quit");
 				return;
 			}
-
-			fclose($this->smtp_fp);
+			
+			@fclose($this->smtp_fp);
 		} else {
 			$this->smtp_error("SMTP service unaviable");
 		}
@@ -282,7 +279,7 @@ class Mail
 		$this->smtp_msg = "";
 		$this->smtp_code = "";
 		
-		fwrite($this->smtp_fp, $cmd . "\r\n");
+		fputs($this->smtp_fp, $cmd . "\r\n");
 		
 		$this->smtp_get_line();
 		
@@ -294,7 +291,7 @@ class Mail
 	/**
 	 * @param string $err
 	 */
-	public function smtp_error($err = "")
+	function smtp_error($err = "")
 	{
 		$this->smtp_msg = $err;
 		$this->send_error = true;
@@ -304,10 +301,11 @@ class Mail
 	 * @param $data
 	 * @return string|string[]
 	 */
-	public function smtp_crlf_encode($data): array|string
+	function smtp_crlf_encode($data): array|string
 	{
 		$data .= "\n";
-        $data = str_replace(array("\r", "\n", "\n.\r\n"), array("", "\r\n", "\n. \r\n"), $data);
+		$data = str_replace("\n", "\r\n", str_replace("\r", "", $data));
+		$data = str_replace("\n.\r\n", "\n. \r\n", $data);
 		return $data;
 	}
 }

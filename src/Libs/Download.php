@@ -20,7 +20,7 @@ class Download implements DownloadInterface
 	 * @param int $resume
 	 * @param int $max_speed
 	 */
-	public function __construct(string $path, $name = "", $resume = 0, $max_speed = 0)
+	public function download(string $path, $name = "", $resume = 0, $max_speed = 0)
 	{
 		
 		$name = ($name == "") ? substr(strrchr("/" . $path, "/"), 1) : $name;
@@ -78,9 +78,7 @@ class Download implements DownloadInterface
 		header('Content-Disposition: attachment; filename="' . $this->properties['new_name'] . '";');
 		header("Content-Transfer-Encoding: binary");
 		
-		if ($this->properties['resume']) {
-            header("Accept-Ranges: bytes");
-        }
+		if ($this->properties['resume']) header("Accept-Ranges: bytes");
 		
 		if ($this->range) {
 			

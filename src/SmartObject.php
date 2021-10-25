@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sura;
 
 use Sura\Exception\MemberAccessException;
-use Sura\Exception\UnexpectedValueException;
 use Sura\Utils\ObjectHelpers;
 
 
@@ -19,8 +18,7 @@ use Sura\Utils\ObjectHelpers;
 trait SmartObject
 {
     /**
-     * @param string $name
-     * @param array $args
+     * @throws MemberAccessException
      * @throws \ReflectionException
      */
 	public function __call(string $name, array $args)
@@ -34,7 +32,7 @@ trait SmartObject
 					$handler(...$args);
 				}
 			} elseif ($handlers !== null) {
-				throw new UnexpectedValueException("Property $class::$$name must be iterable or null, " . gettype($handlers) . ' given.');
+				throw new \Sura\Exception\UnexpectedValueException("Property $class::$$name must be iterable or null, " . gettype($handlers) . ' given.');
 			}
 			
 		} else {
@@ -125,7 +123,6 @@ trait SmartObject
         try {
             return isset(ObjectHelpers::getMagicProperties(static::class)[$name]);
         } catch (\ReflectionException $e) {
-            return false;
         }
     }
 }

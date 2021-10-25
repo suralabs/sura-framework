@@ -10,9 +10,10 @@ use Sura\Utils\DateTime;
 
 class Date
 {
+    //TODO l18n
 	/**
      *  generate date
-     * TODO l18n
+     *
 	 * @param int $timestamp - date
 	 * @param false|string $func - no_year
 	 * @param bool $full - full

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sura\Utils;
 
-use JetBrains\PhpStorm\Pure;
 use Sura;
 use Sura\HtmlStringable;
 use function is_array, is_float, is_object, is_string;
@@ -254,14 +253,13 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
 	private $isEmpty;
 
 
-    /**
-     * Constructs new HTML element.
-     * @param string|null $name
-     * @param null $attrs element's attributes or plain text content
-     * @return static
-     */
-	public static function el(string $name = null, $attrs = null): static
-    {
+	/**
+	 * Constructs new HTML element.
+	 * @param  array|string $attrs element's attributes or plain text content
+	 * @return static
+	 */
+	public static function el(string $name = null, $attrs = null)
+	{
 		$el = new static;
 		$parts = explode(' ', (string) $name, 2);
 		$el->setName($parts[0]);
@@ -283,22 +281,18 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
 	}
 
 
-    /**
-     * Returns an object representing HTML text.
-     * @param string $html
-     * @return Html
-     */
+	/**
+	 * Returns an object representing HTML text.
+	 */
 	public static function fromHtml(string $html): self
 	{
 		return (new static)->setHtml($html);
 	}
 
 
-    /**
-     * Returns an object representing plain text.
-     * @param string $text
-     * @return Html
-     */
+	/**
+	 * Returns an object representing plain text.
+	 */
 	public static function fromText(string $text): self
 	{
 		return (new static)->setText($text);
@@ -323,25 +317,21 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
 	}
 
 
-    /**
-     * Converts given HTML code to plain text.
-     * @param string $html
-     * @return string
-     */
-	#[Pure] public static function htmlToText(string $html): string
+	/**
+	 * Converts given HTML code to plain text.
+	 */
+	public static function htmlToText(string $html): string
 	{
 		return html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
 	}
 
 
-    /**
-     * Changes element's name.
-     * @param string $name
-     * @param bool|null $isEmpty
-     * @return static
-     */
-	final public function setName(string $name, bool $isEmpty = null): static
-    {
+	/**
+	 * Changes element's name.
+	 * @return static
+	 */
+	final public function setName(string $name, bool $isEmpty = null)
+	{
 		$this->name = $name;
 		$this->isEmpty = $isEmpty ?? isset(static::$emptyElements[$name]);
 		return $this;
@@ -366,27 +356,25 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
 	}
 
 
-    /**
-     * Sets multiple attributes.
-     * @param array $attrs
-     * @return static
-     */
-	public function addAttributes(array $attrs): static
-    {
+	/**
+	 * Sets multiple attributes.
+	 * @return static
+	 */
+	public function addAttributes(array $attrs)
+	{
 		$this->attrs = array_merge($this->attrs, $attrs);
 		return $this;
 	}
 
 
-    /**
-     * Appends value to element's attribute.
-     * @param string $name
-     * @param mixed $value
-     * @param mixed $option
-     * @return static
-     */
-	public function appendAttribute(string $name, mixed $value, $option = true): static
-    {
+	/**
+	 * Appends value to element's attribute.
+	 * @param  mixed  $value
+	 * @param  mixed  $option
+	 * @return static
+	 */
+	public function appendAttribute(string $name, $value, $option = true)
+	{
 		if (is_array($value)) {
 			$prev = isset($this->attrs[$name]) ? (array) $this->attrs[$name] : [];
 			$this->attrs[$name] = $value + $prev;
@@ -404,37 +392,34 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
 	}
 
 
-    /**
-     * Sets element's attribute.
-     * @param string $name
-     * @param mixed $value
-     * @return static
-     */
-	public function setAttribute(string $name, mixed $value): static
-    {
+	/**
+	 * Sets element's attribute.
+	 * @param  mixed  $value
+	 * @return static
+	 */
+	public function setAttribute(string $name, $value)
+	{
 		$this->attrs[$name] = $value;
 		return $this;
 	}
 
 
-    /**
-     * Returns element's attribute.
-     * @param string $name
-     * @return mixed
-     */
-	public function getAttribute(string $name): mixed
-    {
+	/**
+	 * Returns element's attribute.
+	 * @return mixed
+	 */
+	public function getAttribute(string $name)
+	{
 		return $this->attrs[$name] ?? null;
 	}
 
 
-    /**
-     * Unsets element's attribute.
-     * @param string $name
-     * @return static
-     */
-	public function removeAttribute(string $name): static
-    {
+	/**
+	 * Unsets element's attribute.
+	 * @return static
+	 */
+	public function removeAttribute(string $name)
+	{
 		unset($this->attrs[$name]);
 		return $this;
 	}

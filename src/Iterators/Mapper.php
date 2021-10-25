@@ -12,23 +12,17 @@ class Mapper extends \IteratorIterator
 {
 	/** @var callable */
 	private $callback;
-
-    /**
-     * Mapper constructor.
-     * @param \Traversable $iterator
-     * @param callable $callback
-     */
+	
+	
 	public function __construct(\Traversable $iterator, callable $callback)
 	{
 		parent::__construct($iterator);
 		$this->callback = $callback;
 	}
-
-    /**
-     * @return mixed
-     */
-	public function current(): mixed
-    {
-		return ($this->callback)(parent::current(), $this->key());
+	
+	
+	public function current()
+	{
+		return ($this->callback)(parent::current(), parent::key());
 	}
 }

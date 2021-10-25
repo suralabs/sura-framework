@@ -15,27 +15,27 @@ interface LangsInterface
     /**
      * @return array
      */
-    public static function getLangdate(): array;
+    public static function get_langdate(): array;
 
     /**
      * @return array
      */
-    public static function getLangs(): array;
+    public static function get_langs(): array;
 
     /**
      * Check language
      *
      * @return string
      */
-    public static function checkLang(): string;
+    public static function check_lang(): string;
 
     /**
      *
      */
-    public static function setLocale(): void;
+    public static function setlocale(): void;
 
     /**
      * @return array Languages list
      */
-    public static function langList(): array;
+    public static function lang_list(): array;
 }

@@ -72,6 +72,7 @@ class Request implements RequestInterface
         $_SERVER = $this->server;
 
         //$this->request = $_REQUEST = array_merge($this->get, $this->post, $this->cookie);
+        $this->request = $_REQUEST = array_merge($this->get, $this->post, $this->cookie);
         $this->request = $_REQUEST = array_merge($this->cookie, $this->get, $this->post );
     }
 
@@ -120,15 +121,15 @@ class Request implements RequestInterface
      */
     #[Pure] public function getClientIP() : string
     {
-        if (isset($this->server["HTTP_X_REAL_IP"]) && strcasecmp($this->server["HTTP_X_REAL_IP"], "unknown"))
+        if (isset($this->server["HTTP_X_REAL_IP"]) and strcasecmp($this->server["HTTP_X_REAL_IP"], "unknown"))
         {
             return $this->server["HTTP_X_REAL_IP"];
         }
-        if (isset($this->server["HTTP_CLIENT_IP"]) && strcasecmp($this->server["HTTP_CLIENT_IP"], "unknown"))
+        if (isset($this->server["HTTP_CLIENT_IP"]) and strcasecmp($this->server["HTTP_CLIENT_IP"], "unknown"))
         {
             return $this->server["HTTP_CLIENT_IP"];
         }
-        if (isset($this->server["HTTP_X_FORWARDED_FOR"]) && strcasecmp($this->server["HTTP_X_FORWARDED_FOR"], "unknown"))
+        if (isset($this->server["HTTP_X_FORWARDED_FOR"]) and strcasecmp($this->server["HTTP_X_FORWARDED_FOR"], "unknown"))
         {
             return $this->server["HTTP_X_FORWARDED_FOR"];
         }
@@ -168,15 +169,11 @@ class Request implements RequestInterface
         return isset($this->post['ajax']) and $this->post['ajax'] == 'yes';
     }
 
-    /**
-     * @return bool
-     * @throws \JsonException
-     */
-    public static function newcheckAjax(): bool
+    static public function newcheckAjax()
     {
         $json = file_get_contents('php://input');
         if (!empty($json)){
-            $obj = json_decode($json, TRUE, 512, JSON_THROW_ON_ERROR);
+            $obj = json_decode($json, TRUE);
 
             if ($obj['ajax'] == 'yes'){
                 return true;
@@ -187,7 +184,10 @@ class Request implements RequestInterface
 //            // Если к нам идёт Ajax запрос, то ловим его
 //            return true;
 //        }else
-        return isset($_POST['ajax']) && $_POST['ajax'] == 'yes';
+            if (isset($_POST['ajax']) and $_POST['ajax'] == 'yes'){
+            return true;
+        }
+        return false;
 
     }
 
@@ -198,7 +198,12 @@ class Request implements RequestInterface
      */
     public static function ajax() : bool
     {
-        return isset($_POST['ajax']) and $_POST['ajax'] == 'yes';
+        if (isset($_POST['ajax']) ){
+            return $_POST['ajax'] == 'yes';
+        }else {
+            return false;
+        }
+
     }
 
     /**

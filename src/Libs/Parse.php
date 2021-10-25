@@ -19,8 +19,14 @@ class Parse implements ParseInterface
 		
 		$source = preg_replace("#<iframe#i", "&lt;iframe", $source);
 		$source = preg_replace("#<script#i", "&lt;script", $source);
-
-        $source = str_ireplace(array("{", "`", "{theme}", "[/b]", "[b]", "[/i]", "[i]", "[/u]", "[u]"), array("&#123;", "&#96;", "&#123;theme}", "</b>", "<b>", "</i>", "<i>", "</u>", "<u>"), $source);
+		
+		$source = str_ireplace("{", "&#123;", $source);
+		$source = str_ireplace("`", "&#96;", $source);
+		$source = str_ireplace("{theme}", "&#123;theme}", $source);
+		
+		$source = str_ireplace("[b]", "<b>", str_ireplace("[/b]", "</b>", $source));
+		$source = str_ireplace("[i]", "<i>", str_ireplace("[/i]", "</i>", $source));
+		$source = str_ireplace("[u]", "<u>", str_ireplace("[/u]", "</u>", $source));
 		
 		$source = preg_replace("#\[(left|right|center)\](.+?)\[/\\1\]#is", "<div >\\2</div>", $source);
 		
@@ -58,31 +64,18 @@ class Parse implements ParseInterface
 			
 			
 			if ($exp['4']) {
-				if ($exp['4'] > 131) {
-                    $height = "height=\'131\'";
-                } else {
-                    $height = "height=\'{$exp['4']}\'";
-                }
+				if ($exp['4'] > 131) $height = "height=\'131\'"; else
+					$height = "height=\'{$exp['4']}\'";
 			}
 			
-			if ($exp['5']) {
-                $border = 'notes_videoborder';
-            }
+			if ($exp['5']) $border = 'notes_videoborder';
 			
-			if ($exp['6']) {
-                $blank = 'target="_blank"';
-            } else {
-                $blank = "onClick=\"videos.show({$exp['1']}, this.href, \'/notes/view/{note-id}\'); return false\"";
-            }
+			if ($exp['6']) $blank = 'target="_blank"'; else
+				$blank = "onClick=\"videos.show({$exp['1']}, this.href, \'/notes/view/{note-id}\'); return false\"";
 			
-			if ($exp['7'] == 1) {
-                $pos = "align=\"left\"";
-            } elseif ($exp['7'] == 2) {
-                $pos = "align=\"right\"";
-            }
-			else {
-                $pos = "";
-            }
+			if ($exp['7'] == 1) $pos = "align=\"left\""; elseif ($exp['7'] == 2) $pos = "align=\"right\"";
+			else
+				$pos = "";
 			
 			if (!$preview) {
 				$link = "<a href=\"/video{$exp['0']}_{$exp['1']}_sec=notes/id={note-id}\" {$blank}>";
@@ -123,24 +116,14 @@ class Parse implements ParseInterface
 			if ($exp['4']) if ($exp['4'] > 547) $height = "height=\'547\'"; else
 				$height = "height=\'{$exp['4']}\'";
 			
-			if ($exp['5']) {
-                $border = 'notes_videoborder';
-            }
+			if ($exp['5']) $border = 'notes_videoborder';
 			
-			if ($exp['6']) {
-                $blank = 'target="_blank"';
-            } else {
-                $blank = "onClick=\"Photo.Show(this.href); return false\"";
-            }
+			if ($exp['6']) $blank = 'target="_blank"'; else
+				$blank = "onClick=\"Photo.Show(this.href); return false\"";
 			
-			if ($exp['7'] == 1) {
-                $pos = "align=\"left\"";
-            } elseif ($exp['7'] == 2) {
-                $pos = "align=\"right\"";
-            }
-			else {
-                $pos = "";
-            }
+			if ($exp['7'] == 1) $pos = "align=\"left\""; elseif ($exp['7'] == 2) $pos = "align=\"right\"";
+			else
+				$pos = "";
 			
 			if ($exp['8'] and !$preview and $exp['0'] and $exp['1']) {
 				$link = "<a href=\"/photo{$exp['0']}_{$exp['1']}_sec=notes/id={note-id}\" {$blank}>";
@@ -153,11 +136,8 @@ class Parse implements ParseInterface
 				$elink = '';
 			}
 			
-			if ($exp['0'] && $exp['1']) {
-                $source = "<!--photo:{$source}-->{$link}<img class=\"notes_videopad {$border}\" src=\"{$exp['2']}\" {$width} {$height} {$pos} />{$elink}<!--/photo-->";
-            } else {
-                $source = "<!--photo:{$source}-->{$link}<img class=\"notes_videopad {$border}\" src=\"{$exp['2']}\" {$width} {$height} {$pos} />{$elink}<!--/photo-->";
-            }
+			if ($exp['0'] and $exp['1']) $source = "<!--photo:{$source}-->{$link}<img class=\"notes_videopad {$border}\" src=\"{$exp['2']}\" {$width} {$height} {$pos} />{$elink}<!--/photo-->"; else
+				$source = "<!--photo:{$source}-->{$link}<img class=\"notes_videopad {$border}\" src=\"{$exp['2']}\" {$width} {$height} {$pos} />{$elink}<!--/photo-->";
 		}
 		
 		return $source;
@@ -171,9 +151,7 @@ class Parse implements ParseInterface
 	{
 		$exp = explode('|', $source);
 		if ($exp['0']) {
-			if (!$exp['1']) {
-                $exp['1'] = $exp['0'];
-            }
+			if (!$exp['1']) $exp['1'] = $exp['0'];
 			$exp['0'] = str_replace(':', '', $exp[0]);
 			$source = "<!--link:{$source}--><a href=\"{$exp['0']}\" target=\"_blank\">{$exp['1']}</a><!--/link-->";
 		}
@@ -186,7 +164,12 @@ class Parse implements ParseInterface
 	 */
 	public function BBdecode(string $source): string
 	{
-        $source = str_ireplace(array("&#123;", "&#96;", "&#123;theme}", "</b>", "<b>", "</i>", "<i>", "</u>", "<u>"), array("{", "`", "{theme}", "[/b]", "[b]", "[/i]", "[i]", "[/u]", "[u]"), $source);
+		$source = str_ireplace("&#123;", "{", $source);
+		$source = str_ireplace("&#96;", "`", $source);
+		$source = str_ireplace("&#123;theme}", "{theme}", $source);
+		$source = str_ireplace("<b>", "[b]", str_ireplace("</b>", "[/b]", $source));
+		$source = str_ireplace("<i>", "[i]", str_ireplace("</i>", "[/i]", $source));
+		$source = str_ireplace("<u>", "[u]", str_ireplace("</u>", "[/u]", $source));
 		$source = preg_replace("#<div align=\"(left|right|center)\">(.+?)</div>#is", "[\\1]\\2[/\\1]", $source);
 		$source = preg_replace("#\[quote\](.+?)\[/quote\]#is", "<blockquote>\\1</blockquote>", $source);
 		$source = preg_replace("#<blockquote>(.+?)</blockquote>#is", "[quote]\\1[/quote]", $source);

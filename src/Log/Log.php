@@ -247,7 +247,7 @@ class Log
 
         $signature = serialize(array($handler, $name, $ident, $conf, $level));
         if (!isset($instances[$signature])) {
-            $instances[$signature] = self::factory($handler, $name, $ident,
+            $instances[$signature] = Log::factory($handler, $name, $ident,
                 $conf, $level);
         }
 
@@ -283,10 +283,9 @@ class Log
 
     /**
      * Abstract implementation of the log() method.
-     * @return bool
      * @since Log 1.0
      */
-    public function log(): bool
+    public function log($message, $priority = null): bool
     {
         return false;
     }
@@ -305,7 +304,7 @@ class Log
      */
     public function emerg(mixed $message): bool
     {
-        return $this->log();
+        return $this->log($message, PEAR_LOG_EMERG);
     }
 
     /**
@@ -322,7 +321,7 @@ class Log
      */
     public function alert(mixed $message): bool
     {
-        return $this->log();
+        return $this->log($message, PEAR_LOG_ALERT);
     }
 
     /**
@@ -339,7 +338,7 @@ class Log
      */
     public function crit(mixed $message): bool
     {
-        return $this->log();
+        return $this->log($message, PEAR_LOG_CRIT);
     }
 
     /**
@@ -356,7 +355,7 @@ class Log
      */
     public function err(mixed $message): bool
     {
-        return $this->log();
+        return $this->log($message, PEAR_LOG_ERR);
     }
 
     /**
@@ -373,7 +372,7 @@ class Log
      */
     public function warning(mixed $message): bool
     {
-        return $this->log();
+        return $this->log($message, PEAR_LOG_WARNING);
     }
 
     /**
@@ -390,7 +389,7 @@ class Log
      */
     public function notice(mixed $message): bool
     {
-        return $this->log();
+        return $this->log($message, PEAR_LOG_NOTICE);
     }
 
     /**
@@ -407,7 +406,7 @@ class Log
      */
     public function info(mixed $message): bool
     {
-        return $this->log();
+        return $this->log($message, PEAR_LOG_INFO);
     }
 
     /**
@@ -424,7 +423,7 @@ class Log
      */
     public function debug(mixed $message): bool
     {
-        return $this->log();
+        return $this->log($message, PEAR_LOG_DEBUG);
     }
 
     /**
@@ -590,7 +589,7 @@ class Log
         if (preg_match('/%[5678]/', $format)) {
             /* Plus 2 to account for our internal function calls. */
             $d = $this->_backtrace_depth + 2;
-            [$file, $line, $func, $class] = $this->_getBacktraceVars($d);
+            list($file, $line, $func, $class) = $this->_getBacktraceVars($d);
         }
 
         /*

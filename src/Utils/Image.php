@@ -234,7 +234,7 @@ class Image
      */
 	public static function detectTypeFromFile(string $file): ?int
 	{
-		$type = getimagesize($file)[2]; // @ - files smaller than 12 bytes causes read error
+		$type = @getimagesize($file)[2]; // @ - files smaller than 12 bytes causes read error
 		return isset(self::FORMATS[$type]) ? $type : null;
 	}
 
