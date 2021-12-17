@@ -4,16 +4,25 @@ declare(strict_types=1);
 
 namespace Sura\Contracts;
 
-use Sura\Libs\Db;
 
+/**
+ *
+ */
 interface ModuleInterface
 {
-    public function user_info() : string|array|null;
+    /**
+     * @return mixed
+     */
+    public function userInfo() : mixed;
 
+    /**
+     * @return bool|null
+     */
     public function logged() : bool|null;
 
-    public function db() : null|Db;
-
-    public function get_langs() : array;
+    /**
+     * @return array
+     */
+    public function getLangs() : array;
 
 }

@@ -8,10 +8,13 @@ namespace Sura;
  */
 class Console
 {
-	
-	function __construct($basePath = null)
+
+    /**
+     * @param null $basePath
+     */
+    function __construct($basePath = null)
 	{
-		$params = array();
+		$params = [];
 		$this->routing($params);
 	}
 	
@@ -40,10 +43,10 @@ class Console
 		$res = $path = explode('-', $go);
 		$res = $res['1'];
 		$url = explode(':', $res);
-		$controllerName = ucfirst($url['0'] . 'Controller');
-		$actionName = 'Console' . ucfirst($url['1']);
-		$class = 'App\Modules\\' . $controllerName;
-		$foo = new $class();
-		return call_user_func_array(array($foo, $actionName), $params);
+		$controller_name = ucfirst($url['0'] . 'Controller');
+		$action_name = 'Console' . ucfirst($url['1']);
+		$class = 'App\Modules\\' . $controller_name;
+		$controller = new $class();
+		return call_user_func_array([$controller, $action_name], $params);
 	}
 }

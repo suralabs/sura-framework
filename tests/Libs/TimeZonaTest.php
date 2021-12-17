@@ -1,6 +1,6 @@
 <?php
 
-namespace Sura\Libs;
+namespace Libs;
 
 use Sura\Libs\TimeZona;
 use PHPUnit\Framework\TestCase;

@@ -5,12 +5,15 @@ namespace Sura\Time;
 
 use Sura\Contracts\ZoneInterface;
 
+/**
+ *
+ */
 abstract class Zone implements ZoneInterface
 {
     /**
      * @var array|string[]
      */
-    private static array $time_zone = array(
+    private static array $timeZone = [
         0 => 'Europe/Moscow',
         1 => 'Europe/Kiev',
         2 => 'Pacific/Samoa',
@@ -37,7 +40,7 @@ abstract class Zone implements ZoneInterface
         23 => 'Asia/Vladivostok',
         24 => 'Australia/Sydney',
         25 => 'Asia/Kamchatka',
-    );
+    ];
 	
 	/**
 	 * Set timezone
@@ -47,7 +50,7 @@ abstract class Zone implements ZoneInterface
 	 */
 	public static function zone(int $id): bool
 	{
-		return date_default_timezone_set(self::$time_zone[$id]);
+		return date_default_timezone_set(self::$timeZone[$id]);
 	}
 
 	/**
@@ -57,11 +60,11 @@ abstract class Zone implements ZoneInterface
 	 */
 	public static function list(): string
 	{
-		$row = '';
-		$time_zone = self::$time_zone;
+		$zone_list = '';
+		$time_zone = self::$timeZone;
 		foreach ($time_zone as $key => $value) {
-			$row .= '<option value="' . $key . '">' . $value . '</option>';
+			$zone_list .= '<option value="' . $key . '">' . $value . '</option>';
 		}
-        return $row;
+        return $zone_list;
     }
 }

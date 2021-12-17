@@ -1,6 +1,6 @@
 <?php
 
-namespace Sura\Libs;
+namespace Libs;
 
 use Sura\Libs\Auth;
 use PHPUnit\Framework\TestCase;

@@ -10,9 +10,8 @@ class ValidationTest extends TestCase
     public function testStrip_data(): string
     {
         $text = 'foo';
-        $instance = 'foo';
 
-//        $instance = Validation::strip_data($text);
+        $instance = Validation::stripData($text);
 
         self::assertEquals('foo', $instance);
 
@@ -23,7 +22,7 @@ class ValidationTest extends TestCase
     {
         $text = "foo\r";
 
-        $instance = Validation::replace_rn($text);
+        $instance = Validation::replaceRn($text);
 
         self::assertEquals('foo', $instance);
 
@@ -45,7 +44,7 @@ class ValidationTest extends TestCase
     {
         $text = "foo\r";
 
-        $instance = Validation::rn_replace($text);
+        $instance = Validation::rnReplace($text);
 
         self::assertEquals('foo', $instance);
 
@@ -100,12 +99,12 @@ class ValidationTest extends TestCase
         self::assertNotFalse(true);
     }
 
-    public function testcheck_name(): bool
+    public function testcheck_name(): bool|string
     {
         //Проверка имени
-        $instance = Validation::check_name('Иван');
+        $instance = Validation::checkName('Иван');
 
-        self::assertEquals(true, $instance);
+        self::assertEquals('Иван', $instance);
 
         return $instance;
 
@@ -115,9 +114,9 @@ class ValidationTest extends TestCase
     {
 
         //Проверка имени
-        $instance = Validation::check_email('example@example.com');
+        $instance = Validation::checkEmail('example@example.com');
 
-        self::assertEquals(true, $instance);
+        self::assertEquals('example@example.com', $instance);
 
         return $instance;
 
@@ -127,9 +126,9 @@ class ValidationTest extends TestCase
     {
         //Проверка имени
         //don`t use password qwerty10
-        $instance = Validation::check_password('qwerty10', 'qwerty10');
+        $instance = Validation::checkPassword('qwerty10', 'qwerty10');
 
-        self::assertEquals(true, $instance);
+        self::assertEquals('qwerty10', $instance);
 
         return $instance;
 
@@ -137,7 +136,12 @@ class ValidationTest extends TestCase
 
     public function testcheck_password2(): bool
     {
-         $password2 = 'rasmuslerdorf';
+        $password1 = Validation::checkPassword('rasmuslerdorf', 'rasmuslerdorf');
+        $pass_hash1 = password_hash($password1, PASSWORD_DEFAULT);
+
+        //Проверка имени
+        //don`t use password qwerty10
+        $password2 = Validation::checkPassword('rasmuslerdorf', 'rasmuslerdorf');
         $pass_hash2 = password_hash($password2, PASSWORD_DEFAULT);
 
         $instance = password_verify('rasmuslerdorf', $pass_hash2);
@@ -145,5 +149,18 @@ class ValidationTest extends TestCase
 
         return $instance;
 
+    }
+
+    public function testcheck_password3(): void
+    {
+        // Смотрите пример использования password_hash(), для понимания откуда это взялось.
+        $hash = '$2y$10$rkadTE2AWb2CwFK/0J9fbetb4IWTVdgTibsnM4UaFr0D5pl0za2ci';
+        $instance = password_verify('Hec2GugBed', $hash);
+        if ($instance) {
+            echo 'Пароль правильный!';
+        } else {
+            echo 'Пароль неправильный.';
+        }
+        self::assertEquals(true, $instance);
     }
 }

@@ -22,9 +22,9 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	 */
 	public static function from(array $array, bool $recursive = true): static
 	{
-		$obj = new static;
-		foreach ($array as $key => $value) {
-			$obj->$key = $recursive && is_array($value)
+		$obj = new static();
+		foreach ($array as $offset => $value) {
+			$obj->$offset = $recursive && is_array($value)
 				? static::from($value, true)
 				: $value;
 		}
@@ -52,46 +52,46 @@ class ArrayHash extends \stdClass implements \ArrayAccess, \Countable, \Iterator
 	
 	/**
 	 * Replaces or appends a item.
-	 * @param string|int $key
+	 * @param string|int $offset
 	 * @param mixed $value
 	 */
-	public function offsetSet($key, mixed $value): void
+	public function offsetSet($offset, mixed $value): void
 	{
-		if (!is_scalar($key)) { // prevents null
-			throw new InvalidArgumentException(sprintf('Key must be either a string or an integer, %s given.', gettype($key)));
+		if (!is_scalar($offset)) { // prevents null
+			throw new InvalidArgumentException(sprintf('Key must be either a string or an integer, %s given.', gettype($offset)));
 		}
-		$this->$key = $value;
+		$this->$offset = $value;
 	}
 	
 	
 	/**
 	 * Returns a item.
-	 * @param  string|int  $key
+	 * @param  string|int  $offset
 	 * @return mixed
 	 */
-	public function offsetGet($key): mixed
+	public function offsetGet($offset): mixed
     {
-		return $this->$key;
+		return $this->$offset;
 	}
 
 
 	/**
 	 * Determines whether a item exists.
-	 * @param string|int $key
+	 * @param string|int $offset
 	 * @return bool
 	 */
-	public function offsetExists($key): bool
+	public function offsetExists($offset): bool
 	{
-		return isset($this->$key);
+		return isset($this->$offset);
 	}
 	
 	
 	/**
 	 * Removes the element from this list.
-	 * @param  string|int  $key
+	 * @param  string|int  $offset
 	 */
-	public function offsetUnset($key): void
+	public function offsetUnset($offset): void
 	{
-		unset($this->$key);
+		unset($this->$offset);
 	}
 }

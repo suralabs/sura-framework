@@ -16,7 +16,7 @@ use Sura\Contracts\RegistryInterface;
 class Registry implements RegistryInterface
 {
     /** Статическое хранилище для данных */
-    protected static array $store = array();
+    protected static array $store = [];
 
     /** Защита от создания экземпляров статического класса */
     protected function __construct()

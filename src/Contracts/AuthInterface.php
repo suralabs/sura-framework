@@ -18,5 +18,5 @@ interface AuthInterface
      * logout site
      * @param bool $redirect
      */
-    public static function logout($redirect = false): void;
+    public static function logout(bool $redirect): void;
 }

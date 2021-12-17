@@ -4,16 +4,47 @@ declare(strict_types=1);
 
 namespace Sura\Contracts;
 
+/**
+ *
+ */
 interface GramaticInterface
 {
-    public static function DeclName(string $name, string $declination);
+    /**
+     * @param string $name
+     * @param string $declination
+     * @return mixed
+     */
+    public static function DeclName(string $name, string $declination): mixed;
 
-    public static function totranslit(string $var, bool $lower = true, bool $punkt = true);
+    /**
+     * @param string $var
+     * @param bool $lower
+     * @param bool $punkt
+     * @return mixed
+     */
+    public static function totranslit(string $var, bool $lower = true, bool $punkt = true): mixed;
 
-    public static function declOfNum(int $number, array $titles);
+    /**
+     * @param int $number
+     * @param array $titles
+     * @return mixed
+     */
+    public static function declOfNum(int $number, array $titles): mixed;
 
-    public static function gramatikName(string $name);
+    /**
+     * @param string $name
+     * @return mixed
+     */
+    public static function gramatikName(string $name): mixed;
 
-    public static function newGram(int $num, $a, $b, $c, bool $t = false);
+    /**
+     * @param int $num
+     * @param $a
+     * @param $b
+     * @param $c
+     * @param bool $t
+     * @return mixed
+     */
+    public static function newGram(int $num, $a, $b, $c, bool $t = false): mixed;
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sura\Libs;
+namespace Libs;
 
 use Sura\Libs\Gramatic;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +28,7 @@ class GramaticTest extends TestCase
 
     public function testTotranslit()
     {
-        echo Gramatic::toTranslit('Андрей', true, true);
+        echo Gramatic::totranslit('Андрей', true, true);
         $this->expectOutputString('andrey');
     }
 

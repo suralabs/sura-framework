@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Sura\Libs;
 
 use Sura\Contracts\ModuleInterface;
+use Sura\Database\Connection;
 
 /**
  *  Module
@@ -11,7 +12,7 @@ use Sura\Contracts\ModuleInterface;
  */
 class Module implements ModuleInterface
 {
-    private static ?\Sura\Database\Connection $database = null;
+    private static ?Connection $database = null;
 
     /**
      * Model constructor.
@@ -25,7 +26,10 @@ class Module implements ModuleInterface
         self::$database = self::getDB();
     }
 
-    public static function getDB(): \Sura\Database\Connection
+    /**
+     * @return Connection
+     */
+    public static function getDB(): Connection
     {
         if (self::$database == null) {
             $config = Settings::load();
@@ -36,40 +40,37 @@ class Module implements ModuleInterface
 
 //            $database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
 
-            self::$database = new \Sura\Database\Connection($dsn, $user, $password);
+            self::$database = new Connection($dsn, $user, $password);
         }
         return self::$database;
     }
 
-	/**
-	 * @return string|array|null
-	 */
-	public function user_info(): string|array|null
-	{
-		return Registry::get('user_info');
-	}
-	
-	/**
-	 * @return bool
-	 */
-	public function logged(): bool|null
-	{
-		return Registry::get('logged');
-	}
-	
-	/**
-	 * @return \Sura\Libs\Db|null
-	 */
-	public function db(): null|Db
-	{
-		return Db::getDB();
-	}
-	
-	/**
-	 * @return array
-	 */
-	public function get_langs(): array
-	{
-		return Langs::get_langs();
-	}
+    /**
+     * @return string|array|null
+     */
+    public function userInfo($params = 'none'): mixed
+    {
+        if ($params == 'none')
+            return Registry::get('user_info');
+        else {
+            $user_info = Registry::get('user_info');
+            return $user_info[$params];
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function logged(): bool|null
+    {
+        return Registry::get('logged');
+    }
+
+    /**
+     * @return array
+     */
+    public function getLangs(): array
+    {
+        return Langs::getLangs();
+    }
 }

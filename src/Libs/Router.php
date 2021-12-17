@@ -74,18 +74,18 @@ class Router implements RouterInterface
 		$server = $requests->server;
 		$method = $requests->getMethod();
 		if (isset($server['REQUEST_URI'])) {
-			$uri = $server['REQUEST_URI'];
+			$uri_data = $server['REQUEST_URI'];
 		} elseif (!empty($config['home_url'])) {
-			$uri = $config['home_url'];
+            $uri_data = $config['home_url'];
 		} else {
-			$uri = '';
+            $uri_data = '';
 			echo 'error: non url';
 		}
-		if (false !== $pos = strpos($uri, '?')) {
-			$uri = substr($uri, 0, $pos);
+		if (false !== $pos__ = strpos($uri_data, '?')) {
+            $uri_data = substr($uri_data, 0, $pos__);
 		}
-		$uri = rawurldecode($uri);
-		return new static($uri, $method);
+        $uri_data = rawurldecode($uri_data);
+		return new static($uri_data, $method);
 	}
 	
 	/**
@@ -171,7 +171,7 @@ class Router implements RouterInterface
 	public function add(array|string $route, callable|null|string $handler = null): Router
 	{
 		if ($handler !== null && !is_array($route)) {
-			$route = array($route => $handler);
+			$route = [$route => $handler];
 		}
 		self::$routes = array_merge(self::$routes, $route);
 		return $this;
@@ -183,29 +183,29 @@ class Router implements RouterInterface
 	 */
 	public function isFound(): bool
 	{
-		$uri = self::getRequestUri();
+		$uri_data = self::getRequestUri();
 		
 		/**
 		 *  if URI equals to route
 		 */
-		if (isset(self::$routes[$uri])) {
-			self::$requestHandler = self::$routes[$uri];
+		if (isset(self::$routes[$uri_data])) {
+			self::$requestHandler = self::$routes[$uri_data];
 			return true;
 		}
 		
-		$find = array_keys(self::$placeholders);
+		$find_placeholder = array_keys(self::$placeholders);
 		$replace = array_values(self::$placeholders);
 		foreach (self::$routes as $route => $handler) {
 			/**
 			 *  Replace wildcards by regex
 			 */
 			if (str_contains($route, ':')) {
-				$route = str_replace($find, $replace, $route);
+				$route = str_replace($find_placeholder, $replace, $route);
 			}
 			/**
 			 *  Route rule matched
 			 */
-			if (preg_match('#^' . $route . '$#', $uri, $matches)) {
+			if (preg_match('#^' . $route . '$#', $uri_data, $matches)) {
 				self::$requestHandler = $handler;
 				self::$params = array_slice($matches, 1);
 				return true;
@@ -222,10 +222,10 @@ class Router implements RouterInterface
 	 * @param array $params
 	 * @return mixed
 	 */
-	public function executeHandler(callable|null|string $handler = null, array $params = array()): mixed
+	public function executeHandler(callable|null|string $handler = null, array $params = []): mixed
 	{
 		if ($handler === null) {
-			throw SuraException::Error('Request handler not setted out. Please check ' . __CLASS__ . '::isFound() first');
+			throw SuraException::error('Request handler not setted out. Please check ' . __CLASS__ . '::isFound() first');
 		}
 		
 		// execute action in callable
@@ -241,20 +241,20 @@ class Router implements RouterInterface
 			
 			if (class_exists('\\App\\Modules\\' . $controller_name)) {
 				if (!method_exists('\\App\\Modules\\' . $controller_name, $action)) {
-					throw SuraException::Error("Method '\\App\\Modules\\{$controller_name}::{$action}()' not found");
+					throw SuraException::error("Method '\\App\\Modules\\{$controller_name}::{$action}()' not found");
 				}
 				
 				$class = 'App\Modules\\' . $controller_name;
-				$foo = new $class();
+                $controller = new $class();
 				
 				$params['params'] = '';
-				$params = array($params);
+				$params = [$params];
 //                return call_user_func_array(array($foo, $action), array());
-				return call_user_func_array(array($foo, $action), $params);
+				return call_user_func_array([$controller, $action], $params);
 			}
 			
-			throw SuraException::Error("Class '{$controller_name}' not found");
+			throw SuraException::error("Class '{$controller_name}' not found");
 		}
-		throw SuraException::Error("Execute handler error");
+		throw SuraException::error('Execute handler error');
 	}
 }

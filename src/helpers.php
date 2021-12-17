@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Sura;
 
 use JetBrains\PhpStorm\Pure;
+use App\Application;
 
 if (!function_exists('e')) {
 	/**
@@ -17,24 +19,6 @@ if (!function_exists('e')) {
 	}
 }
 
-if (!function_exists('check_smartphone')) {
-	#[Pure] function check_smartphone(): bool
-	{
-		
-		if (isset($_SESSION['mobile_enable'])) {
-			return true;
-		}
-		$phone_array = array('iphone', 'android', 'pocket', 'palm', 'windows ce', 'windowsce', 'mobile windows', 'cellphone', 'opera mobi', 'operamobi', 'ipod', 'small', 'sharp', 'sonyericsson', 'symbian', 'symbos', 'opera mini', 'nokia', 'htc_', 'samsung', 'motorola', 'smartphone', 'blackberry', 'playstation portable', 'tablet browser', 'android');
-		$agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-		foreach ($phone_array as $value) {
-			if (str_contains($agent, $value)) {
-				return true;
-			}
-		}
-		return false;
-	}
-}
-
 /**
  * Get the available container instance.
  *
@@ -45,10 +29,10 @@ if (!function_exists('check_smartphone')) {
 function app($abstract = null, array $parameters = []): mixed
 {
 	if (is_null($abstract)) {
-		return \App\Application::getInstance();
+		return Application::getInstance();
 	}
 	
-	return \App\Application::getInstance()->make($abstract, $parameters);
+	return Application::getInstance()->make($abstract, $parameters);
 }
 
 /**
@@ -59,5 +43,5 @@ function app($abstract = null, array $parameters = []): mixed
  */
 function resolve(string $name): mixed
 {
-	return \Sura\app($name);
+	return app($name);
 }

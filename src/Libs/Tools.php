@@ -5,6 +5,7 @@ namespace Sura\Libs;
 
 use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
+use Sura\Exception\SuraException;
 use Sura\Utils\DateTime;
 
 /**
@@ -18,10 +19,10 @@ class Tools
 	 * @param $url
 	 * @return string
 	 */
-	public static function clean_url(string $url): string
+	public static function cleanUrl(string $url): string
 	{
-		$url = str_replace(array("http://", "https://"), "", strtolower($url));
-		if (substr($url, 0, 4) == 'www.') {
+		$url = str_replace(['https://', 'https://'], "", strtolower($url));
+		if (str_starts_with($url, 'www.')) {
 			$url = substr($url, 4);
 		}
 		$url = explode('/', $url);
@@ -34,10 +35,10 @@ class Tools
 	/**
 	 * @return string
 	 */
-	public static function domain_cookie(): string
+	public static function domainCookie(): string
 	{
 		
-		$domain_cookie = explode(".", self::clean_url($_SERVER['HTTP_HOST']));
+		$domain_cookie = explode('.', self::cleanUrl($_SERVER['HTTP_HOST']));
 		$domain_cookie_count = count($domain_cookie);
 		$domain_allow_count = -2;
 		
@@ -63,7 +64,7 @@ class Tools
 	 * @param $value
 	 * @param $expires
 	 */
-	public static function set_cookie(string $name, string $value, int $expires): void
+	public static function setCookie(string $name, string $value, int $expires): void
 	{
 		if ($expires) {
 			$expires = time() + ($expires * 86400);
@@ -71,7 +72,7 @@ class Tools
 			$expires = time() + ($expires * 86400);
 //            $expires = FALSE;
 		}
-		$domain = self::domain_cookie();
+		$domain = self::domainCookie();
 		
 		setcookie($name, $value, $expires, "/", $domain, true, true);
 	}
@@ -81,7 +82,7 @@ class Tools
 	 */
 	public static function NoAjaxQuery(string $url = ''): void
 	{
-		if (self::clean_url($_SERVER['HTTP_REFERER']) !== self::clean_url($_SERVER['HTTP_HOST']) and $_SERVER['REQUEST_METHOD'] != 'POST') {
+		if (self::cleanUrl($_SERVER['HTTP_REFERER']) !== self::cleanUrl($_SERVER['HTTP_HOST']) and $_SERVER['REQUEST_METHOD'] != 'POST') {
 			if ($url !== '') {
 				header('Location: ' . $url);
 			} else {
@@ -122,20 +123,20 @@ class Tools
 	{
 		return str_replace('val="' . $id . '" class="', 'val="' . $id . '" class="active ', $options);
 	}
-	
-	//deprecated
+
+    //eprecated
 	
 	/**
 	 * check xss
 	 */
-	public static function check_xss(): void
+	public static function checkXss(): void
 	{
 		$url = html_entity_decode(urldecode($_SERVER['QUERY_STRING']));
 		
 		if ($url) {
 			if ((str_contains($url, '<')) || (str_contains($url, '>')) || (str_contains($url, '"')) || (str_contains($url, './')) || (str_contains($url, '../')) || (str_contains($url, '\'')) || (str_contains($url, '.php'))) {
-				if ($_GET['go'] != "search" and $_GET['go'] != "messages") {
-					throw \Sura\Exception\SuraException::Error('Hacking attempt!');
+				if ($_GET['go'] != 'search' and $_GET['go'] != 'messages') {
+					throw SuraException::error('Hacking attempt!');
 				}
 			}
 		}
@@ -143,7 +144,7 @@ class Tools
 		$url = html_entity_decode(urldecode($_SERVER['REQUEST_URI']));
 		if ($url) {
 			if ((str_contains($url, '<')) || (str_contains($url, '>')) || (str_contains($url, '"')) || (str_contains($url, '\''))) {
-				if ($_GET['go'] != "search" and $_GET['go'] != "messages") die('Hacking attempt!');
+				if ($_GET['go'] != 'search' and $_GET['go'] != 'messages') die('Hacking attempt!');
 			}
 		}
 	}
@@ -158,8 +159,8 @@ class Tools
 	 * @return mixed
 	 */
 	//TODO update code
-	public static function navigation($limit, $num, $id, $function, $act)
-	{
+	public static function navigation($limit, $num, $id, $function, $act): mixed
+    {
 		if (isset($_GET['page']) and $_GET['page'] > 0) $page = (int)$_GET['page']; else
 			$page = 1;
 

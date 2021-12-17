@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace Sura\Libs;
 
+use Sura\Database\Connection;
 
 abstract class Model
 {
-	private static ?\Sura\Database\Connection $database = null;
+	private static ?Connection $database = null;
 	
 	/**
 	 * Model constructor.
@@ -17,12 +18,12 @@ abstract class Model
 	 */
 	public function __construct()
 	{
-
-
-//        $this->$database = self::getDB();
 	}
-	
-	public static function getDB(): \Sura\Database\Connection
+
+    /**
+     * @return Connection
+     */
+    public static function getDB(): Connection
 	{
 		if (self::$database == null) {
 			$config = Settings::load();
@@ -31,9 +32,7 @@ abstract class Model
 			$user = $config['dbuser'];
 			$password = $config['dbpass'];
 
-//            $database = new \Sura\Database\Connection($dsn, $user, $password); // the same arguments as uses PDO
-			
-			self::$database = new \Sura\Database\Connection($dsn, $user, $password);
+			self::$database = new Connection($dsn, $user, $password);
 		}
 		return self::$database;
 	}

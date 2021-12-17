@@ -25,9 +25,12 @@ class CachingIterator extends \CachingIterator implements \Countable
 	
 	/** @var int */
 	private int $counter = 0;
-	
-	
-	public function __construct($iterator)
+
+
+    /**
+     * @throws \Exception
+     */
+    public function __construct($iterator)
 	{
 		if (is_array($iterator) || $iterator instanceof \stdClass) {
 			$iterator = new \ArrayIterator($iterator);
@@ -39,7 +42,7 @@ class CachingIterator extends \CachingIterator implements \Countable
 			assert($iterator instanceof \Iterator);
 			
 		} elseif ($iterator instanceof \Iterator) {
-//fixme empty
+            //fixme empty
 		} elseif ($iterator instanceof \Traversable) {
 			$iterator = new \IteratorIterator($iterator);
 		} else {
@@ -147,9 +150,9 @@ class CachingIterator extends \CachingIterator implements \Countable
 	
 	/**
 	 * Returns the next key.
-	 * @return mixed
-	 */
-	public function getNextKey(): mixed
+	 * @return string|int|bool|float|null
+     */
+	public function getNextKey(): string|int|bool|null|float
     {
 		return $this->getInnerIterator()->key();
 	}

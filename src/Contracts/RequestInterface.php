@@ -38,8 +38,14 @@ interface RequestInterface
      */
     public static function ajax(): bool;
 
+    /**
+     * @return mixed
+     */
     public static function newcheckAjax();
 
+    /**
+     * @return Request
+     */
     public static function getRequest(): Request;
 
     /**
@@ -81,6 +87,9 @@ interface RequestInterface
      */
     public function unsetGlobal(): void;
 
+    /**
+     * @return string
+     */
     public function getMethod(): string;
 
     /**

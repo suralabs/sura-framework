@@ -44,6 +44,9 @@ class Request implements RequestInterface
 
     }
 
+    /**
+     * @return Request
+     */
     public static function getRequest() : Request
     {
         if (self::$requests == null) {
@@ -103,7 +106,7 @@ class Request implements RequestInterface
     {
 //        $_REQUEST = $_SESSION = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
 //        $_REQUEST = $_COOKIE = $_FILES = $_POST = $_SERVER = $_GET = array();
-        $_REQUEST = $_COOKIE = $_POST = $_SERVER = $_GET = array();
+        $_REQUEST = $_COOKIE = $_POST = $_SERVER = $_GET = [];
     }
 
     /**
@@ -121,23 +124,23 @@ class Request implements RequestInterface
      */
     #[Pure] public function getClientIP() : string
     {
-        if (isset($this->server["HTTP_X_REAL_IP"]) and strcasecmp($this->server["HTTP_X_REAL_IP"], "unknown"))
+        if (isset($this->server['HTTP_X_REAL_IP']) and strcasecmp($this->server['HTTP_X_REAL_IP'], 'unknown'))
         {
-            return $this->server["HTTP_X_REAL_IP"];
+            return $this->server['HTTP_X_REAL_IP'];
         }
-        if (isset($this->server["HTTP_CLIENT_IP"]) and strcasecmp($this->server["HTTP_CLIENT_IP"], "unknown"))
+        if (isset($this->server['HTTP_CLIENT_IP']) and strcasecmp($this->server['HTTP_CLIENT_IP'], 'unknown'))
         {
-            return $this->server["HTTP_CLIENT_IP"];
+            return $this->server['HTTP_CLIENT_IP'];
         }
-        if (isset($this->server["HTTP_X_FORWARDED_FOR"]) and strcasecmp($this->server["HTTP_X_FORWARDED_FOR"], "unknown"))
+        if (isset($this->server['HTTP_X_FORWARDED_FOR']) and strcasecmp($this->server['HTTP_X_FORWARDED_FOR'], 'unknown'))
         {
-            return $this->server["HTTP_X_FORWARDED_FOR"];
+            return $this->server['HTTP_X_FORWARDED_FOR'];
         }
-        if (isset($this->server["REMOTE_ADDR"]))
+        if (isset($this->server['REMOTE_ADDR']))
         {
-            return $this->server["REMOTE_ADDR"];
+            return $this->server['REMOTE_ADDR'];
         }
-        return "";
+        return '';
     }
 
     /**
@@ -147,13 +150,16 @@ class Request implements RequestInterface
      */
     public function getClientAGENT() : string
     {
-        if (isset($this->server["HTTP_USER_AGENT"]))
+        if (isset($this->server['HTTP_USER_AGENT']))
         {
-            return $this->server["HTTP_USER_AGENT"];
+            return $this->server['HTTP_USER_AGENT'];
         }
-        return "";
+        return '';
     }
 
+    /**
+     * @return string
+     */
     #[Pure] public function getMethod(): string
     {
         return getenv('REQUEST_METHOD');
@@ -169,7 +175,10 @@ class Request implements RequestInterface
         return isset($this->post['ajax']) and $this->post['ajax'] == 'yes';
     }
 
-    static public function newcheckAjax()
+    /**
+     * @return bool
+     */
+    public static function newcheckAjax(): bool
     {
         $json = file_get_contents('php://input');
         if (!empty($json)){
