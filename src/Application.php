@@ -75,19 +75,17 @@ class Application extends Container
         try {
             $this->routing();
         } catch (Exception $error) {
-//            $params = array();
             $class = 'App\Modules\ErrorController';
             $controller = new $class();
             $params['error'] = 'Error: ' . $error->getLine();
             $params['error_name'] = 'Error: ' . $error->getMessage();
-            echo call_user_func_array([$controller, 'index'], [$params]);
+            call_user_func_array([$controller, 'index'], [$params]);
         } catch (Throwable $error) {
-//            $params = array();
             $class = 'App\Modules\ErrorController';
             $controller = new $class();
             $params['error'] = 'Error: ' . $error->getLine() . $error->getFile();
             $params['error_name'] = $error->getMessage();
-            echo call_user_func_array([$controller, 'index'], [$params]);
+            call_user_func_array([$controller, 'index'], [$params]);
         }
     }
 
