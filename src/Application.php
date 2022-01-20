@@ -9,6 +9,7 @@ use JetBrains\PhpStorm\Pure;
 use Sura\Container\Container;
 use Sura\Libs\Router;
 use Sura\Libs\Settings;
+use Sura\Log\Log;
 use Throwable;
 
 /**
@@ -20,7 +21,7 @@ class Application extends Container
     /**
      * VERSION
      */
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.0.4';
 
     /**
      * The base path for the Sura installation.
@@ -80,12 +81,14 @@ class Application extends Container
             $params['error'] = 'Error: ' . $error->getLine();
             $params['error_name'] = 'Error: ' . $error->getMessage();
             call_user_func_array([$controller, 'index'], [$params]);
+            (new Log)->warning($error->getMessage(),  ['Line' => $error->getLine()]);
         } catch (Throwable $error) {
             $class = 'App\Modules\ErrorController';
             $controller = new $class();
             $params['error'] = 'Error: ' . $error->getLine() . $error->getFile();
             $params['error_name'] = $error->getMessage();
             call_user_func_array([$controller, 'index'], [$params]);
+            (new Log)->warning($error->getMessage(),  ['Line' => $error->getLine(), 'File' => $error->getFile(),]);
         }
     }
 
