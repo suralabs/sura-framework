@@ -4,13 +4,6 @@
     "keywords": ["framework", "sura","router", "mvc"],
     "license": "MIT",
     "type": "library",
-    "authors": [
-      {
-          "name": "Semen Alekseev",
-          "email": "semyon492@ya.ru",
-          "homepage": "https://qd2.ru/"
-      }
-    ],
     "require": {
       "php": "^8.0",
       "ext-json": "*",
@@ -24,6 +17,13 @@
       "ext-dom": "*",
       "ext-simplexml": "*"
     },
+    "authors": [
+      {
+          "name": "Semen Alekseev",
+          "email": "semyon492@ya.ru",
+          "homepage": "https://qd2.ru/"
+      }
+    ],
     "require-dev": {
       "phpunit/phpunit": "^9.5"
     },

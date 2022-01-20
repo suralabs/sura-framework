@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Sura;
 
 use Exception;
-use Sura\Libs\Settings;
-use Throwable;
 use InvalidArgumentException;
 use JetBrains\PhpStorm\Pure;
 use Sura\Container\Container;
 use Sura\Libs\Router;
+use Sura\Libs\Settings;
+use Throwable;
 
 /**
  * Class Application
@@ -125,7 +125,7 @@ class Application extends Container
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function routing()
     {
