@@ -1,0 +1,48 @@
+type:build:
+  - ".github/**/*"
+  - ".coveralls.yml"
+  - ".gitignore"
+  - "phpcs.xml"
+
+dependencies:
+  - "composer.json"
+  - "composer.lock"
+
+type:helper:
+  - "src/Helpers/**/*"
+  - "src/Support/**/*"
+  - "src/Traits/**/*"
+  - "src/helpers.php"
+
+type:collections:
+  - "src/Collections/**/*"
+
+type:providers:
+  - "src/Providers/**/*"
+  - "src/Schema/**/*"
+  - "src/Types/**/*"
+  - "src/LTreeExtension.php"
+
+type:resources:
+  - "src/Resources/**/*"
+
+type:relations:
+  - "src/Relations/**/*"
+
+type:services:
+  - "src/Services/**/*"
+  - "src/Exceptions/**/*"
+
+type:interfaces:
+  - "src/Interfaces/**/*"
+  - "src/Contracts/**/*"
+
+type:tests:
+  - 'tests/**/*'
+  - 'phpunit.xml.dist'
+
+theme:docs:
+  - "README.md"
+  - "LICENSE"
+  - "CONTRIBUTING.md"
+  - "CODE_OF_CONDUCT.md"
