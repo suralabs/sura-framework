@@ -56,7 +56,6 @@ version-resolver:
       - 'theme:docs'
   patch:
     labels:
-      - patch
       - bug
       - bugfix
       - hotfix
