@@ -14,23 +14,7 @@ type:helper:
   - "src/Traits/**/*"
   - "src/helpers.php"
 
-type:collections:
-  - "src/Collections/**/*"
-
-type:providers:
-  - "src/Providers/**/*"
-  - "src/Schema/**/*"
-  - "src/Types/**/*"
-  - "src/LTreeExtension.php"
-
-type:resources:
-  - "src/Resources/**/*"
-
-type:relations:
-  - "src/Relations/**/*"
-
-type:services:
-  - "src/Services/**/*"
+type:exceptions:
   - "src/Exceptions/**/*"
 
 type:interfaces:
