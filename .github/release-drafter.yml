@@ -12,13 +12,8 @@ categories:
     labels:
       - 'feature'
       - 'type:helper'
-      - 'type:collections'
-      - 'type:providers'
-      - 'type:resources'
-      - 'type:relations'
-      - 'type:services'
+      - 'type:exceptions'
       - 'type:interfaces'
-      - 'type:services'
   - title: '🐛 Bug Fixes'
     labels:
       - 'fix'
@@ -44,15 +39,11 @@ version-resolver:
   minor:
     labels:
       - feature
+      - 'type:feature'
       - minor
       - 'type:helper'
-      - 'type:collections'
-      - 'type:providers'
-      - 'type:resources'
-      - 'type:relations'
-      - 'type:services'
+      - 'type:exceptions'
       - 'type:interfaces'
-      - 'type:services'
       - 'theme:docs'
   patch:
     labels:
