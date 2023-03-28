@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "sura/database",
-            "version": "0.1.1",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Sura-framework/sura-database.git",
-                "reference": "3025c31d19b737abcdc7e322011fa83ce33fc3a1"
+                "reference": "6164ba57c5f4958566bb019224c17bdd89a2c007"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sura-framework/sura-database/zipball/3025c31d19b737abcdc7e322011fa83ce33fc3a1",
-                "reference": "3025c31d19b737abcdc7e322011fa83ce33fc3a1",
+                "url": "https://api.github.com/repos/Sura-framework/sura-database/zipball/6164ba57c5f4958566bb019224c17bdd89a2c007",
+                "reference": "6164ba57c5f4958566bb019224c17bdd89a2c007",
                 "shasum": ""
             },
             "require": {
@@ -29,7 +29,7 @@
                 "phpunit/phpunit": "^9",
                 "psalm/plugin-phpunit": "<1",
                 "squizlabs/php_codesniffer": "^3",
-                "vimeo/psalm": "^4"
+                "vimeo/psalm": "^4 || ^5"
             },
             "type": "library",
             "autoload": {
@@ -55,9 +55,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Sura-framework/sura-database/issues",
-                "source": "https://github.com/Sura-framework/sura-database/tree/0.1.1"
+                "source": "https://github.com/Sura-framework/sura-database/tree/0.1.2"
             },
-            "time": "2022-12-04T20:13:44+00:00"
+            "time": "2023-01-08T19:44:11+00:00"
         },
         {
             "name": "tephida/corner",
@@ -96,6 +96,7 @@
                 "issues": "https://github.com/Tephida/corner/issues",
                 "source": "https://github.com/Tephida/corner/tree/0.1.2"
             },
+            "abandoned": true,
             "time": "2022-04-16T14:34:06+00:00"
         }
     ],
