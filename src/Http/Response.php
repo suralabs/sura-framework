@@ -14,6 +14,7 @@ use JsonException;
 class Response
 {
     /**
+     * Json response
      * @throws JsonException
      */
     public function _e_json(mixed $value): void
