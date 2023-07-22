@@ -79,6 +79,7 @@ class Filesystem implements FilesystemInterface
     }
 
     /**
+     * size dir
      * @param string $directory
      * @return bool|int
      */

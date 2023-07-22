@@ -13,6 +13,7 @@ namespace Sura\Support;
 class Cookie
 {
     /**
+     * remove cookie
      * @param string $name
      * @return void
      */
@@ -24,6 +25,7 @@ class Cookie
     }
 
     /**
+     * add to cookie
      * @param string $name
      * @param string $value
      * @param false|int $expires
@@ -41,7 +43,7 @@ class Cookie
     }
 
     /**
-     * get value
+     * get value cookie
      * @param string $name
      * @return string
      */
