@@ -4,29 +4,68 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "67facad472414229656e5148da0c6502",
+    "content-hash": "509c1e6a27161b5091e09a3f8e6c1aa8",
     "packages": [
         {
-            "name": "sura/database",
-            "version": "0.1.2",
+            "name": "sura/corner",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Sura-framework/sura-database.git",
-                "reference": "6164ba57c5f4958566bb019224c17bdd89a2c007"
+                "url": "https://github.com/Sura-framework/corner.git",
+                "reference": "b43b80403c02326dd07fe49dc03a2bd19dfa886f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Sura-framework/sura-database/zipball/6164ba57c5f4958566bb019224c17bdd89a2c007",
-                "reference": "6164ba57c5f4958566bb019224c17bdd89a2c007",
+                "url": "https://api.github.com/repos/Sura-framework/corner/zipball/b43b80403c02326dd07fe49dc03a2bd19dfa886f",
+                "reference": "b43b80403c02326dd07fe49dc03a2bd19dfa886f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9",
+                "psalm/plugin-phpunit": "<1",
+                "vimeo/psalm": "^5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sura\\Corner\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Generic PHP Exceptions and Errors, made user-friendly.",
+            "support": {
+                "issues": "https://github.com/Sura-framework/corner/issues",
+                "source": "https://github.com/Sura-framework/corner/tree/0.1.0"
+            },
+            "time": "2022-12-04T20:46:22+00:00"
+        },
+        {
+            "name": "sura/database",
+            "version": "0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Sura-framework/sura-database.git",
+                "reference": "9de4b32080bb2dbc7169f09d6f27d06087c9f9c1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Sura-framework/sura-database/zipball/9de4b32080bb2dbc7169f09d6f27d06087c9f9c1",
+                "reference": "9de4b32080bb2dbc7169f09d6f27d06087c9f9c1",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
                 "php": "^8",
-                "tephida/corner": "^0.1"
+                "sura/corner": "^0.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9",
+                "phpunit/phpunit": "^9 || ^10",
                 "psalm/plugin-phpunit": "<1",
                 "squizlabs/php_codesniffer": "^3",
                 "vimeo/psalm": "^4 || ^5"
@@ -55,49 +94,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Sura-framework/sura-database/issues",
-                "source": "https://github.com/Sura-framework/sura-database/tree/0.1.2"
+                "source": "https://github.com/Sura-framework/sura-database/tree/0.2.1"
             },
-            "time": "2023-01-08T19:44:11+00:00"
-        },
-        {
-            "name": "tephida/corner",
-            "version": "0.1.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Tephida/corner.git",
-                "reference": "dbc192b574523477c0bd075046dc54cf9e138971"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Tephida/corner/zipball/dbc192b574523477c0bd075046dc54cf9e138971",
-                "reference": "dbc192b574523477c0bd075046dc54cf9e138971",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9",
-                "psalm/plugin-phpunit": "<1",
-                "vimeo/psalm": "^4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Tephida\\Corner\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Generic PHP Exceptions and Errors, made user-friendly.",
-            "support": {
-                "issues": "https://github.com/Tephida/corner/issues",
-                "source": "https://github.com/Tephida/corner/tree/0.1.2"
-            },
-            "abandoned": true,
-            "time": "2022-04-16T14:34:06+00:00"
+            "time": "2023-07-24T15:59:39+00:00"
         }
     ],
     "packages-dev": [
