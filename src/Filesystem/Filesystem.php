@@ -15,6 +15,9 @@ use function floor;
 use function sprintf;
 use function strlen;
 
+/**
+ *
+ */
 class Filesystem implements FilesystemInterface
 {
     /**
@@ -79,6 +82,7 @@ class Filesystem implements FilesystemInterface
     }
 
     /**
+     * size dir
      * @param string $directory
      * @return bool|int
      */

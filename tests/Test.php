@@ -13,8 +13,14 @@ namespace Sura\tests;
 use Sura\Http\Request;
 use PHPUnit\Framework\TestCase;
 
+/**
+ *
+ */
 class Test extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testInput()
     {
         $instance_1 = (new Request())->textFilter('qwerty');
@@ -23,12 +29,18 @@ class Test extends TestCase
         self::assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     public function testInt()
     {
         $instance = (new Request())->int('qwerty');
         self::assertEquals(0, $instance);
     }
 
+    /**
+     * @return void
+     */
     public function testRequestFilter()
     {
         $instance = (new Request())->filter('qwerty');

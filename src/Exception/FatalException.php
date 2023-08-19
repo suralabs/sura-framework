@@ -12,6 +12,9 @@ namespace Sura\Exception;
 
 use Error;
 
+/**
+ *
+ */
 class FatalException extends Error
 {
 }

@@ -19,6 +19,9 @@ use JetBrains\PhpStorm\Pure;
  */
 class AbstractException extends Exception
 {
+    /**
+     * @var string
+     */
     private string $soapFault;
 
     /**

@@ -10,6 +10,9 @@
 
 namespace Sura\Http;
 
+/**
+ *
+ */
 class Request
 {
     /**

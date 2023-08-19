@@ -11,7 +11,7 @@
 use JetBrains\PhpStorm\Deprecated;
 
 /**
- * todo update
+ * todo add i18n
  * @param string $format
  * @param int $stamp
  * @return string
@@ -99,6 +99,7 @@ function addToList(string $id, array $list): string
 }
 
 /**
+ * todo add i18n
  * @param int $date
  * @param bool $func
  * @param bool $full
