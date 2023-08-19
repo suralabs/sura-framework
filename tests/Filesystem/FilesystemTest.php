@@ -13,8 +13,14 @@ namespace Sura\tests\Filesystem;
 use Sura\Filesystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 
+/**
+ *
+ */
 final class FilesystemTest extends TestCase
 {
+    /**
+     * @return void
+     */
     public function testCreateDir(): void
     {
         $dir = __DIR__;
@@ -28,6 +34,9 @@ final class FilesystemTest extends TestCase
         self::assertEquals(true, $instance);
     }
 
+    /**
+     * @return void
+     */
     public function testCheck(): void
     {
         $dir = __DIR__;
@@ -37,6 +46,9 @@ final class FilesystemTest extends TestCase
         self::assertEquals(false, $instance);
     }
 
+    /**
+     * @return void
+     */
     public function testCopy(): void
     {
         $dir = __DIR__;
@@ -50,6 +62,9 @@ final class FilesystemTest extends TestCase
         self::assertEquals(false, $instance);
     }
 
+    /**
+     * @return void
+     */
     public function testDirSize(): void
     {
         $dir = __DIR__;
@@ -61,6 +76,9 @@ final class FilesystemTest extends TestCase
         self::assertEquals(-1, $instance);
     }
 
+    /**
+     * @return void
+     */
     public function testDelete(): void
     {
         $dir = __DIR__;
@@ -72,6 +90,9 @@ final class FilesystemTest extends TestCase
         self::assertEquals(false, $instance);
     }
 
+    /**
+     * @return void
+     */
     public function testFileSize(): void
     {
         $bytes = Filesystem::humanFileSize(5945766364);

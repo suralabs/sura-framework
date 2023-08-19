@@ -10,6 +10,9 @@
 
 namespace Sura\Support;
 
+/**
+ *
+ */
 class Declensions
 {
     /** @var array $declensions */

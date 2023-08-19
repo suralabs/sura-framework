@@ -12,8 +12,15 @@ namespace Sura\Exception;
 
 use JetBrains\PhpStorm\Pure;
 
+/**
+ *
+ */
 class InvalidArgumentException extends AbstractException
 {
+    /**
+     * @param string $message
+     * @param int $code
+     */
     #[Pure] public function __construct(string $message = '', int $code = 500)
     {
         if (!$message) {

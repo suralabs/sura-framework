@@ -13,8 +13,14 @@ namespace Sura\tests\Support;
 use Sura\Support\Registry;
 use PHPUnit\Framework\TestCase;
 
+/**
+ *
+ */
 class RegistryTest extends TestCase
 {
+    /**
+     * @return void
+     */
     final public function testSet(): void
     {
         $instance = Registry::set('ttt', 'qwerty');
@@ -25,6 +31,9 @@ class RegistryTest extends TestCase
         self::assertTrue(true);
     }
 
+    /**
+     * @return void
+     */
     final public function testGet(): void
     {
         $instance = Registry::get('ttt');
@@ -33,6 +42,9 @@ class RegistryTest extends TestCase
         self::assertEquals(null, $instance);
     }
 
+    /**
+     * @return void
+     */
     final public function testExists(): void
     {
         $instance = Registry::get('ttt');

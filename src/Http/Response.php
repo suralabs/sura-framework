@@ -11,6 +11,9 @@ namespace Sura\Http;
 
 use JsonException;
 
+/**
+ *
+ */
 class Response
 {
     /**
