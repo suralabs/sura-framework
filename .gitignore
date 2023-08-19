@@ -8,4 +8,4 @@
 .env
 .phpunit.result.cache
 composer.phar
-/composer.lock
+composer.lock
