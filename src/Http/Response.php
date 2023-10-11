@@ -23,6 +23,6 @@ class Response
     public function _e_json(mixed $value): void
     {
         header('Content-Type: application/json');
-        echo json_encode($value, JSON_THROW_ON_ERROR);
+        echo json_encode($value, JSON_FORCE_OBJECT);
     }
 }
